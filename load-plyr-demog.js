@@ -12,34 +12,30 @@ var loadPlyrDemog = (function() {
       , recs = pipeObj.data[ pipeObj.prevStep ]
       ;
 
+
     for(var i=0; i < recs.length; i++ ) {
-      recs[i]._id       = recs[i].playerID;
-      recs[i].allstar   = [];
-      recs[i].positions = []
+      if ( recs[i] != null && recs[i].playerID != '' && recs[i].playerID != null ) {
+        recs[i]._id       = recs[i].playerID;
+        recs[i].allstar   = [];
+        recs[i].positions = []
 
-      recs[i].battingStats  = [];
-      recs[i].fieldingStats = [];
-      recs[i].pitchingStats = [];
+        recs[i].battingStats  = [];
+        recs[i].fieldingStats = [];
+        recs[i].pitchingStats = [];
 
-      recs[i].pitchingPlayoffsStats = [];
-      recs[i].battingPlayoffsStats  = [];
-      recs[i].fieldingPlayoffsStats = [];
+        recs[i].pitchingPlayoffsStats = [];
+        recs[i].battingPlayoffsStats  = [];
+        recs[i].fieldingPlayoffsStats = [];
 
+        delete recs[i].managerID;
+        delete recs[i].lahman40ID;
+        delete recs[i].lahman45ID;
+        delete recs[i].holtzID;
 
-      delete recs[i].managerID;
-      delete recs[i].playerID;
-      delete recs[i].weight;
-      delete recs[i].height;
-      delete recs[i].debut;
-      delete recs[i].finalGame;
-      delete recs[i].college;
-      delete recs[i].lahman40ID;
-      delete recs[i].lahman45ID;
-      delete recs[i].holtzID;
-
-      docs.push( recs[i] );
+        docs.push( recs[i] );
+      }
     }
-
+    console.log( docs.length );
     pipeObj.data.push( docs );
     pipeObj.prevStep += 1;
     callback( null, pipeObj );
@@ -49,13 +45,13 @@ var loadPlyrDemog = (function() {
   return  async.compose(
      createPlayerObjects, 
      dataUtils.createObjects,
-     dataUtils.readCsv
+     dataUtils.readRemoteCsv
   );
 
 }());
 
 
-var inputSrc = { path: dataDir + '/Players.csv',
+var inputSrc = { path: dataUtils.baseGithubUrl + '/Master.csv',
               headers: 1,
           dataTypeMap: [ 'playerID','managerID','hofID','birthCountry','birthState','birthCity','deathCountry',
                          'deathState','deathCity','nameFirst','nameLast','nameNote','nameGiven','nameNick','bats',
@@ -63,7 +59,7 @@ var inputSrc = { path: dataDir + '/Players.csv',
                          'bbrefID'] };
 
 var outputSettings = { type: 'mongodb', 
-                        url: mongoUrl, 
+                        url: dataUtils.mongoUrl, 
                  collection: 'players' };
 
 var pipeObj = { input: inputSrc,
