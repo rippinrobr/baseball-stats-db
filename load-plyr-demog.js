@@ -12,7 +12,6 @@ var loadPlyrDemog = (function() {
       , recs = pipeObj.data[ pipeObj.prevStep ]
       ;
 
-
     for(var i=0; i < recs.length; i++ ) {
       if ( recs[i] != null && recs[i].playerID != '' && recs[i].playerID != null ) {
         recs[i]._id       = recs[i].playerID;
@@ -35,7 +34,7 @@ var loadPlyrDemog = (function() {
         docs.push( recs[i] );
       }
     }
-    console.log( docs.length );
+
     pipeObj.data.push( docs );
     pipeObj.prevStep += 1;
     callback( null, pipeObj );
