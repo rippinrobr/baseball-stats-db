@@ -1,7 +1,5 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
-  , mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/giants'  
-  , dataDir  = process.env.DATA_DIR  || '../giants'
   ;
 
 // Creates the 'Pipeline' object with the pipeline specific functions in it.
@@ -29,18 +27,18 @@ var loadBattingStats = (function() {
   return async.compose(
     createUpdateObjects,
     dataUtils.createObjects,
-    dataUtils.readCsv
+    dataUtils.readRemoteCsv
   );
 
 }());
 
 
-var inputSrc = { path: dataDir + '/Batting.csv',
+var inputSrc = { path: dataUtils.baseGithubUrl + '/Batting.csv',
               headers: 1,
           dataTypeMap: [ 'playerID', 'teamID', 'lgID'] };
 
 var outputSettings = { type: 'mongodb', 
-                        url: mongoUrl, 
+                        url: dataUtils.mongoUrl, 
                  collection: 'players' };
 
 var pipeObj = { input: inputSrc,
