@@ -1,7 +1,5 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
-  , mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/giants'  
-  , dataDir  = process.env.DATA_DIR  || '../giants'
   ;
 
 // Creates the 'Pipeline' object with the pipeline specific functions in it.
@@ -29,9 +27,6 @@ var loadManagerAwards = (function() {
             var id = rec.managerID;
 
             delete rec.managerID;
-            delete rec.lgID;
-            delete rec.tie;
-            delete rec.notes;
       
             docs.push( { query: {_id: id}, set: { $addToSet: { awards: rec }} } );
           } 
@@ -47,22 +42,22 @@ var loadManagerAwards = (function() {
   return async.compose( 
     getAwardWinningManagers,
     dataUtils.createObjects,
-    dataUtils.loadInput
+    dataUtils.readRemoteCsv
   );
 
 }());
 
-var inputSrc = { path: dataDir + '/AwardsManagers.csv',
+var inputSrc = { path: dataUtils.baseGithubUrl + '/AwardsManagers.csv',
               headers: 1,
                  type: 'csv',
           dataTypeMap: [ 'managerID', 'awardID', 'lgID', 'tie', 'notes' ],
           floatColMap: null }
 
-var outputSettings = { type: 'mongodb', url: mongoUrl, collection: 'managers' };
+var outputSettings = { type: 'mongodb', url: dataUtils.mongoUrl, collection: 'managers' };
 
 var pipeObj  = { input: inputSrc, 
                  lookups: [ {}, {}, 
-                           {step: 2, type: 'mongodb', url: mongoUrl, 
+                           {step: 2, type: 'mongodb', url: dataUtils.mongoUrl, 
                             collection: 'managers', query: {}, 
                             projection: {_id:1, 'record':1} } ],
                  output: outputSettings,
