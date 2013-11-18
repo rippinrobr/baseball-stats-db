@@ -1,7 +1,5 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
-  , mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/giants'  
-  , dataDir  = process.env.DATA_DIR  || '../giants'
   ;
 
 // Creates the 'Pipeline' object with the pipeline specific functions in it.
@@ -15,8 +13,6 @@ var loadAppearances = (function() {
     for(var i=0; i < recs.length; i++ ) {
       var id = recs[i].playerID;
 
-      delete recs[i].teamID;
-      delete recs[i].lgID;
       delete recs[i].playerID;
 
       docs.push( {query: { _id: id }, set: { $addToSet: { appearances: recs[i] }}} );
@@ -30,19 +26,19 @@ var loadAppearances = (function() {
   return async.compose(
     createUpdateObjects,
     dataUtils.createObjects,
-    dataUtils.readCsv
+    dataUtils.readRemoteCsv
   );
 
 }());
 
 
-var inputSrc = { path: dataDir + '/Appearances.csv',
+var inputSrc = { path: dataUtils.baseGithubUrl + '/Appearances.csv',
               headers: 1,
           dataTypeMap: [ 'playerID' ],
           floatColMap: null }
 
 var outputSettings = { type: 'mongodb', 
-                        url: mongoUrl, 
+                        url: dataUtils.mongoUrl, 
                  collection: 'players' };
 
 var pipeObj = { input: inputSrc,
@@ -56,7 +52,7 @@ loadAppearances( pipeObj, function(err, result ) {
   if ( pipeObj.output ) {
     dataUtils.updateFns[ pipeObj.output.type ]( result.data[2], pipeObj.output, function( err, r) {
       console.log('[loadAppearances] Appearances loaded' );
-      dataUtils.createIndex( mongoUrl, 'players', { 'appearances.yearID':1});
+      dataUtils.createIndex( dataUtils.mongoUrl, 'players', { 'appearances.yearID':1});
     });
   }
 });
