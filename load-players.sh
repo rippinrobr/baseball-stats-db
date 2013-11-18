@@ -13,7 +13,6 @@ $NODE load-batting.js
 $NODE load-fielding.js
 $NODE load-pitching.js
 $NODE load-players-awards.js
-$NODE load-positions.js
 $NODE load-postseason-batting.js
 $NODE load-postseason-fielding.js
 $NODE load-postseason-pitching.js

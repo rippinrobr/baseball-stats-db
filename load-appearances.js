@@ -34,7 +34,7 @@ var loadAppearances = (function() {
 
 var inputSrc = { path: dataUtils.baseGithubUrl + '/Appearances.csv',
               headers: 1,
-          dataTypeMap: [ 'playerID' ],
+          dataTypeMap: [ 'playerID', 'teamID', 'lgID' ],
           floatColMap: null }
 
 var outputSettings = { type: 'mongodb', 

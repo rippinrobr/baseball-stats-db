@@ -1,7 +1,5 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
-  , mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/giants'  
-  , dataDir  = process.env.DATA_DIR  || '../giants'
   ;
 
 // Creates the 'Pipeline' object with the pipeline specific functions in it.
@@ -15,8 +13,6 @@ var loadPostSeasonBattingStats = (function() {
     for(var i=0; i < recs.length; i++ ) {
       var id = recs[i].playerID;
 
-      delete recs[i].teamID;
-      delete recs[i].lgID;
 
       docs.push( {query: { _id: id }, set: { $addToSet: { battingPlayoffsStats: recs[i] }}} );
     }
@@ -29,18 +25,18 @@ var loadPostSeasonBattingStats = (function() {
   return async.compose(
     createUpdateObjects,
     dataUtils.createObjects,
-    dataUtils.readCsv
+    dataUtils.readRemoteCsv
   );
 
 }());
 
 
-var inputSrc = { path: dataDir + '/BattingPost.csv',
+var inputSrc = { path: dataUtils.baseGithubUrl + '/BattingPost.csv',
               headers: 1,
           dataTypeMap: [ 'playerID', 'teamID', 'lgID', 'round'] };
 
 var outputSettings = { type: 'mongodb', 
-                        url: mongoUrl, 
+                        url: dataUtils.mongoUrl, 
                  collection: 'players' };
 
 var pipeObj = { input: inputSrc,
