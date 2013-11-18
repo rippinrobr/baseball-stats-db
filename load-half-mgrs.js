@@ -1,7 +1,5 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
-  , mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/giants'  
-  , dataDir  = process.env.DATA_DIR  || '../giants'
   ;
 
 // Creates the 'Pipeline' object with the pipeline specific functions in it.
@@ -28,12 +26,15 @@ var loadHalfManagers = (function() {
   return async.compose( 
       createUpdateObjects,
       dataUtils.createObjects, 
-      dataUtils.readCsv );  
+      dataUtils.readRemoteCsv );  
 }());
 
 // Configuration for the pipeline
-var inputSrc = { type: 'csv', path: dataDir + '/ManagersHalf.csv', headers:1, dataTypeMap: ['teamID', 'lgID', 'managerID', 'plyrMgr'] };
-var outputSettings = { type: 'mongodb', url: mongoUrl, collection: 'managers' };
+var inputSrc = { type: 'csv', 
+                 path: dataUtils.baseGithubUrl + '/ManagersHalf.csv', 
+              headers:1, 
+          dataTypeMap: ['teamID', 'lgID', 'managerID', 'plyrMgr'] };
+var outputSettings = { type: 'mongodb', url: dataUtils.mongoUrl, collection: 'managers' };
 var pipeObj  = { input: inputSrc, 
                  exitFn: null, // this can/will be used to 'chain' these pipelines together.
                  output: outputSettings,
