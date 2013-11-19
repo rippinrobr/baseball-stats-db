@@ -6,8 +6,8 @@ echo ""
 echo ""
 echo "### Starting to load the seasons data ###"
 
-$NODE load-seasons.js
-$NODE load-seasons-managers.js
+$NODE load-teams.js
+$NODE load-teams-managers.js
 $NODE load-half-seasons.js
 $NODE load-rosters.js
 $NODE load-playoff-records.js

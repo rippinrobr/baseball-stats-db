@@ -1,19 +1,18 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
-  , mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/giants'  
-  , dataDir  = process.env.DATA_DIR  || '../giants'
   ;
 
 // Creates the 'Pipeline' object with the pipeline specific functions in it.
 // Returns the async.compose results
-var loadSeasons = (function() {
+var loadTeams = (function() {
     var createSeasonObjects = function( pipeObj, callback ) {
     var docs = []
       , recs = pipeObj.data[ pipeObj.prevStep ]
       ;
-
+ 
+    console.log( recs.length );
     for(var i=0; i < recs.length; i++ ) {
-      recs[i]._id      = recs[i].yearID;
+      recs[i]._id      = recs[i].yearID + "_" + recs[i].teamID;
       recs[i].managers = [];
       recs[i].players  = []
 
@@ -31,20 +30,20 @@ var loadSeasons = (function() {
   return  async.compose(
      createSeasonObjects, 
      dataUtils.createObjects,
-     dataUtils.readCsv
+     dataUtils.readRemoteCsv
   );
 
 }());
 
 
-var inputSrc = { path: dataDir + '/Teams.csv',
+var inputSrc = { path: dataUtils.baseGithubUrl + '/Teams.csv',
               headers: 1,
           dataTypeMap: [ 'lgID', 'teamID', 'franchID', 'divID', 'name', 'park', 'teamIDBR', 'teamIDretro', 'DivWin', 'WCWin', 'LgWin', 'WSWin'],
           floatColMap: [ 'ERA' ]  };
 
 var outputSettings = { type: 'mongodb', 
-                        url: mongoUrl, 
-                 collection: 'seasons' };
+                        url: dataUtils.mongoUrl, 
+                 collection: 'teams' };
 
 var pipeObj = { input: inputSrc,
                exitFn: null,
@@ -53,15 +52,15 @@ var pipeObj = { input: inputSrc,
              prevStep: -1 };
 
 
-loadSeasons( pipeObj, function(err, result ) {
+loadTeams( pipeObj, function(err, result ) {
 
   if ( pipeObj.output ) {
-    dataUtils.emptyCollection( pipeObj.output.url, 'seasons', function(err, numDeleted) { 
-      console.log('[loadSeasons]', 'Deleted', numDeleted, 'seasons documents.');
+    dataUtils.emptyCollection( pipeObj.output.url, 'teams', function(err, numDeleted) { 
+      console.log('[loadTeams]', 'Deleted', numDeleted, 'teams documents.');
       dataUtils.storageFns[ pipeObj.output.type ]( result.data[2], pipeObj.output, function( err, r) {
-        console.log('[loadSeasons]', 'Seasons Loaded!');
-        dataUtils.createIndex( mongoUrl, 'seasons', { 'managers._id':1});
-        dataUtils.createIndex( mongoUrl, 'seasons', { 'players._id':1});
+        console.log('[loadTeams]', 'Teams Loaded!');
+        dataUtils.createIndex( dataUtils.mongoUrl, 'teams', { 'managers._id':1});
+        dataUtils.createIndex( dataUtils.mongoUrl, 'teams', { 'players._id':1});
       });
     });
   }

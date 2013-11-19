@@ -1,7 +1,6 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
   , MongoClient = require('mongodb').MongoClient
-  , mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/giants'  
   ;
 
 // Returns the async.compose results
@@ -11,7 +10,8 @@ var loadSeasonManagers = (function() {
     var docs = [];
 
     pipeObj.data[ pipeObj.prevStep ].forEach( function( rec ) {
-      docs.push( { query: {_id: rec.record.yearID}, set: { $addToSet: { managers: rec }} } );
+      docs.push( { query: {_id: rec.record.yearID + "_" + rec.record.teamID}, 
+                     set: { $addToSet: { managers: rec }} } );
     });
 
     pipeObj.data.push( docs );
@@ -47,9 +47,9 @@ var loadSeasonManagers = (function() {
 
 }());
 
-var inputSrc = { type: 'mongodb', url: mongoUrl, collection: 'managers' }
+var inputSrc = { type: 'mongodb', url: dataUtils.mongoUrl, collection: 'managers' }
 
-var outputSettings = { type: 'mongodb', url: mongoUrl, collection: 'seasons' };
+var outputSettings = { type: 'mongodb', url: dataUtils.mongoUrl, collection: 'teams' };
 
 var pipeObj  = { input: inputSrc, 
                  output: outputSettings,
