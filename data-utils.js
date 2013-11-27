@@ -155,7 +155,7 @@ updateFns['mongodb'] = function( data, settings, cb ) {
 
   mongoClient.connect( settings.url, function( err, db ) {
     if (err) throw err;
-
+    
     async.map( data, function( item,cb ) {
       db.collection( settings.collection )
         .update( item.query, item.set, function( err, result ) {

@@ -14,7 +14,6 @@ var loadTeams = (function() {
     for(var i=0; i < recs.length; i++ ) {
       recs[i]._id      = recs[i].yearID + "_" + recs[i].teamID;
       recs[i].managers = [];
-      recs[i].players  = []
 
       delete recs[i].teamIDlahman45;
 

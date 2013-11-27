@@ -16,7 +16,6 @@ var loadPlyrDemog = (function() {
       if ( recs[i] != null && recs[i].playerID != '' && recs[i].playerID != null ) {
         recs[i]._id       = recs[i].playerID;
         recs[i].allstar   = [];
-        recs[i].positions = []
 
         recs[i].battingStats  = [];
         recs[i].fieldingStats = [];

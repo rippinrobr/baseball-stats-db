@@ -12,6 +12,7 @@ var loadAppearances = (function() {
 
     for(var i=0; i < recs.length; i++ ) {
       var id = recs[i].playerID;
+      recs[i].season = recs[i].yearID + '_' + recs[i].teamID;
 
       delete recs[i].playerID;
 

@@ -13,7 +13,8 @@ var loadPostSeasonBattingStats = (function() {
     for(var i=0; i < recs.length; i++ ) {
       var id = recs[i].playerID;
 
-
+      recs[i].season = recs[i].yearID + '_' + recs[i].teamID;
+    
       docs.push( {query: { _id: id }, set: { $addToSet: { battingPlayoffsStats: recs[i] }}} );
     }
 

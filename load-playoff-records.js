@@ -1,7 +1,5 @@
 var async = require('async')
   , dataUtils = require('./data-utils') 
-  , mongoUrl = 'mongodb://localhost:27017/giants'  
-  , dataDir  = process.env.DATA_DIR  || '../giants'
   ;
 
 // Creates the 'Pipeline' object with the pipeline specific functions in it.
@@ -13,9 +11,12 @@ var loadPlayoffRecords = (function() {
       ;
 
     for(var i=0; i < recs.length; i++ ) {
-      var id = recs[i].yearID;
-      
-      docs.push( {query: { _id: id }, set: { $addToSet: { playoffs: recs[i] }}} );
+      var winningId = recs[i].yearID + '_' + recs[i].teamIDwinner
+        , losingId  = recs[i].yearID + '_' + recs[i].teamIDlooser
+        ;     
+
+      docs.push( {query: { _id: winningId }, set: { $addToSet: { playoffs: recs[i] }}} );
+      docs.push( {query: { _id: losingId }, set: { $addToSet: { playoffs: recs[i] }}} );
     }
 
     pipeObj.data.push( docs );
@@ -26,19 +27,19 @@ var loadPlayoffRecords = (function() {
   return async.compose(
     createUpdateObjects,
     dataUtils.createObjects,
-    dataUtils.readCsv
+    dataUtils.readRemoteCsv
   );
 
 }());
 
 
-var inputSrc = { path: dataDir + '/SeriesPost.csv',
+var inputSrc = { path: dataUtils.baseGithubUrl + '/SeriesPost.csv',
               headers: 1,
           dataTypeMap: [ 'round', 'teamIDwinner', 'lgIDwinner', 'teamIDloser', 'lgIDloser' ] };
 
 var outputSettings = { type: 'mongodb', 
-                        url: mongoUrl, 
-                 collection: 'seasons' };
+                        url: dataUtils.mongoUrl, 
+                 collection: 'teams' };
 
 var pipeObj = { input: inputSrc,
                exitFn: null,
