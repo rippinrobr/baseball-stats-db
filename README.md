@@ -1,6 +1,6 @@
 ##Data Related Scripts
 
-The scripts in this directory are used to load the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank/tree/2012update) into MongoDb database.
+The scripts in this directory are used to load the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) into MongoDb database.
 
 ----------
 ### Running the load scripts
