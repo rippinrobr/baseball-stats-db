@@ -1,5 +1,6 @@
 import csv
 import sys
+import utils
 
 # this should get moved into a settings file/object 
 base_dir = "/home/rob/src/baseballdatabank/core"
@@ -9,6 +10,8 @@ manager_files = [base_dir+"/Managers.csv",
         base_dir+"/AwardsManagers.csv", 
         base_dir+"/AwardsShareManagers.csv"]
 # end of settings info
+
+utils.hi()
 
 managers = dict() 
 
@@ -38,7 +41,7 @@ def list_to_dict(headers, data):
     return d
 
 
-def process_file(file_path, stat_prop, id_key):
+def process_file(file_path, bdb_obj_list, stat_prop, id_key):
     print "processing: " + file_path
 
     with open(file_path)  as csvfile:
@@ -62,18 +65,18 @@ def process_file(file_path, stat_prop, id_key):
             stats_dict = list_to_dict(csv_headers, mgr_season)
             id = stats_dict.pop(id_key, None) 
             if id:
-                if id not in managers:
-                    managers[ id] = RawManager(id)
+                if id not in bdb_obj_list:
+                    bdb_obj_list[ id] = RawManager(id)
             
-                managers[id].add_stats(stat_prop, stats_dict)
+                bdb_obj_list[id].add_stats(stat_prop, stats_dict)
             counter = counter + 1
 
     print "\nDone!"
 
 # start the processing
-process_file(manager_files[0], "seasons", "playerID")
-process_file(manager_files[1], "seasons", "playerID")
-process_file(manager_files[2], "awards", "playerID")
-process_file(manager_files[3], "awards", "playerID")
+process_file(manager_files[0], managers, "seasons", "playerID")
+process_file(manager_files[1], managers, "seasons", "playerID")
+process_file(manager_files[2], managers, "awards", "playerID")
+process_file(manager_files[3], managers, "awards", "playerID")
 
-#print managers["bochybr01"].awards
+print managers["bochybr01"].awards
