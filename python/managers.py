@@ -36,7 +36,8 @@ def list_to_dict(headers, data):
                 d[ headers[i] ] = data[i]
     return d
 
-def process_manager_files_with_id_in_first_col(file_path, stat_prop):
+
+def process_file(file_path, stat_prop, id_key):
     
     with open(file_path)  as csvfile:
         is_header_row = True
@@ -45,24 +46,22 @@ def process_manager_files_with_id_in_first_col(file_path, stat_prop):
         mgr_reader = csv.reader(csvfile, delimiter=',')
         for mgr_season in mgr_reader:
             if is_header_row:
-                csv_headers = mgr_season[1:]
+                csv_headers = mgr_season
                 is_header_row = False
                 continue
 
-            stats_dict = list_to_dict(csv_headers, mgr_season[1:])
-            if mgr_season[0]:
-                if mgr_season[0] not in managers:
-                    managers[mgr_season[0]] = RawManager(mgr_season[0])
+            stats_dict = list_to_dict(csv_headers, mgr_season)
+            id = stats_dict.pop(id_key, None) 
+            if id:
+                if id not in managers:
+                    managers[ id] = RawManager(id)
             
-                managers[mgr_season[0]].add_stats(stat_prop, stats_dict)
+                managers[id].add_stats(stat_prop, stats_dict)
 
 # start the processing
-process_manager_files_with_id_in_first_col(manager_files[0], "seasons")
-process_manager_files_with_id_in_first_col(manager_files[1], "seasons")
-process_manager_files_with_id_in_first_col(manager_files[2], "awards")
+process_file(manager_files[0], "seasons", "playerID")
+process_file(manager_files[1], "seasons", "playerID")
+process_file(manager_files[2], "awards", "playerID")
+process_file(manager_files[3], "awards", "playerID")
 
-print( managers["bochybr01"].seasons )
-print( managers["bochybr01"].awards )
-#for k in managers:
-#    print( managers[k].seasons)
-
+print managers["bochybr01"].awards
