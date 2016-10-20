@@ -1,4 +1,5 @@
-import csv;
+import csv
+import sys
 
 # this should get moved into a settings file/object 
 base_dir = "/home/rob/src/baseballdatabank/core"
@@ -38,18 +39,26 @@ def list_to_dict(headers, data):
 
 
 def process_file(file_path, stat_prop, id_key):
-    
+    print "processing: " + file_path
+
     with open(file_path)  as csvfile:
         is_header_row = True
         csv_headers = []
 
         mgr_reader = csv.reader(csvfile, delimiter=',')
+        counter = 0
         for mgr_season in mgr_reader:
             if is_header_row:
                 csv_headers = mgr_season
                 is_header_row = False
                 continue
 
+            if counter != 0:
+                if counter % 20 == 0:
+                    print ""
+                sys.stdout.write(".")
+                sys.stdout.flush()
+            
             stats_dict = list_to_dict(csv_headers, mgr_season)
             id = stats_dict.pop(id_key, None) 
             if id:
@@ -57,6 +66,9 @@ def process_file(file_path, stat_prop, id_key):
                     managers[ id] = RawManager(id)
             
                 managers[id].add_stats(stat_prop, stats_dict)
+            counter = counter + 1
+
+    print "\nDone!"
 
 # start the processing
 process_file(manager_files[0], "seasons", "playerID")
@@ -64,4 +76,4 @@ process_file(manager_files[1], "seasons", "playerID")
 process_file(manager_files[2], "awards", "playerID")
 process_file(manager_files[3], "awards", "playerID")
 
-print managers["bochybr01"].awards
+#print managers["bochybr01"].awards
