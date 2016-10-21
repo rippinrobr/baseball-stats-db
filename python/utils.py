@@ -29,7 +29,7 @@ def process_file(file_path, bdb_obj_list, stat_prop, id_key, entity):
                 continue
 
             if counter != 0:
-                if counter % 20 == 0:
+                if counter % 40 == 0:
                     print ""
                 sys.stdout.write(".")
                 sys.stdout.flush()

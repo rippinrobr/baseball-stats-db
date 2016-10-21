@@ -5,6 +5,9 @@ player_files = [
         utils.base_dir+"/Master.csv", 
         utils.base_dir+"/AllstarFull.csv", 
         utils.base_dir+"/Appearances.csv", 
+        utils.base_dir+"/Batting.csv", 
+        utils.base_dir+"/Fielding.csv", 
+        utils.base_dir+"/Pitching.csv", 
 ]
 
 class RawPlayer:
@@ -38,12 +41,24 @@ class RawPlayer:
         self.batting_stats = []
         self.fielding_stats = []
         self.pitching_stats = []
+        self.playoff_batting_stats = []
+        self.playoff_fielding_stats = []
+        self.playoff_pitching_stats = []
 
     def add_allstar_appearances(self, appearance):
         self.allstar_appearances.append( appearance )
 
     def add_appearances(self, appearance):
         self.appearances.append( appearance )
+
+    def add_batting_stats(self, stats):
+        self.batting_stats.append( stats )
+
+    def add_fielding_stats(self, stats):
+        self.fielding_stats.append( stats )
+
+    def add_pitching_stats(self, stats):
+        self.pitching_stats.append( stats )
 
     def add_demographics(self, demog):
         self.birth_country =  demog["birthCountry"]
@@ -74,17 +89,29 @@ class RawPlayer:
         if stat_prop == "demographics":
             self.add_demographics(stats)
 
+        if stat_prop == "batting":
+            self.add_batting_stats(stats)
+
+        if stat_prop == "fielding":
+            self.add_fielding_stats(stats)
+
+        if stat_prop == "pitching":
+            self.add_pitching_stats(stats)
+
 def parse():
     players= dict() 
  
     utils.process_file(player_files[0], players, "demographics", "playerID", RawPlayer)
     utils.process_file(player_files[1], players, "allstars", "playerID", RawPlayer)
     utils.process_file(player_files[2], players, "appearances", "playerID", RawPlayer)
+    utils.process_file(player_files[3], players, "batting", "playerID", RawPlayer)
+    utils.process_file(player_files[4], players, "fielding", "playerID", RawPlayer)
+    utils.process_file(player_files[5], players, "pitching", "playerID", RawPlayer)
     
     return players
 
 players =  parse()
 
 
-for p in players:
-    print players[p].appearances
+#for p in players:
+    #print players[p].appearances
