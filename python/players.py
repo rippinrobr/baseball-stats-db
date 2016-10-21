@@ -4,6 +4,7 @@ import utils
 player_files = [
         utils.base_dir+"/Master.csv", 
         utils.base_dir+"/AllstarFull.csv", 
+        utils.base_dir+"/Appearances.csv", 
 ]
 
 class RawPlayer:
@@ -33,12 +34,16 @@ class RawPlayer:
         self.bbrefID = ""
         
         self.allstar_appearances = []
+        self.appearances =  []
         self.batting_stats = []
         self.fielding_stats = []
         self.pitching_stats = []
 
     def add_allstar_appearances(self, appearance):
         self.allstar_appearances.append( appearance )
+
+    def add_appearances(self, appearance):
+        self.appearances.append( appearance )
 
     def add_demographics(self, demog):
         self.birth_country =  demog["birthCountry"]
@@ -63,6 +68,9 @@ class RawPlayer:
         if stat_prop == "allstars":
             self.add_allstar_appearances(stats)
 
+        if stat_prop == "appearances":
+            self.add_appearances(stats)
+
         if stat_prop == "demographics":
             self.add_demographics(stats)
 
@@ -71,6 +79,7 @@ def parse():
  
     utils.process_file(player_files[0], players, "demographics", "playerID", RawPlayer)
     utils.process_file(player_files[1], players, "allstars", "playerID", RawPlayer)
+    utils.process_file(player_files[2], players, "appearances", "playerID", RawPlayer)
     
     return players
 
@@ -78,4 +87,4 @@ players =  parse()
 
 
 for p in players:
-    print players[p].allstar_appearances
+    print players[p].appearances
