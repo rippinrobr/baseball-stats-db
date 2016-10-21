@@ -24,8 +24,7 @@ class RawManager:
             self.awards.append( stats )
 
 
-# start the processing
-def parse_managers():
+def parse():
     managers = dict() 
     
     utils.process_file(manager_files[0], managers, "seasons", "playerID", RawManager)
@@ -33,7 +32,6 @@ def parse_managers():
     utils.process_file(manager_files[2], managers, "awards", "playerID", RawManager)
     utils.process_file(manager_files[3], managers, "awards", "playerID", RawManager)
 
+    #print managers["bochybr01"].awards
     return managers
 
-parse_managers()
-#print managers["bochybr01"].awards
