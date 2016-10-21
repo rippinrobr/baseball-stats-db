@@ -8,6 +8,11 @@ player_files = [
         utils.base_dir+"/Batting.csv", 
         utils.base_dir+"/Fielding.csv", 
         utils.base_dir+"/Pitching.csv", 
+        utils.base_dir+"/BattingPost.csv", 
+        utils.base_dir+"/FieldingPost.csv", 
+        utils.base_dir+"/PitchingPost.csv", 
+        utils.base_dir+"/FieldingOF.csv", 
+        utils.base_dir+"/AwardsPlayers.csv", 
 ]
 
 class RawPlayer:
@@ -38,8 +43,10 @@ class RawPlayer:
         
         self.allstar_appearances = []
         self.appearances =  []
+        self.awards = []
         self.batting_stats = []
         self.fielding_stats = []
+        self.fielding_of_stats = []
         self.pitching_stats = []
         self.playoff_batting_stats = []
         self.playoff_fielding_stats = []
@@ -51,14 +58,29 @@ class RawPlayer:
     def add_appearances(self, appearance):
         self.appearances.append( appearance )
 
+    def add_awards(self, awards):
+        self.awards.append( awards )
+
     def add_batting_stats(self, stats):
         self.batting_stats.append( stats )
 
     def add_fielding_stats(self, stats):
         self.fielding_stats.append( stats )
 
+    def add_fielding_of_stats(self, stats):
+        self.fielding_of_stats.append( stats )
+
     def add_pitching_stats(self, stats):
         self.pitching_stats.append( stats )
+
+    def add_playoff_batting_stats(self, stats):
+        self.playoff_batting_stats.append( stats )
+
+    def add_playoff_fielding_stats(self, stats):
+        self.playoff_fielding_stats.append( stats )
+
+    def add_playoff_pitching_stats(self, stats):
+        self.playoff_pitching_stats.append( stats )
 
     def add_demographics(self, demog):
         self.birth_country =  demog["birthCountry"]
@@ -86,6 +108,9 @@ class RawPlayer:
         if stat_prop == "appearances":
             self.add_appearances(stats)
 
+        if stat_prop == "awards":
+            self.add_awards(stats)
+
         if stat_prop == "demographics":
             self.add_demographics(stats)
 
@@ -95,8 +120,20 @@ class RawPlayer:
         if stat_prop == "fielding":
             self.add_fielding_stats(stats)
 
+        if stat_prop == "fielding-OF":
+            self.add_fielding_of_stats(stats)
+
         if stat_prop == "pitching":
             self.add_pitching_stats(stats)
+
+        if stat_prop == "playoff_batting":
+            self.add_playoff_batting_stats(stats)
+
+        if stat_prop == "playoff_fielding":
+            self.add_playoff_fielding_stats(stats)
+
+        if stat_prop == "playoff_pitching":
+            self.add_playoff_pitching_stats(stats)
 
 def parse():
     players= dict() 
@@ -107,7 +144,12 @@ def parse():
     utils.process_file(player_files[3], players, "batting", "playerID", RawPlayer)
     utils.process_file(player_files[4], players, "fielding", "playerID", RawPlayer)
     utils.process_file(player_files[5], players, "pitching", "playerID", RawPlayer)
-    
+    utils.process_file(player_files[6], players, "playoff_pitching", "playerID", RawPlayer)
+    utils.process_file(player_files[7], players, "playoff_fielding", "playerID", RawPlayer)
+    utils.process_file(player_files[8], players, "playoff_pitching", "playerID", RawPlayer)
+    utils.process_file(player_files[9], players, "fielding-OF", "playerID", RawPlayer)
+    utils.process_file(player_files[10], players, "awards", "playerID", RawPlayer)
+
     return players
 
 players =  parse()
