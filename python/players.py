@@ -14,27 +14,27 @@ player_files = [
         utils.base_dir+"/FieldingOF.csv", 
         utils.base_dir+"/AwardsPlayers.csv", 
         utils.base_dir+"/Salaries.csv", 
+        utils.base_dir+"/CollegePlaying.csv",
+        utils.base_dir+"/HallOfFame.csv",
 ]
 
 class RawPlayer:
     " A representation of a players's stats and demographics as read from CSV file """
     def __init__(self, playerId):
         self.playerID = playerId
-        self.birth_country = ""
-        self.birth_state = ""
-        self.birth_city = ""
-        self.death_country = ""
-        self.death_state = ""
-        self.death_city = ""
-        self.name_first = ""
-        self.name_last = ""
-        self.name_note = ""
-        self.name_given = ""
-        self.name_nick = ""
+        self.birthCountry = ""
+        self.birthState = ""
+        self.birthCity = ""
+        self.deathCountry = ""
+        self.deathState = ""
+        self.deathCity = ""
+        self.nameFirst = ""
+        self.nameLast = ""
+        self.nameGiven = ""
         self.bats = ""
         self.throws = ""
         self.debut = ""
-        self.final_game = ""
+        self.finalGame = ""
         self.college = ""
         self.lahman40ID = ""
         self.lahman45ID = ""
@@ -42,20 +42,22 @@ class RawPlayer:
         self.holtzID = ""
         self.bbrefID = ""
         
-        self.allstar_appearances = []
+        self.allstarAppearances = []
         self.appearances =  []
         self.awards = []
-        self.batting_stats = []
-        self.fielding_stats = []
-        self.fielding_of_stats = []
-        self.pitching_stats = []
-        self.playoff_batting_stats = []
-        self.playoff_fielding_stats = []
-        self.playoff_pitching_stats = []
+        self.battingStats = []
+        self.college = []
+        self.fieldingStats = []
+        self.fieldingOfStats = []
+        self.hallOfFame = []
+        self.pitchingStats = []
+        self.playoffBattingStats = []
+        self.playoffFieldingStats = []
+        self.playoffPitchingStats = []
         self.salaries = []
 
-    def add_allstar_appearances(self, appearance):
-        self.allstar_appearances.append( appearance )
+    def add_allstarAppearances(self, appearance):
+        self.allstarAppearances.append( appearance )
 
     def add_appearances(self, appearance):
         self.appearances.append( appearance )
@@ -63,52 +65,58 @@ class RawPlayer:
     def add_awards(self, awards):
         self.awards.append( awards )
 
-    def add_batting_stats(self, stats):
-        self.batting_stats.append( stats )
+    def add_battingStats(self, stats):
+        self.battingStats.append( stats )
+
+    def add_college(self, stats):
+        self.college.append( stats )
 
     def add_demographics(self, demog):
-        self.birth_country =  demog["birthCountry"]
-        self.birth_state = demog["birthState"]
-        self.birth_city = demog["birthCity"]
-        self.death_country = demog["deathCountry"]
-        self.death_state = demog["deathCountry"]
-        self.death_city = demog["deathCountry"]
-        self.name_first = demog["nameFirst"]
-        self.name_last = demog["nameLast"]
-        self.name_given = demog["nameGiven"]
+        self.birthCountry =  demog["birthCountry"]
+        self.birthState = demog["birthState"]
+        self.birthCity = demog["birthCity"]
+        self.deathCountry = demog["deathCountry"]
+        self.deathState = demog["deathCountry"]
+        self.deathCity = demog["deathCountry"]
+        self.nameFirst = demog["nameFirst"]
+        self.nameLast = demog["nameLast"]
+        self.nameGiven = demog["nameGiven"]
         self.weight = demog["weight"]
         self.height = demog["height"]
         self.bats = demog["bats"]
         self.throws = demog["throws"] 
         self.debut = demog["debut"]
-        self.final_game = demog["finalGame"]
+        self.finalGame = demog["finalGame"]
         self.retroID = demog["retroID"]
         self.bbrefID = demog["bbrefID"]
 
-    def add_fielding_stats(self, stats):
-        self.fielding_stats.append( stats )
+    def add_fieldingStats(self, stats):
+        self.fieldingStats.append( stats )
 
-    def add_fielding_of_stats(self, stats):
-        self.fielding_of_stats.append( stats )
+    def add_fieldingOfStats(self, stats):
+        self.fieldingOfStats.append( stats )
 
-    def add_pitching_stats(self, stats):
-        self.pitching_stats.append( stats )
+    def add_hallOfFame(self, stats):
+        self.hallOfFame.append(stats)
 
-    def add_playoff_batting_stats(self, stats):
-        self.playoff_batting_stats.append( stats )
+    def add_pitchingStats(self, stats):
+        self.pitchingStats.append( stats )
 
-    def add_playoff_fielding_stats(self, stats):
-        self.playoff_fielding_stats.append( stats )
+    def add_playoffBattingStats(self, stats):
+        self.playoffBattingStats.append( stats )
 
-    def add_playoff_pitching_stats(self, stats):
-        self.playoff_pitching_stats.append( stats )
+    def add_playoffFieldingStats(self, stats):
+        self.playoffFieldingStats.append( stats )
+
+    def add_playoffPitchingStats(self, stats):
+        self.playoffPitchingStats.append( stats )
 
     def add_salaries(self, stats):
         self.salaries.append(stats)
 
     def add_stats(self, stat_prop, stats):
         if stat_prop == "allstars":
-            self.add_allstar_appearances(stats)
+            self.add_allstarAppearances(stats)
 
         if stat_prop == "appearances":
             self.add_appearances(stats)
@@ -120,25 +128,31 @@ class RawPlayer:
             self.add_demographics(stats)
 
         if stat_prop == "batting":
-            self.add_batting_stats(stats)
+            self.add_battingStats(stats)
+
+        if stat_prop == "college":
+            self.add_college(stats)
 
         if stat_prop == "fielding":
-            self.add_fielding_stats(stats)
+            self.add_fieldingStats(stats)
 
         if stat_prop == "fielding-OF":
-            self.add_fielding_of_stats(stats)
+            self.add_fieldingOfStats(stats)
+
+        if stat_prop == "hallOfFame":
+            self.add_hallOfFame(stats)
 
         if stat_prop == "pitching":
-            self.add_pitching_stats(stats)
+            self.add_pitchingStats(stats)
 
-        if stat_prop == "playoff_batting":
-            self.add_playoff_batting_stats(stats)
+        if stat_prop == "playoffBatting":
+            self.add_playoffBattingStats(stats)
 
-        if stat_prop == "playoff_fielding":
-            self.add_playoff_fielding_stats(stats)
+        if stat_prop == "playoffFielding":
+            self.add_playoffFieldingStats(stats)
 
-        if stat_prop == "playoff_pitching":
-            self.add_playoff_pitching_stats(stats)
+        if stat_prop == "playoffPitching":
+            self.add_playoffPitchingStats(stats)
 
         if stat_prop == "salaries":
             self.add_salaries(stats)
@@ -152,17 +166,13 @@ def parse():
     utils.process_file(player_files[3], players, "batting", "playerID", RawPlayer)
     utils.process_file(player_files[4], players, "fielding", "playerID", RawPlayer)
     utils.process_file(player_files[5], players, "pitching", "playerID", RawPlayer)
-    utils.process_file(player_files[6], players, "playoff_pitching", "playerID", RawPlayer)
-    utils.process_file(player_files[7], players, "playoff_fielding", "playerID", RawPlayer)
-    utils.process_file(player_files[8], players, "playoff_pitching", "playerID", RawPlayer)
+    utils.process_file(player_files[6], players, "playoffPitching", "playerID", RawPlayer)
+    utils.process_file(player_files[7], players, "playoffFielding", "playerID", RawPlayer)
+    utils.process_file(player_files[8], players, "playoffPitching", "playerID", RawPlayer)
     utils.process_file(player_files[9], players, "fielding-OF", "playerID", RawPlayer)
     utils.process_file(player_files[10], players, "awards", "playerID", RawPlayer)
     utils.process_file(player_files[11], players, "salaries", "playerID", RawPlayer)
+    utils.process_file(player_files[12], players, "college", "playerID", RawPlayer)
+    utils.process_file(player_files[13], players, "hallOfFame", "playerID", RawPlayer)
 
     return players
-
-players =  parse()
-
-
-#for p in players:
-    #print players[p].appearances
