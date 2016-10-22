@@ -13,6 +13,7 @@ player_files = [
         utils.base_dir+"/PitchingPost.csv", 
         utils.base_dir+"/FieldingOF.csv", 
         utils.base_dir+"/AwardsPlayers.csv", 
+        utils.base_dir+"/Salaries.csv", 
 ]
 
 class RawPlayer:
@@ -51,6 +52,7 @@ class RawPlayer:
         self.playoff_batting_stats = []
         self.playoff_fielding_stats = []
         self.playoff_pitching_stats = []
+        self.salaries = []
 
     def add_allstar_appearances(self, appearance):
         self.allstar_appearances.append( appearance )
@@ -63,24 +65,6 @@ class RawPlayer:
 
     def add_batting_stats(self, stats):
         self.batting_stats.append( stats )
-
-    def add_fielding_stats(self, stats):
-        self.fielding_stats.append( stats )
-
-    def add_fielding_of_stats(self, stats):
-        self.fielding_of_stats.append( stats )
-
-    def add_pitching_stats(self, stats):
-        self.pitching_stats.append( stats )
-
-    def add_playoff_batting_stats(self, stats):
-        self.playoff_batting_stats.append( stats )
-
-    def add_playoff_fielding_stats(self, stats):
-        self.playoff_fielding_stats.append( stats )
-
-    def add_playoff_pitching_stats(self, stats):
-        self.playoff_pitching_stats.append( stats )
 
     def add_demographics(self, demog):
         self.birth_country =  demog["birthCountry"]
@@ -100,6 +84,27 @@ class RawPlayer:
         self.final_game = demog["finalGame"]
         self.retroID = demog["retroID"]
         self.bbrefID = demog["bbrefID"]
+
+    def add_fielding_stats(self, stats):
+        self.fielding_stats.append( stats )
+
+    def add_fielding_of_stats(self, stats):
+        self.fielding_of_stats.append( stats )
+
+    def add_pitching_stats(self, stats):
+        self.pitching_stats.append( stats )
+
+    def add_playoff_batting_stats(self, stats):
+        self.playoff_batting_stats.append( stats )
+
+    def add_playoff_fielding_stats(self, stats):
+        self.playoff_fielding_stats.append( stats )
+
+    def add_playoff_pitching_stats(self, stats):
+        self.playoff_pitching_stats.append( stats )
+
+    def add_salaries(self, stats):
+        self.salaries.append(stats)
 
     def add_stats(self, stat_prop, stats):
         if stat_prop == "allstars":
@@ -135,6 +140,9 @@ class RawPlayer:
         if stat_prop == "playoff_pitching":
             self.add_playoff_pitching_stats(stats)
 
+        if stat_prop == "salaries":
+            self.add_salaries(stats)
+
 def parse():
     players= dict() 
  
@@ -149,6 +157,7 @@ def parse():
     utils.process_file(player_files[8], players, "playoff_pitching", "playerID", RawPlayer)
     utils.process_file(player_files[9], players, "fielding-OF", "playerID", RawPlayer)
     utils.process_file(player_files[10], players, "awards", "playerID", RawPlayer)
+    utils.process_file(player_files[11], players, "salaries", "playerID", RawPlayer)
 
     return players
 

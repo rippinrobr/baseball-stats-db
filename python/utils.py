@@ -1,7 +1,11 @@
 import csv
 import sys
+import os
 
 base_dir = "/home/rob/src/baseballdatabank/core"
+if os.environ["BDB_BASE_DIR"]:
+    base_dir = os.environ["BDB_BASE_DIR"]
+
 
 def list_to_dict(headers, data):
     d = {}
