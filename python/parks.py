@@ -2,7 +2,6 @@ import utils
 
 park_files = [
         utils.base_dir + "/Parks.csv",
-        utils.base_dir + "/HomeGames.csv",
         ]
 
 class Park:
@@ -23,8 +22,8 @@ def parse():
     parks = dict()
 
     utils.process_file(park_files[0], parks, "info","park.key", Park),
-    utils.process_file(park_files[1], parks, "home_games","park.key", Park),
 
     #print parks
+    return parks
 
 parse()
