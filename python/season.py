@@ -127,24 +127,24 @@ def process_playoff_file(file_path, seasons_list, teams_list):
             # THIS NEEDS TO BE FUNC THAT TAKES the yearID and teamId
             # if STL it needs to see what season it is to determine 
             # the appropriate teamId
-            if winningTeamId == "NYP":
-                winningTeamId = "NY4"
+#            if winningTeamId == "NYP":
+#                winningTeamId = "NY4"
 
-            if winningTeamId == "CHC":
-                winningTeamId = "CHN"
+#            if winningTeamId == "CHC":
+#                winningTeamId = "CHN"
 
-            if winningTeamId == "STL":
-                winningTeamId = "SL2"
+#            if winningTeamId == "STL":
+#                winningTeamId = "SL2"
 
             losingTeamId  = stats_dict.pop("teamIDloser", None) 
-            if losingTeamId == "NYP":
-                losingTeamId = "NY4"
+#            if losingTeamId == "NYP":
+#                losingTeamId = "NY4"
 
-            if losingTeamId == "CHC":
-                losingTeamId = "CHN"
+#            if losingTeamId == "CHC":
+#                losingTeamId = "CHN"
 
-            if losingTeamId == "STL":
-                losingTeamId = "SL2"
+#            if losingTeamId == "STL":
+#                losingTeamId = "SL2"
 
             winnerKey= yearId + "_"  + winningTeamId
             losingKey= yearId + "_"  + losingTeamId
@@ -159,10 +159,13 @@ def process_playoff_file(file_path, seasons_list, teams_list):
     print "Done!"
 
 # Run here
-franchises = dict()
-seasons = dict()
-teams = dict()
+def parse():
+    franchises = dict()
+    seasons = dict()
+    teams = dict()
 
-process_season_file(team_files[0], seasons, teams, franchises, "season")
-process_season_file(team_files[1], seasons, teams, franchises, "half_season")
-process_playoff_file(team_files[2], seasons, teams)
+    process_season_file(team_files[0], seasons, teams, franchises, "season")
+    process_season_file(team_files[1], seasons, teams, franchises, "half_season")
+    process_playoff_file(team_files[2], seasons, teams)
+
+    return teams, seasons, franchises

@@ -10,7 +10,7 @@ print "### PROCESSING PLAYER DATA ###"
 raw_players = players.parse()
 
 print "### PROCESSING SEASON  DATA ###"
-raw_seasons = players.parse()
+raw_teams, raw_seasons, raw_franchises = season.parse()
 
 print "### PROCESSING SEASON  DATA ###"
 raw_hof = hall_of_fame.parse()
