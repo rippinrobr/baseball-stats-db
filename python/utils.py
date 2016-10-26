@@ -21,11 +21,11 @@ def process_file(file_path, bdb_obj_list, stat_prop, id_key, entity):
         is_header_row = True
         csv_headers = []
 
-        mgr_reader = csv.reader(csvfile, delimiter=',')
+        reader = csv.reader(csvfile, delimiter=',')
         counter = 0
-        for mgr_season in mgr_reader:
+        for record in reader:
             if is_header_row:
-                csv_headers = mgr_season
+                csv_headers = record
                 is_header_row = False
                 continue
 
@@ -35,7 +35,7 @@ def process_file(file_path, bdb_obj_list, stat_prop, id_key, entity):
                 sys.stdout.write(".")
                 sys.stdout.flush()
             
-            stats_dict = list_to_dict(csv_headers, mgr_season)
+            stats_dict = list_to_dict(csv_headers, record)
             id = stats_dict.pop(id_key, None) 
             if id:
                 if id not in bdb_obj_list:
@@ -45,3 +45,41 @@ def process_file(file_path, bdb_obj_list, stat_prop, id_key, entity):
             counter = counter + 1
 
     print "\nDone!"
+
+def process_file_with_composite_key(file_path, bdb_obj_list, key_field_list, entity):
+    print "processing: " + file_path
+
+    with open(file_path)  as csvfile:
+        is_header_row = True
+        csv_headers = []
+
+        reader = csv.reader(csvfile, delimiter=',')
+        counter = 0
+        for record in reader:
+            if is_header_row:
+                csv_headers = record
+                is_header_row = False
+                continue
+
+            if counter != 0:
+                if counter % 60 == 0:
+                    print ""
+                sys.stdout.write(".")
+                sys.stdout.flush()
+            
+            stats_dict = list_to_dict(csv_headers, record)
+            id = ""
+            for i,f in enumerate(key_field_list):
+                if i == 0:
+                    id = stats_dict.pop(f)
+                else:
+                    id = id + "_" + stats_dict.pop(f)
+
+            if id:
+                if id not in bdb_obj_list:
+                    bdb_obj_list[id] = entity(id)
+            
+                bdb_obj_list[id].add_stats("", stats_dict)
+            counter = counter + 1
+
+    print "Done!"

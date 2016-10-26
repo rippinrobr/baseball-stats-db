@@ -1,7 +1,6 @@
 Data Relations
  - post load add playoff records to franchise objects
  - Misc files to process
-	- HomeGames.csv - seasons, teams, and franchies(?)
 	- Schools.csv - lookup table
 	- TeamsFranchises.csv - franchise
 	
