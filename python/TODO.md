@@ -1,9 +1,6 @@
 Data Relations
- - post load add playoff records to franchise objects
- - Misc files to process
-	- AwardsSharePlayers.csv 
-	- Schools.csv 
-	schools- TeamsFranchises.csv 
+ - data store
+ 	- everything 
 
  - Update readme 
  	- include column name changes for HomeGames columns

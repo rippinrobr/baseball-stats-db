@@ -23,11 +23,11 @@ def new_process_file(file_path):
         is_header_row = True
         csv_headers = []
 
-        mgr_reader = csv.reader(csvfile, delimiter=',')
+        reader = csv.reader(csvfile, delimiter=',')
         counter = 0
-        for mgr_season in mgr_reader:
+        for record in reader:
             if is_header_row:
-                csv_headers = mgr_season
+                csv_headers = record
                 is_header_row = False
                 continue
 
