@@ -37,7 +37,7 @@ def new_process_file(file_path):
                 sys.stdout.write(".")
                 sys.stdout.flush()
             
-            bdb_obj_list.append( list_to_dict(csv_headers, mgr_season) )
+            bdb_obj_list.append( list_to_dict(csv_headers, record) )
             counter = counter + 1
 
     print "\nDone!"
