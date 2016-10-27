@@ -1,8 +1,11 @@
 Data Relations
  - data store
- 	- everything 
+ 	- File/primary key
+    - AllStarFull.csv   playerID, gameID
+    - Appearances.csv   playerID, teamID, yearID
+    -
 
- - Update readme 
+ - Update readme
  	- include column name changes for HomeGames columns
 		- year.key to year
 		- league.key to league
@@ -15,4 +18,3 @@ Data Relations
 		- park.key to parkID
 		- park.name to name
 		- park.alias to alias
-
