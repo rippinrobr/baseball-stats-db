@@ -1,82 +1,24 @@
+import os
 import utils
 
-table_schemas = {}
-raw_all_stars, schema = utils.new_process_file(utils.BASE_DIR + "/AllStarFull.csv")
-table_schemas[schema['table_name']] = schema
+BASE_DIR = os.getenv("BDB_BASE_DIR", "/home/rob/src/baseballdatabank/core")
+FILES = ["/AllstarFull.csv", "/Appearances.csv", "/AwardsManagers.csv", "/AwardsPlayers.csv",
+         "/AwardsShareManagers.csv", "/AwardsSharePlayers.csv", "/Batting.csv", "/BattingPost.csv",
+         "/CollegePlaying.csv", "/Fielding.csv", "/FieldingOF.csv", "/FieldingPost.csv",
+         "/HallOfFame.csv", "/HomeGames.csv", "/Managers.csv", "/ManagersHalf.csv", "/Master.csv",
+         "/Parks.csv", "/Pitching.csv", "/PitchingPost.csv", "/Salaries.csv", "/Schools.csv",
+         "/SeriesPost.csv", "/Teams.csv", "/TeamsFranchises.csv", "/TeamsHalf.csv"]
 
-raw_appearances, schema = utils.new_process_file(utils.BASE_DIR + "/Appearances.csv")
-table_schemas[schema['table_name']] = schema
+PARSER = utils.Parser()
+SCHEMA_GENERATOR = utils.SchemaGenerator()
 
-raw_awards_managers, schema = utils.new_process_file(utils.BASE_DIR + "/AwardsManagers.csv")
-table_schemas[schema['table_name']] = schema
+TABLE_DATA = {}
+TABLE_SCHEMAS = {}
 
-raw_awards_players, schema = utils.new_process_file(utils.BASE_DIR + "/AwardsPlayers.csv")
-table_schemas[schema['table_name']] = schema
+for csv_file in FILES:
+    data, schema = PARSER.parse_file(BASE_DIR + csv_file)
+    TABLE_SCHEMAS[schema['table_name']] = schema
+    print schema['table_name'], " ", schema
+    TABLE_DATA[schema['table_name']] = data
 
-raw_awards_share_managers, schema = utils.new_process_file(utils.BASE_DIR + "/AwardsShareManagers.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_awards_share_players, schema = utils.new_process_file(utils.BASE_DIR + "/AwardsSharePlayers.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_batting, schema = utils.new_process_file(utils.BASE_DIR + "/Batting.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_batting_post, schema = utils.new_process_file(utils.BASE_DIR + "/BattingPost.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_college_playing, schema = utils.new_process_file(utils.BASE_DIR + "/CollegePlaying.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_fielding, schema = utils.new_process_file(utils.BASE_DIR + "/Fielding.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_fielding_of, schema = utils.new_process_file(utils.BASE_DIR + "/FieldingOF.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_fielding_post, schema = utils.new_process_file(utils.BASE_DIR + "/FieldingPost.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_hof, schema = utils.new_process_file(utils.BASE_DIR + "/HallOfFame.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_home_games, schema = utils.new_process_file(utils.BASE_DIR + "/HomeGames.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_managers, schema = utils.new_process_file(utils.BASE_DIR + "/Managers.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_managers_half, schema = utils.new_process_file(utils.BASE_DIR + "/ManagersHalf.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_master, schema = utils.new_process_file(utils.BASE_DIR + "/Master.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_parks, schema = utils.new_process_file(utils.BASE_DIR + "/Parks.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_pitching, schema = utils.new_process_file(utils.BASE_DIR + "/Pitching.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_pitching_post, schema = utils.new_process_file(utils.BASE_DIR + "/PitchingPost.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_salaries, schema = utils.new_process_file(utils.BASE_DIR + "/Salaries.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_schools, schema = utils.new_process_file(utils.BASE_DIR + "/Schools.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_series_post, schema = utils.new_process_file(utils.BASE_DIR + "/SeriesPost.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_teams, schema = utils.new_process_file(utils.BASE_DIR + "/Teams.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_team_franchises, schema = utils.new_process_file(utils.BASE_DIR + "/TeamsFranchises.csv")
-table_schemas[schema['table_name']] = schema
-
-raw_teams_half, schema = utils.new_process_file(utils.BASE_DIR + "/TeamsHalf.csv")
-table_schemas[schema['table_name']] = schema
-
-utils.write_sql_schema(table_schemas, utils.SQLITE)
+SCHEMA_GENERATOR.write_sql_schema(TABLE_SCHEMAS, utils.SQLITE)
