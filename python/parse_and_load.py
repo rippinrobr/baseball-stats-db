@@ -18,6 +18,7 @@ TABLE_SCHEMAS = {}
 for csv_file in FILES:
     data, schema = PARSER.parse_file(BASE_DIR + csv_file)
     TABLE_SCHEMAS[schema['table_name']] = schema
+    print schema['table_name'], " ", schema
     TABLE_DATA[schema['table_name']] = data
 
 SCHEMA_GENERATOR.write_sql_schema(TABLE_SCHEMAS, utils.SQLITE)
