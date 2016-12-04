@@ -3,6 +3,14 @@ from playhouse.postgres_ext import *
 import logging
 import sys
 
+BDB_DB = SqliteDatabase('db/bdb_v0.0.1.sqlite')
+
+class BaseModel(Model):
+    """BaseModel is used to connect to the database"""
+    class Meta(object):
+        """Where the connection is set"""
+        database = BDB_DB
+
 # Print the connection info here for sqlite
 class Master(BaseModel):
     playerID = CharField(null='false',primary_key=True)
@@ -30,17 +38,26 @@ class Master(BaseModel):
     retroID = CharField(null='false', unique=True)
     bbrefID = CharField(null='false', unique=True) 
 
-class TeamsFranchises(BaseModel):
+class Teams_Franchises(BaseModel):
     franchID = CharField(null='false', primary_key=True)
     franchName = CharField(null='false')
     active = CharField(null='true')
     NAassoc = CharField(null='true')
     
+class Parks(BaseModel):
+    parkID = CharField(null='false', primary_key=True)
+    name = CharField(null='false', unique=True)
+    alias = CharField(null='true')
+    city = CharField(null='false')
+    state = CharField(null='false')
+    country = CharField(null='false')
+    
+
 class Teams(BaseModel):
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
     teamID = CharField(null='true')
-    franchID = ForeignKeyField(TeamsFranchises, related_name='franchID')
+    franchID = ForeignKeyField(Teams_Franchises)
     divID = CharField(null='true')
     Rank = IntegerField(null='true')
     G = IntegerField(null='false', default=0)
@@ -54,8 +71,8 @@ class Teams(BaseModel):
     R = IntegerField(null='false', default=0)
     AB = IntegerField(null='false', default=0)
     H = IntegerField(null='false', default=0)
-    2B = IntegerField(null='false', default=0)
-    3B = IntegerField(null='false', default=0)
+    doubles = IntegerField(null='false', db_column="2B", default=0)
+    triples = IntegerField(null='false', db_column="3B", default=0)
     HR = IntegerField(null='false', default=0)
     BB = IntegerField(null='false', default=0)
     SO = IntegerField(null='false', default=0)
@@ -78,7 +95,7 @@ class Teams(BaseModel):
     DP = IntegerField(null='false', default=0)
     FP = FloatField(null='true')
     name = CharField(null='false')
-    park = CharField(null='true')
+    park = ForeignKeyField(Parks, to_field='name')
     attendance = IntegerField(null='false', default=0)
     BPF = IntegerField(null='false', default=0)
     PPF = IntegerField(null='false', default=0)
@@ -87,12 +104,10 @@ class Teams(BaseModel):
     teamIDretro = CharField(null='false')
 
     class Meta:
-        indexes = (
-            (('yearID', 'lgID', 'teamID'))
-        )
+        primary_key = CompositeKey('yearID', 'lgID', 'teamID')
 
 class Managers(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='false')
     teamID = CharField(null=False)
     lgID = CharField(null=False)
@@ -104,13 +119,10 @@ class Managers(BaseModel):
     plyrMgr = CharField(null='true')
 
     class Meta:
-        indexes = (
-                # create a unique index
-                (('playerID', 'teamID', 'lgID', 'yearID'), True),
-        )
+        primary_key = CompositeKey('playerID', 'lgID', 'lgID', 'yearID')
 
 class ManagersHalf(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='false')
     teamID = CharField(null=False)
     lgID = CharField(null='false')
@@ -122,31 +134,28 @@ class ManagersHalf(BaseModel):
     rank = IntegerField(null='true')
     
     class Meta:
-        indexes = (
-                # create a unique index
-                (('playerID', 'teamID', 'lgID', 'yearID', 'half'), True),
-        )
+        primary_key = CompositeKey('playerID', 'teamID', 'lgID', 'yearID', 'half')
 
 class Schools(BaseModel):
     schoolID = CharField(null='false', primary_key=True)
-    name_full = CharField(null='false', unique=true)
+    name_full = CharField(null='false', unique=True)
     city = CharField(null='false')
     state = CharField(null='false')
     country = CharField(null='false')
     
    
-class BattingPost(BaseModel):
+class Batting_Post(BaseModel):
     yearID = IntegerField(null='false')
     round = CharField(null='true')
-    playerID = ForeignKeyField(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     teamID = CharField(null=False)
     lgID = CharField(null='false')
     G = IntegerField(null='false', default=0)
     AB = IntegerField(null='false', default=0)
     R = IntegerField(null='false', default=0)
     H = IntegerField(null='false', default=0)
-    2B = IntegerField(null='false', default=0)
-    3B = IntegerField(null='false', default=0)
+    doubles = IntegerField(null='false', db_column="2b", default=0)
+    triples = IntegerField(null='false', db_column="3b", default=0)
     HR = IntegerField(null='false', default=0)
     RBI = IntegerField(null='false', default=0)
     SB = IntegerField(null='false', default=0)
@@ -160,31 +169,18 @@ class BattingPost(BaseModel):
     GIDP = IntegerField(null='false', default=0)
 
     class Meta:
-        indexes = (
-                # create a unique index
-                (('yearID', 'round', 'playerID', 'teamID'), True),
-        )
+        primary_key = CompositeKey('yearID', 'round', 'playerID', 'teamID')
     
-class CollegePlaying(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
-    schoolID = ForeignKeyField(Schools, related_name='schoolID')
+class College_Playing(BaseModel):
+    playerID = ForeignKeyField(Master)
+    schoolID = ForeignKeyField(Schools)
     yearID = IntegerField(null='false')
 
     class Meta:
-        index = (
-            (('playerID', 'schoolID', 'yearID'), True),
-        )
-    
-class Parks(BaseModel):
-    parkID = CharField(null='false', primary_key=True)
-    name = CharField(null='false')
-    alias = CharField(null='true')
-    city = CharField(null='false')
-    state = CharField(null='false')
-    country = CharField(null='false')
-    
-class AwardsPlayers(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+        primary_key = CompositeKey('playerID', 'schoolID', 'yearID')
+
+class Awards_Players(BaseModel):
+    playerID = ForeignKeyField(Master)
     awardID = CharField(null='false')
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
@@ -192,12 +188,10 @@ class AwardsPlayers(BaseModel):
     notes = CharField(null='true')
 
     class Meta:
-        index = (
-            (('playerID', 'awardID', 'yearID'), True)
-        )
+        primary_key = CompositeKey('playerID', 'awardID', 'yearID')
     
-class FieldingOF(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+class Fielding_OF(BaseModel):
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='false', default=0)
     stint = IntegerField(null='false', default=0)
     Glf = IntegerField(null='false', default=0)
@@ -205,12 +199,10 @@ class FieldingOF(BaseModel):
     Grf = IntegerField(null='false', default=0)
 
     class Meta:
-        index = (
-            (('playerID', 'yearID', 'stint'), True)
-        )
+        primary_key = CompositeKey('playerID', 'yearID', 'stint')
     
 class Pitching(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='false', default=0)
     stint = IntegerField(null='false', default=0)
     teamID = CharField(null=False)
@@ -242,29 +234,25 @@ class Pitching(BaseModel):
     GIDP = IntegerField(null='false', default=0)
     
     class Meta:
-        index = (
-            (('playerID', 'yearID', 'stint', 'teamID'), True)
-        )
+        primary_key = CompositeKey('playerID', 'yearID', 'stint', 'teamID')
 
-class AllstarFull(BaseModel):
-    playerID = CharField(null='true')
-    yearID = IntegerField(null='true')
-    gameNum = IntegerField(null='true')
-    gameID = CharField(null='true')
-    teamID = CharField(null='true')
-    lgID = CharField(null='true')
-    GP = IntegerField(null='true')
-    startingPos = IntegerField(null='true')
+class Allstar_Full(BaseModel):
+    playerID = ForeignKeyField(Master)
+    yearID = IntegerField(null='false')
+    gameNum = IntegerField(null='false')
+    gameID = CharField(null='false')
+    teamID = CharField(null='false')
+    lgID = CharField(null='false')
+    GP = IntegerField(null='false', default=0)
+    startingPos = IntegerField(null='false', default=0)
 
     class Meta:
-        index = (
-            (('playerID', 'yearID', 'gameNum'), True)
-        )
+        primary_key = CompositeKey('playerID', 'yearID', 'gameNum')
     
-class HomeGames(BaseModel):
+class Home_Games(BaseModel):
     yearID = IntegerField(null='false')
-    parkID = ForeignKeyField(Parks, related_name="parkID")
-    teamID = charField(null=False)
+    parkID = ForeignKeyField(Parks)
+    teamID = CharField(null=False)
     lgID = CharField(null=False)
     attendance = IntegerField(null='true')
     games = IntegerField(null='true')
@@ -273,40 +261,36 @@ class HomeGames(BaseModel):
     openings = IntegerField(null='true')
 
     class Meta:
-        index = (
-            (('yearID', 'parkID', 'teamID'), True)
-        )
+        primary_key = CompositeKey('yearID', 'parkID', 'teamID')
     
 class Appearances(BaseModel):
-    yearID = IntegerField(null='true')
-    teamID = ForeignKeyField(Teams)
-    lgID = CharField(null='true')
-    playerID = CharField(null='true')
-    G_all = IntegerField(null='true')
-    GS = IntegerField(null='true')
-    G_batting = IntegerField(null='true')
-    G_defense = IntegerField(null='true')
-    G_p = IntegerField(null='true')
-    G_c = IntegerField(null='true')
-    G_1b = IntegerField(null='true')
-    G_2b = IntegerField(null='true')
-    G_3b = IntegerField(null='true')
-    G_ss = IntegerField(null='true')
-    G_lf = IntegerField(null='true')
-    G_cf = IntegerField(null='true')
-    G_rf = IntegerField(null='true')
-    G_of = IntegerField(null='true')
-    G_dh = IntegerField(null='true')
-    G_ph = IntegerField(null='true')
-    G_pr = IntegerField(null='true')
+    yearID = IntegerField(null='false')
+    teamID = CharField(null='false')
+    lgID = CharField(null='false')
+    playerID = ForeignKeyField(Master)
+    G_all = IntegerField(null='false', default=0)
+    GS = IntegerField(null='false', default=0)
+    G_batting = IntegerField(null='false', default=0)
+    G_defense = IntegerField(null='false', default=0)
+    G_p = IntegerField(null='false', default=0)
+    G_c = IntegerField(null='false', default=0)
+    G_1b = IntegerField(null='false', default=0)
+    G_2b = IntegerField(null='false', default=0)
+    G_3b = IntegerField(null='false', default=0)
+    G_ss = IntegerField(null='false', default=0)
+    G_lf = IntegerField(null='false', default=0)
+    G_cf = IntegerField(null='false', default=0)
+    G_rf = IntegerField(null='false', default=0)
+    G_of = IntegerField(null='false', default=0)
+    G_dh = IntegerField(null='false', default=0)
+    G_ph = IntegerField(null='false', default=0)
+    G_pr = IntegerField(null='false', default=0)
 
     class Meta:
-        index = (
-            (('yearID', 'teamID', 'playerID'), True)
-        )
+        primary_key = CompositeKey('yearID', 'teamID', 'playerID')
 
-class HallOfFame(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+class Hall_Of_Fame(BaseModel):
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='true')
     votedBy = CharField(null='true')
     ballots = IntegerField(null='true')
@@ -317,12 +301,10 @@ class HallOfFame(BaseModel):
     needed_note = CharField(null='true')
 
     class Meta:
-        index = (
-            (('playerID', 'category'), True)
-        )
+        primary_key = CompositeKey('playerID', 'category')
     
-class FieldingPost(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+class Fielding_Post(BaseModel):
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='false')
     teamID = CharField(null='false')
     lgID = CharField(null='false')
@@ -340,13 +322,11 @@ class FieldingPost(BaseModel):
     SB = IntegerField(null='false', default=0)
     CS = IntegerField(null='false', default=0)
 
-    def Meta:
-        index = (
-            (('playerID', 'yearID', 'round', 'pos'), True)
-        )
+    class Meta:
+        primary_key = CompositeKey('playerID', 'yearID', 'round', 'pos')
         
     
-class SeriesPost(BaseModel):
+class Series_Post(BaseModel):
     yearID = IntegerField(null='false')
     round = CharField(null='false')
     teamIDwinner = CharField(null='false')
@@ -358,12 +338,10 @@ class SeriesPost(BaseModel):
     ties = IntegerField(null='false', default=0)
     
     class Meta:
-        index = (
-            (('yearID', 'round'), True)
-        )
+        primary_key = CompositeKey('yearID', 'round')
 
-class AwardsManagers(BaseModel):
-    playerID = ForeignKeyField(Master, relalted_name='playerID')
+class Awards_Managers(BaseModel):
+    playerID = ForeignKeyField(Master)
     awardID = CharField(null='false')
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
@@ -371,89 +349,79 @@ class AwardsManagers(BaseModel):
     notes = CharField(null='true')
     
     class Meta:
-        index (
-            (('yearID', 'playerID', 'lgID', 'tie'), True)
-        )
+        primary_key = CompositeKey('yearID', 'playerID', 'lgID', 'tie')
 
-class AwardsShareManagers(BaseModel):
+class Awards_Share_Managers(BaseModel):
     awardID = CharField(null='true')
     yearID = IntegerField(null='true')
     lgID = CharField(null='true')
-    playerID = ForeignFieldKey(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     pointsWon = IntegerField(null='true')
     pointsMax = IntegerField(null='true')
     votesFirst = IntegerField(null='true')
     
     class Meta:
-        index (
-            (('awardID', 'yearID', 'lgID', 'playerID'), True)
-        )
+        primary_key = CompositeKey('awardID', 'yearID', 'lgID', 'playerID')
 
 class Salaries(BaseModel):
     yearID = IntegerField(null='true')
     teamID = CharField(null='true')
     lgID = CharField(null='true')
-    playerID = ForeignKeyField(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     salary = IntegerField(null='true')
 
-    def Meta:
-        index = (
-            (('yearID', 'teamID', 'playerID'), True)
-        )
+    class Meta:
+        primary_key = CompositeKey('yearID', 'teamID', 'playerID')
     
-class PitchingPost(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+class Pitching_Post(BaseModel):
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='true')
     round = CharField(null='true')
     teamID = CharField(null='true')
     lgID = CharField(null='true')
-    W = IntegerField(null='false', default=0))
-    L = IntegerField(null='false', default=0))
-    G = IntegerField(null='false', default=0))
-    GS = IntegerField(null='false', default=0))
-    CG = IntegerField(null='false', default=0))
-    SHO = IntegerField(null='false', default=0))
-    SV = IntegerField(null='false', default=0))
-    IPouts = IntegerField(null='false', default=0))
-    H = IntegerField(null='false', default=0))
-    ER = IntegerField(null='false', default=0))
-    HR = IntegerField(null='false', default=0))
-    BB = IntegerField(null='false', default=0))
-    SO = IntegerField(null='false', default=0))
+    W = IntegerField(null='false', default=0)
+    L = IntegerField(null='false', default=0)
+    G = IntegerField(null='false', default=0)
+    GS = IntegerField(null='false', default=0)
+    CG = IntegerField(null='false', default=0)
+    SHO = IntegerField(null='false', default=0)
+    SV = IntegerField(null='false', default=0)
+    IPouts = IntegerField(null='false', default=0)
+    H = IntegerField(null='false', default=0)
+    ER = IntegerField(null='false', default=0)
+    HR = IntegerField(null='false', default=0)
+    BB = IntegerField(null='false', default=0)
+    SO = IntegerField(null='false', default=0)
     BAOpp = FloatField(null='false', default=0.000)
     ERA = FloatField(null='false', default=0.00)
-    IBB = IntegerField(null='false', default=0))
-    WP = IntegerField(null='false', default=0))
-    HBP = IntegerField(null='false', default=0))
-    BK = IntegerField(null='false', default=0))
-    BFP = IntegerField(null='false', default=0))
-    GF = IntegerField(null='false', default=0))
-    R = IntegerField(null='false', default=0))
-    SH = IntegerField(null='false', default=0))
-    SF = IntegerField(null='false', default=0))
-    GIDP = IntegerField(null='false', default=0))
+    IBB = IntegerField(null='false', default=0)
+    WP = IntegerField(null='false', default=0)
+    HBP = IntegerField(null='false', default=0)
+    BK = IntegerField(null='false', default=0)
+    BFP = IntegerField(null='false', default=0)
+    GF = IntegerField(null='false', default=0)
+    R = IntegerField(null='false', default=0)
+    SH = IntegerField(null='false', default=0)
+    SF = IntegerField(null='false', default=0)
+    GIDP = IntegerField(null='false', default=0)
 
-    def Meta:
-        index = (
-            (('playerID', 'yearID', 'round'), True)
-        )
+    class Meta:
+        primary_key = CompositeKey('playerID', 'yearID', 'round')
     
-class AwardsSharePlayers(BaseModel):
+class Awards_Share_Players(BaseModel):
     awardID = CharField(null='false')
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
-    playerID = ForeignKeyField(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     pointsWon = IntegerField(null='fails', default=0)
     pointsMax = IntegerField(null='fails', default=0)
     votesFirst = IntegerField(null='fails', default=0)
 
     class Meta:
-        index = (
-            (('awardID', 'yearID', 'lgID', 'playerID'), True)
-        )
+        primary_key = CompositeKey('awardID', 'yearID', 'lgID', 'playerID')
     
 class Fielding(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
+    playerID = ForeignKeyField(Master)
     yearID = IntegerField(null='false', default=0)
     stint = IntegerField(null='false', default=0)
     teamID = CharField(null='true')
@@ -473,12 +441,10 @@ class Fielding(BaseModel):
     SB = IntegerField(null='false', default=0)
 
     class Meta:
-        index = (
-            (('playerID', 'yearID', 'stint'), True)
-        )
+        primary_key = CompositeKey('playerID', 'yearID', 'stint')
 
 
-class TeamsHalf(BaseModel):
+class Teams_Half(BaseModel):
     yearID = IntegerField(null='true')
     lgID = CharField(null='true')
     teamID = CharField(null='true')
@@ -491,35 +457,45 @@ class TeamsHalf(BaseModel):
     L = IntegerField(null='false', default=0)
 
     class Meta:
-        index = (
-            (('yearID', 'teamID', 'half'),  True)
-        )
+        primary_key = CompositeKey('yearID', 'teamID', 'half')
     
 class Batting(BaseModel):
-    playerID = ForeignKeyField(Master, related_name='playerID')
-    yearID = IntegerField(null='true')
-    stint = IntegerField(null='true')
+    playerID = ForeignKeyField(Master)
+    yearID = IntegerField(null='false')
+    stint = IntegerField(null='false')
     teamID = CharField(null='true')
     lgID = CharField(null='true')
-    G = IntegerField(null='true')
-    AB = IntegerField(null='true')
-    R = IntegerField(null='true')
-    H = IntegerField(null='true')
-    2B = IntegerField(null='true')
-    3B = IntegerField(null='true')
-    HR = IntegerField(null='true')
-    RBI = IntegerField(null='true')
-    SB = IntegerField(null='true')
-    CS = IntegerField(null='true')
-    BB = IntegerField(null='true')
-    SO = IntegerField(null='true')
-    IBB = IntegerField(null='true')
-    HBP = IntegerField(null='true')
-    SH = IntegerField(null='true')
-    SF = IntegerField(null='true')
-    GIDP = IntegerField(null='true')
+    G = IntegerField(null='false', default=0)
+    AB = IntegerField(null='false', default=0)
+    R = IntegerField(null='false', default=0)
+    H = IntegerField(null='false', default=0)
+    doubles = IntegerField(null='false', db_column="2B", default=0)
+    triples = IntegerField(null='false', db_column="3B", default=0)
+    HR = IntegerField(null='false', default=0)
+    RBI = IntegerField(null='false', default=0)
+    SB = IntegerField(null='false', default=0)
+    CS = IntegerField(null='false', default=0)
+    BB = IntegerField(null='false', default=0)
+    SO = IntegerField(null='false', default=0)
+    IBB = IntegerField(null='false', default=0)
+    HBP = IntegerField(null='false', default=0)
+    SH = IntegerField(null='false', default=0)
+    SF = IntegerField(null='false', default=0)
+    GIDP = IntegerField(null='false', default=0)
     
     class Meta:
-        index = (
-            (('playerID', 'yearID', 'stint'), True)
-        )
+        primary_key = CompositeKey('playerID', 'yearID', 'stint')
+
+
+TABLE_NAMES = [ 
+    Master, Teams_Franchises, Parks, Managers, Teams , ManagersHalf, Schools,
+    Batting_Post, College_Playing, Awards_Players, Fielding_OF, 
+    Pitching, Allstar_Full, Home_Games, Appearances , Hall_Of_Fame, Fielding_Post,
+    Series_Post, Awards_Managers, Awards_Share_Managers, Salaries, Pitching_Post,
+    Awards_Share_Players, Fielding, Teams_Half, Batting
+]
+
+def Create_Tables():
+    BDB_DB.connect()
+    BDB_DB.create_tables(TABLE_NAMES)
+

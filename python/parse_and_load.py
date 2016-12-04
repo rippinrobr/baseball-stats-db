@@ -1,3 +1,4 @@
+import bdb_schema
 import os
 import utils
 
@@ -9,17 +10,25 @@ FILES = ["/AllstarFull.csv", "/Appearances.csv", "/AwardsManagers.csv", "/Awards
          "/Parks.csv", "/Pitching.csv", "/PitchingPost.csv", "/Salaries.csv", "/Schools.csv",
          "/SeriesPost.csv", "/Teams.csv", "/TeamsFranchises.csv", "/TeamsHalf.csv"]
 
-PARSER = utils.Parser()
-SCHEMA_GENERATOR = utils.SchemaGenerator()
+tables = [
+    'Master', 'TeamsFranchises', 'AllstarFull', 'Appearances', 'AwardsManagers', 
+    'AwardsPlayers', 'AwardsShareManagers', 'AwardsSharePlayers', 'Batting', 
+    'BattingPost', 'CollegePlaying', 'Fielding', 'FieldingOF', 'FieldingPost', 
+    'HallOfFame', 'HomeGames', 'Managers', 'ManagersHalf', 'Parks', 'Pitching', 
+    'PitchingPost', 'Salaries', 'Schools', 'SeriesPost', 'Teams', 'TeamsHalf'
+]
 
 TABLE_DATA = {}
 TABLE_SCHEMAS = {}
 
+PARSER = utils.Parser()
+#SCHEMA_GENERATOR = utils.SchemaGenerator()
+
 for csv_file in FILES:
     data, schema = PARSER.parse_file(BASE_DIR + csv_file)
-    print schema['table_name']
+    #print schema['table_name']
     #TABLE_SCHEMAS[schema['table_name']] = schema
     #print schema['table_name'], " ", schema
     #TABLE_DATA[schema['table_name']] = data
 
-#SCHEMA_GENERATOR.write_sql_schema(TABLE_SCHEMAS, utils.SQLITE)
+# bdb_schema.Create_Tables()
