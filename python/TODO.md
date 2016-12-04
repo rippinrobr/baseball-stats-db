@@ -21,10 +21,10 @@ Data Relations
   - fixed issue with HallOfFame.csv's yearid, changed it to yearID
 
  	- include column name changes for HomeGames columns
-		- year.key to year
-		- league.key to league
+		- year.key to yearID
+		- league.key to lgID
 		- team.key to teamID
-		- park.key to park
+		- park.key to parkID
 		- span.first to firstGame
 		- span.last to lastGame
 

@@ -25,15 +25,16 @@ class Parser(object):
                         schema[curr_header]['length'] = len(value)
 
                     if schema[curr_header]['data_type'] != "string":
-                        try:
-                            int(value)
-                            schema[curr_header]['data_type'] = "int"
-                        except ValueError:
+                        if value != "":
                             try:
-                                float(value)
-                                schema[curr_header]['data_type'] = "float"
+                                int(value)
+                                schema[curr_header]['data_type'] = "int"
                             except ValueError:
-                                schema[curr_header]['data_type'] = "string"
+                                try:
+                                    float(value)
+                                    schema[curr_header]['data_type'] = "float"
+                                except ValueError:
+                                    schema[curr_header]['data_type'] = "string"
 
         return p_data
 
