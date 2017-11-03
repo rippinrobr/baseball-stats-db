@@ -1,6 +1,8 @@
 import csv
 import argparse
 
+LANG_HAKSELL = "haskell"
+
 TYPE_STRING = "string"
 TYPE_INT = "int"
 TYPE_FLOAT = "float"
@@ -8,12 +10,13 @@ TYPE_FLOAT = "float"
 def define_parameters(parser):
     """Creates the support command line options"""
     parser.add_argument("--input", help="the path to the input CSV file",type=str, required=True )
+    parser.add_argument("--haskell", help="create a Haskell datastructure", action="store_true")
+    parser.add_argument("--name", help="name of the datastructure being created", type=str)
     parser.add_argument("--verbose", help="more output during the parsing and creation of the datastructures", action="store_true")
 
 def get_data_type(col_val):
     """Deterimes if the current value is numeric or a string"""
     dtype = TYPE_STRING
-
 
     if col_val.replace('.', '',1).replace ('-', '',1).replace(',', '', -1).isdigit():
         if '.' in col_val:
@@ -51,26 +54,62 @@ def parse_file(args):
                 headers = line   
                 for col in line:
                     data_types.append("")
-                
                 have_columns = True 
-                print "HEADERS: ", headers
-                print "DATATYPES: ", data_types
 
     return headers, data_types
+
+def col_name_cleaner(col_name):
+    if col_name[0].isdigit():
+        if col_name == "2B":
+            return "doubles"
+        if col_name == "3B":
+            return "triples"
+    
+    return col_name
+
+def create_haskell_datastructure(args, headers, data_types):
+    name = "CsvObj"
+    comma = ""
+    index = 0
+    if args.name != None:
+        name = args.name 
+    
+    print "data", name, "=", name , "{"
+    for raw_col in headers:
+        if index > 0:
+            comma=","
+        
+        col = col_name_cleaner(raw_col).lower()
+        print "  ", comma, col[:1].lower() + col[1:], "::", data_types[index].title()
+        index += 1
+    print "} deriving (Show)"
 
 def main():
     parser = argparse.ArgumentParser(description="Test the SMS notification Service.")
     define_parameters(parser)
     args = parser.parse_args()
 
+    if args.haskell:
+        language = LANG_HAKSELL
+
+    language_funcs = {
+        LANG_HAKSELL: create_haskell_datastructure
+    }
+
+    if language == None:
+        print "ERROR: Please select a language\n"
+        parser.print_usage()
+        parser.exit()
+    
     headers, data_types = parse_file(args)
-    print "------------------------------------------------------------------"
+    if args.verbose:
+        print "Data types\n------------------------------------------------------------------"
+        index = 0
+        for field in headers:
+            print field, " ", data_types[index]
+            index += 1
 
-    index = 0
-    for field in headers:
-        print field, " ", data_types[index]
-        index += 1
-
+    language_funcs[language](args, headers, data_types)
 
 
 if __name__ == "__main__":
