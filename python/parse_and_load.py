@@ -26,9 +26,21 @@ PARSER = utils.Parser()
 
 for csv_file in FILES:
     data, schema = PARSER.parse_file(BASE_DIR + csv_file)
-    #print schema['table_name']
+    print schema['table_name']
     #TABLE_SCHEMAS[schema['table_name']] = schema
     #print schema['table_name'], " ", schema
-    #TABLE_DATA[schema['table_name']] = data
+    TABLE_DATA[schema['table_name']] = data
+    
+print TABLE_DATA['TeamFranchises']
+# print "Loadig Master Data..."
+# bdb_schema.load_master_table(TABLE_DATA['Master'])
+# bdb_schema.load_master_table(TABLE_DATA['TeamsFranchises'])
 
+# for table in tables:
+#     print "\n#### %s" % table
+#     for row in TABLE_DATA[table]:
+#         if table == "Master":
+#             bdb_schema.create_master(row)
+#         print row
+    # print "\n"
 # bdb_schema.Create_Tables()

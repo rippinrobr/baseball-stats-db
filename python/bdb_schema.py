@@ -13,36 +13,145 @@ class BaseModel(Model):
 
 # Print the connection info here for sqlite
 class Master(BaseModel):
-    playerID = CharField(null='false',primary_key=True)
+    playerID = CharField(null='false',primary_key=True, max_length=9)
     birthYear = IntegerField(null='true')
     birthMonth = IntegerField(null='true')
     birthDay = IntegerField(null='true')
-    birthCountry = CharField(null='true')
-    birthState = CharField(null='true')
-    birthCity = CharField(null='true')
+    birthCountry = CharField(null='true', max_length=14)
+    birthState = CharField(null='true', max_length=22)
+    birthCity = CharField(null='true', max_length=26)
     deathYear = IntegerField(null='true')
     deathMonth = IntegerField(null='true')
     deathDay = IntegerField(null='true')
-    deathCountry = CharField(null='true')
-    deathState = CharField(null='true')
-    deathCity = CharField(null='true')
-    nameFirst = CharField(null='false')
-    nameLast = CharField(null='false')
-    nameGiven = CharField(null='true')
+    deathCountry = CharField(null='true', max_length=14)
+    deathState = CharField(null='true', max_length=20)
+    deathCity = CharField(null='true', max_length=28)
+    nameFirst = CharField(null='false', max_length=12)
+    nameLast = CharField(null='false', max_length=14)
+    nameGiven = CharField(null='true', max_length=43)
     weight = IntegerField(null='true')
     height = IntegerField(null='true')
     bats = CharField(null='false')
     throws = CharField(null='false')
     debut = CharField(null='true')
     finalGame = CharField(null='true')
-    retroID = CharField(null='false', unique=True)
-    bbrefID = CharField(null='false', unique=True) 
+    retroID = CharField(null='false')
+    bbrefID = CharField(null='false', max_length=9) 
+
+def load_master_table(records):
+    with BDB_DB.atomic() as txn:
+        for rec in records:
+            if any(rec):
+                if not create_master(rec):
+                    print "Didnt save %s" % rec
+
+def create_master(rec):
+    try:
+        try:
+            birthYear = None
+            if 'birthYear' in rec and rec['birthYear']:
+                birthYear = int(rec['birthYear'])
+            
+            birthMonth = None
+            if 'birthMonth' in rec and rec['birthMonth'] and rec['birthMonth'] != '':
+                birthMonth = int(rec['birthMonth'])
+            
+            birthDay = None
+            if 'birthDay' in rec and rec['birthDay'] and rec['birthDay'] != '':
+                birthDay = int(rec['birthDay'])
+
+            deathYear = None
+            if 'deathYear' in rec and rec['deathYear'] and rec['deathYear'] != '':
+                deathYear = int(rec['deathYear'])
+                
+            deathMonth = None
+            if 'deathMonth' in rec and  rec['deathMonth'] and rec['deathMonth'] != '':
+                deathMonth = int(rec['deathMonth'])
+            
+            deathDay = None
+            if 'deathDay' in rec and rec['deathDay'] and rec['deathDay'] != '':
+                deathDay = int(rec['deathDay'])
+
+            weight = None
+            if 'weight' in rec and rec['weight'] and rec['weight'] != '':
+                weight = int(rec['weight'])
+
+            height = None
+            if 'height' in rec and rec['height'] and rec['height'] != '':
+                height = int(rec['height'])
+
+        except:
+            for e in sys.exc_info():
+                print "converstions: %s" % e
+                return False
+
+        m = Master.create(
+            playerID=rec['playerID'],
+            birthYear=birthYear,
+            birthMonth=birthMonth,
+            birthDay=birthDay,
+            birthCountry=rec['birthCountry'],
+            birthState=rec['birthState'],
+            birthCity=rec['birthCity'],
+            deathYear=deathYear,
+            deathMonth=deathMonth,
+            deathDay=deathDay,
+            deathCountry=rec['deathCountry'],
+            deathState=rec['deathState'],
+            deathCity=rec['deathCity'],
+            nameFirst=rec['nameFirst'],
+            nameLast=rec['nameLast'],
+            nameGiven=rec['nameGiven'],
+            weight=weight,
+            height=height,
+            bats=rec['bats'],
+            throws=rec['throws'],
+        #    debut=rec['debut'],
+        #    finalGame=rec['finalGame'],
+        #    retroID=rec['retroID'],
+            bbrefID=rec['bbrefID']
+        )
+        m.save()
+        BDB_DB.commit()
+        return True
+    except:
+        for e in sys.exc_info():
+            print "%s" % e
+        return False
+
+
 
 class Teams_Franchises(BaseModel):
     franchID = CharField(null='false', primary_key=True)
     franchName = CharField(null='false')
     active = CharField(null='true')
     NAassoc = CharField(null='true')
+
+def load_teams_franchises_table(records):
+    with BDB_DB.atomic() as txn:
+        for rec in records:
+            if any(rec):
+                print rec
+                if not create_team_franchise(rec):
+                    print "Didn't save %s" % rec 
+
+def create_team_franchise(rec):
+    print rec
+    # try:
+    #     m = Teams_Franchises.create(
+    #         franchID=rec['franchID'],
+    #         franchName=rec['franchName'],
+    #         active=rec['active'],
+    #         NAassoc=rec['NAassoc']
+    #     )
+    #     # m.save()
+    #     # BDB_DB.commmit()
+    #     return True
+    # except:
+    #     for e in sys.exc_info():
+    #         print "%s" % e
+    #     return False
+        
     
 class Parks(BaseModel):
     parkID = CharField(null='false', primary_key=True)
