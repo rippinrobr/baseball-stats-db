@@ -1,5 +1,6 @@
 import csv
 import argparse
+import inflection
 
 LANG_GO = "go"
 LANG_HAKSELL = "haskell"
@@ -98,7 +99,6 @@ def create_go_datastructure(args, headers, data_types):
         "float" : "float64"
     }
     name = "CsvObj"
-    comma = ""
     index = 0
 
     if args.name != None:
@@ -107,7 +107,7 @@ def create_go_datastructure(args, headers, data_types):
     print "type", name, "struct {"
     for raw_col in headers:
         col = col_name_cleaner(raw_col).lower()
-        print "  ", comma, col.title(), " ", convert_to_lang_specific_type(types, data_types[index])
+        print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), "\t`json:\"" +inflection.camelize(col,False) +"\"`"
         index += 1
     print "}"
 
