@@ -1,15 +1,18 @@
 import csv
 import argparse
 
+LANG_GO = "go"
 LANG_HAKSELL = "haskell"
 
 TYPE_STRING = "string"
 TYPE_INT = "int"
 TYPE_FLOAT = "float"
 
+
 def define_parameters(parser):
     """Creates the support command line options"""
     parser.add_argument("--input", help="the path to the input CSV file",type=str, required=True )
+    parser.add_argument("--go", help="create a Go datastructure", action="store_true")
     parser.add_argument("--haskell", help="create a Haskell datastructure", action="store_true")
     parser.add_argument("--name", help="name of the datastructure being created", type=str)
     parser.add_argument("--verbose", help="more output during the parsing and creation of the datastructures", action="store_true")
@@ -67,6 +70,12 @@ def col_name_cleaner(col_name):
     
     return col_name
 
+def convert_to_lang_specific_type(typeMap, type):
+    if type in typeMap:
+        return typeMap[type]
+
+    return type
+
 def create_haskell_datastructure(args, headers, data_types):
     name = "CsvObj"
     comma = ""
@@ -84,17 +93,39 @@ def create_haskell_datastructure(args, headers, data_types):
         index += 1
     print "} deriving (Show)"
 
+def create_go_datastructure(args, headers, data_types):
+    types = {
+        "float" : "float64"
+    }
+    name = "CsvObj"
+    comma = ""
+    index = 0
+
+    if args.name != None:
+        name = args.name 
+     
+    print "type", name, "struct {"
+    for raw_col in headers:
+        col = col_name_cleaner(raw_col).lower()
+        print "  ", comma, col.title(), " ", convert_to_lang_specific_type(types, data_types[index])
+        index += 1
+    print "}"
+
 def main():
     parser = argparse.ArgumentParser(description="Test the SMS notification Service.")
     define_parameters(parser)
     args = parser.parse_args()
 
+    LANGUAGE_FUNCS = {
+        LANG_HAKSELL: create_haskell_datastructure,
+        LANG_GO: create_go_datastructure
+    }
+
+    if args.go:
+        language = LANG_GO
+
     if args.haskell:
         language = LANG_HAKSELL
-
-    language_funcs = {
-        LANG_HAKSELL: create_haskell_datastructure
-    }
 
     if language == None:
         print "ERROR: Please select a language\n"
@@ -109,7 +140,7 @@ def main():
             print field, " ", data_types[index]
             index += 1
 
-    language_funcs[language](args, headers, data_types)
+    LANGUAGE_FUNCS[language](args, headers, data_types)
 
 
 if __name__ == "__main__":
