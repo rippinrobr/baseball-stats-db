@@ -1,6 +1,6 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE "master" 
+CREATE TABLE "people" 
 ( 
             "playerid"     VARCHAR(255) PRIMARY KEY, 
             "birthyear"    INTEGER, 
