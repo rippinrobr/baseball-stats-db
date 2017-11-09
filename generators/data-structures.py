@@ -14,6 +14,7 @@ TYPE_FLOAT = "float"
 def define_parameters(parser):
     """Creates the support command line options"""
     parser.add_argument("--csv", help="If the language supports add CSV tags or CSV representation to the structure", action="store_true")
+    parser.add_argument("--db", help="adds db tags to Go structs." , action="store_true")
     parser.add_argument("--input", help="the path to the input CSV file",type=str, required=True )
     parser.add_argument("--json", help="If the language supports add JSON tags or JSON representation to the structure", action="store_true")
     parser.add_argument("--language", choices=[LANG_GO, LANG_HASKELL], help="create a Haskell datastructure", required=True, type=str)
@@ -111,6 +112,7 @@ def create_go_datastructure(args, headers, data_types):
     for raw_col in headers:
         json_tag = ""
         csv_tag = ""
+        db_tag = ""
         tags = ""
 
         col = col_name_cleaner(raw_col).lower()
@@ -120,13 +122,18 @@ def create_go_datastructure(args, headers, data_types):
         if args.csv:
             csv_tag =  "csv:\""+raw_col+"\""  
 
-        if json_tag != "" or csv_tag != "":
-            if json_tag != "" and csv_tag == "":
+        if args.db:
+            db_tag =  "db:\""+raw_col+"\""  
+
+        if json_tag != "" or csv_tag != "" or db_tag != "":
+            if json_tag != "" and csv_tag == "" and db_tag == "":
                 tags = "`"+json_tag+"`"
-            elif csv_tag != "" and json_tag == "":
+            elif csv_tag != "" and json_tag == "" and db_tag == "":
+                tags = "`"+csv_tag+"`"
+            elif db_tag != "" and json_tag == "" and csv_tag == "":
                 tags = "`"+csv_tag+"`"
             else:
-                tags = "`"+json_tag+"  "+csv_tag+"`" 
+                tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"`"
                 
         
         print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), tags
