@@ -3,7 +3,7 @@ import argparse
 import inflection
 
 LANG_GO = "go"
-LANG_HAKSELL = "haskell"
+LANG_HASKELL = "haskell"
 
 TYPE_STRING = "string"
 TYPE_INT = "int"
@@ -12,9 +12,10 @@ TYPE_FLOAT = "float"
 
 def define_parameters(parser):
     """Creates the support command line options"""
+    parser.add_argument("--csv", help="If the language supports add CSV tags or CSV representation to the structure", action="store_true")
     parser.add_argument("--input", help="the path to the input CSV file",type=str, required=True )
-    parser.add_argument("--go", help="create a Go datastructure", action="store_true")
-    parser.add_argument("--haskell", help="create a Haskell datastructure", action="store_true")
+    parser.add_argument("--json", help="If the language supports add JSON tags or JSON representation to the structure", action="store_true")
+    parser.add_argument("--language", choices=[LANG_GO, LANG_HASKELL], help="create a Haskell datastructure", required=True, type=str)
     parser.add_argument("--name", help="name of the datastructure being created", type=str)
     parser.add_argument("--verbose", help="more output during the parsing and creation of the datastructures", action="store_true")
 
@@ -106,8 +107,27 @@ def create_go_datastructure(args, headers, data_types):
      
     print "type", name, "struct {"
     for raw_col in headers:
+        json_tag = ""
+        csv_tag = ""
+        tags = ""
+
         col = col_name_cleaner(raw_col).lower()
-        print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), "\t`json:\"" +inflection.camelize(col,False) +"\"`"
+        if args.json:
+            json_tag = "json:\"" +inflection.camelize(col,False) +"\""
+
+        if args.csv:
+            csv_tag =  "csv:\""+raw_col+"\""  
+
+        if json_tag != "" or csv_tag != "":
+            if json_tag != "" and csv_tag == "":
+                tags = "`"+json_tag+"`"
+            elif csv_tag != "" and json_tag == "":
+                tags = "`"+csv_tag+"`"
+            else:
+                tags = "`"+json_tag+"  "+csv_tag+"`" 
+                
+        
+        print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), tags
         index += 1
     print "}"
 
@@ -117,21 +137,10 @@ def main():
     args = parser.parse_args()
 
     LANGUAGE_FUNCS = {
-        LANG_HAKSELL: create_haskell_datastructure,
+        LANG_HASKELL: create_haskell_datastructure,
         LANG_GO: create_go_datastructure
     }
 
-    if args.go:
-        language = LANG_GO
-
-    if args.haskell:
-        language = LANG_HAKSELL
-
-    if language == None:
-        print "ERROR: Please select a language\n"
-        parser.print_usage()
-        parser.exit()
-    
     headers, data_types = parse_file(args)
     if args.verbose:
         print "Data types\n------------------------------------------------------------------"
@@ -140,7 +149,7 @@ def main():
             print field, " ", data_types[index]
             index += 1
 
-    LANGUAGE_FUNCS[language](args, headers, data_types)
+    LANGUAGE_FUNCS[args.language](args, headers, data_types)
 
 
 if __name__ == "__main__":
