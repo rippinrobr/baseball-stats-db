@@ -1,6 +1,7 @@
-import csv
 import argparse
+import csv
 import inflection
+import os
 
 LANG_GO = "go"
 LANG_HASKELL = "haskell"
@@ -78,13 +79,17 @@ def convert_to_lang_specific_type(typeMap, type):
 
     return type
 
+def get_data_struct_name(args):
+   if args.name != None:
+        return args.name 
+   else:
+        return os.path.splitext(os.path.basename(args.input))[0] 
+
 def create_haskell_datastructure(args, headers, data_types):
-    name = "CsvObj"
     comma = ""
     index = 0
-    if args.name != None:
-        name = args.name 
-    
+
+    name = get_data_struct_name(args) 
     print "data", name, "=", name , "{"
     for raw_col in headers:
         if index > 0:
@@ -99,12 +104,9 @@ def create_go_datastructure(args, headers, data_types):
     types = {
         "float" : "float64"
     }
-    name = "CsvObj"
-    index = 0
 
-    if args.name != None:
-        name = args.name 
-     
+    index = 0
+    name = get_data_struct_name(args)
     print "type", name, "struct {"
     for raw_col in headers:
         json_tag = ""
