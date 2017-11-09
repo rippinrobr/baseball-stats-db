@@ -2,14 +2,16 @@ from peewee import *
 from playhouse.postgres_ext import *
 import logging
 import sys
+import argparse
 
-BDB_DB = SqliteDatabase('db/bdb_v0.0.1.sqlite')
+#  THIS IS HOW TO MAKE THIS PART DYNAMIC http://docs.peewee-orm.com/en/latest/peewee/database.html#dynamic-db
+database_proxy =  Proxy() #SqliteDatabase('db/bdb_v0.0.1.sqlite')
 
 class BaseModel(Model):
     """BaseModel is used to connect to the database"""
     class Meta(object):
         """Where the connection is set"""
-        database = BDB_DB
+        database = database_proxy
 
 # Print the connection info here for sqlite
 class People(BaseModel):
@@ -616,9 +618,22 @@ TABLE_NAMES = [
     Awards_Share_Players, Fielding, Teams_Half, Batting
 ]
 
+SQLITE = "sqlite"
+def define_parameters(parser):
+    parser.add_argument("--dbtype", choices=[SQLITE], help="the database type you'd like to generate the schema for", type=str, default="sqlite" )
+
 def main():
-    BDB_DB.connect()
-    BDB_DB.create_tables(TABLE_NAMES)
+    param_parser = argparse.ArgumentParser(description="Generates a DB schema based on the Baseball Databank csv files.")    
+    define_parameters(param_parser)
+    args = param_parser.parse_args()
+
+    bdb_db = ""
+    if args.dbtype == SQLITE:
+        bdb_db = SqliteDatabase('db/bdb_v0.0.1.sqlite')
+
+    database_proxy.initialize(bdb_db)
+    database_proxy.connect()
+    database_proxy.create_tables(TABLE_NAMES)
     
 if __name__ == "__main__":
     main()
