@@ -609,6 +609,11 @@ class Batting(BaseModel):
     class Meta:
         primary_key = CompositeKey('playerID', 'yearID', 'stint')
 
+def initialize_db_and_connect(bdb_db):
+    database_proxy.initialize(bdb_db)
+    database_proxy.connect()
+    database_proxy.create_tables(TABLE_NAMES)
+    
 
 TABLE_NAMES = [ 
     People, Teams_Franchises, Parks, Managers, Teams , ManagersHalf, Schools,
@@ -617,23 +622,3 @@ TABLE_NAMES = [
     Series_Post, Awards_Managers, Awards_Share_Managers, Salaries, Pitching_Post,
     Awards_Share_Players, Fielding, Teams_Half, Batting
 ]
-
-SQLITE = "sqlite"
-def define_parameters(parser):
-    parser.add_argument("--dbtype", choices=[SQLITE], help="the database type you'd like to generate the schema for", type=str, default="sqlite" )
-
-def main():
-    param_parser = argparse.ArgumentParser(description="Generates a DB schema based on the Baseball Databank csv files.")    
-    define_parameters(param_parser)
-    args = param_parser.parse_args()
-
-    bdb_db = ""
-    if args.dbtype == SQLITE:
-        bdb_db = SqliteDatabase('db/bdb_v0.0.1.sqlite')
-
-    database_proxy.initialize(bdb_db)
-    database_proxy.connect()
-    database_proxy.create_tables(TABLE_NAMES)
-    
-if __name__ == "__main__":
-    main()
