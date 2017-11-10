@@ -2,6 +2,7 @@ import argparse
 import csv
 import inflection
 import os
+from go_data_structures import *
 
 LANG_GO = "go"
 LANG_HASKELL = "haskell"
@@ -65,26 +66,7 @@ def parse_file(args):
 
     return headers, data_types
 
-def col_name_cleaner(col_name):
-    if col_name[0].isdigit():
-        if col_name == "2B":
-            return "doubles"
-        if col_name == "3B":
-            return "triples"
-    
-    return col_name
 
-def convert_to_lang_specific_type(typeMap, type):
-    if type in typeMap:
-        return typeMap[type]
-
-    return type
-
-def get_data_struct_name(args):
-   if args.name != None:
-        return args.name 
-   else:
-        return os.path.splitext(os.path.basename(args.input))[0] 
 
 def create_haskell_datastructure(args, headers, data_types):
     comma = ""
@@ -101,44 +83,44 @@ def create_haskell_datastructure(args, headers, data_types):
         index += 1
     print "} deriving (Show)"
 
-def create_go_datastructure(args, headers, data_types):
-    types = {
-        "float" : "float64"
-    }
+# def create_go_datastructure(args, headers, data_types):
+#     types = {
+#         "float" : "float64"
+#     }
 
-    index = 0
-    name = get_data_struct_name(args)
-    print "type", name, "struct {"
-    for raw_col in headers:
-        json_tag = ""
-        csv_tag = ""
-        db_tag = ""
-        tags = ""
+#     index = 0
+#     name = get_data_struct_name(args)
+#     print "type", name, "struct {"
+#     for raw_col in headers:
+#         json_tag = ""
+#         csv_tag = ""
+#         db_tag = ""
+#         tags = ""
 
-        col = col_name_cleaner(raw_col).lower()
-        if args.json:
-            json_tag = "json:\"" +inflection.camelize(col,False) +"\""
+#         col = col_name_cleaner(raw_col).lower()
+#         if args.json:
+#             json_tag = "json:\"" +inflection.camelize(col,False) +"\""
 
-        if args.csv:
-            csv_tag =  "csv:\""+raw_col+"\""  
+#         if args.csv:
+#             csv_tag =  "csv:\""+raw_col+"\""  
 
-        if args.db:
-            db_tag =  "db:\""+raw_col+"\""  
+#         if args.db:
+#             db_tag =  "db:\""+raw_col+"\""  
 
-        if json_tag != "" or csv_tag != "" or db_tag != "":
-            if json_tag != "" and csv_tag == "" and db_tag == "":
-                tags = "`"+json_tag+"`"
-            elif csv_tag != "" and json_tag == "" and db_tag == "":
-                tags = "`"+csv_tag+"`"
-            elif db_tag != "" and json_tag == "" and csv_tag == "":
-                tags = "`"+csv_tag+"`"
-            else:
-                tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"`"
+#         if json_tag != "" or csv_tag != "" or db_tag != "":
+#             if json_tag != "" and csv_tag == "" and db_tag == "":
+#                 tags = "`"+json_tag+"`"
+#             elif csv_tag != "" and json_tag == "" and db_tag == "":
+#                 tags = "`"+csv_tag+"`"
+#             elif db_tag != "" and json_tag == "" and csv_tag == "":
+#                 tags = "`"+csv_tag+"`"
+#             else:
+#                 tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"`"
                 
         
-        print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), tags
-        index += 1
-    print "}"
+#         print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), tags
+#         index += 1
+#     print "}"
 
 def main():
     parser = argparse.ArgumentParser(description="Test the SMS notification Service.")
