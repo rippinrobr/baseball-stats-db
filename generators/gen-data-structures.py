@@ -1,7 +1,7 @@
 import argparse
 import csv
 import inflection
-import os
+import os, errno
 from go_data_structures import *
 
 LANG_GO = "go"
@@ -20,6 +20,7 @@ def define_parameters(parser):
     parser.add_argument("--json", help="If the language supports add JSON tags or JSON representation to the structure", action="store_true")
     parser.add_argument("--language", choices=[LANG_GO, LANG_HASKELL], help="create a Haskell datastructure", required=True, type=str)
     parser.add_argument("--name", help="name of the datastructure being created", type=str)
+    parser.add_argument("--output-dir", help="the directory where the generated file should be written.  If not provided file will be written to stdout")
     parser.add_argument("--verbose", help="more output during the parsing and creation of the datastructures", action="store_true")
 
 def get_data_type(col_val):
@@ -83,44 +84,12 @@ def create_haskell_datastructure(args, headers, data_types):
         index += 1
     print "} deriving (Show)"
 
-# def create_go_datastructure(args, headers, data_types):
-#     types = {
-#         "float" : "float64"
-#     }
-
-#     index = 0
-#     name = get_data_struct_name(args)
-#     print "type", name, "struct {"
-#     for raw_col in headers:
-#         json_tag = ""
-#         csv_tag = ""
-#         db_tag = ""
-#         tags = ""
-
-#         col = col_name_cleaner(raw_col).lower()
-#         if args.json:
-#             json_tag = "json:\"" +inflection.camelize(col,False) +"\""
-
-#         if args.csv:
-#             csv_tag =  "csv:\""+raw_col+"\""  
-
-#         if args.db:
-#             db_tag =  "db:\""+raw_col+"\""  
-
-#         if json_tag != "" or csv_tag != "" or db_tag != "":
-#             if json_tag != "" and csv_tag == "" and db_tag == "":
-#                 tags = "`"+json_tag+"`"
-#             elif csv_tag != "" and json_tag == "" and db_tag == "":
-#                 tags = "`"+csv_tag+"`"
-#             elif db_tag != "" and json_tag == "" and csv_tag == "":
-#                 tags = "`"+csv_tag+"`"
-#             else:
-#                 tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"`"
-                
-        
-#         print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), tags
-#         index += 1
-#     print "}"
+def create_output_directory(dir_path):
+    try:
+        os.makedirs(dir_path)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
 
 def main():
     parser = argparse.ArgumentParser(description="Test the SMS notification Service.")
@@ -132,6 +101,9 @@ def main():
         LANG_GO: create_go_datastructure
     }
 
+    if args.output_dir != None or args.output_dir != "":
+        create_output_directory(args.output_dir)
+        
     headers, data_types = parse_file(args)
     if args.verbose:
         print "Data types\n------------------------------------------------------------------"
