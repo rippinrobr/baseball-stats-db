@@ -3,21 +3,23 @@ import sys
 from core_data_structures import *
 
 def create_go_datastructure(args, headers, data_types):
-    types = {
-        "float" : "float64"
-    }
-
-    index = 0
-    
     original_output_stream = sys.stdout
-    
     if args.output_dir != None:
-        file_name = get_file_name(args.input).lower()
+        file_name = get_file_name(args.input).lower().replace(".csv", ".go")
         output_file = os.path.join(args.output_dir, file_name)
         print "Writing to the file", output_file
         sys.stdout = open(output_file, "w+")
 
+    print_code_file(args, headers, data_types)
+    sys.stdout = original_output_stream
+
+def print_code_file(args, headers, data_types):
     data_structure_name, table_name = get_data_struct_name(args)
+    index = 0
+    types = {
+        "float" : "float64"
+    }
+
     print "DON'T FORGET TO ADD YOUR PACKAGE LINE HERE\n\n "
     print "type", data_structure_name, "struct {"
     for raw_col in headers:
@@ -56,8 +58,6 @@ def create_go_datastructure(args, headers, data_types):
     print_get_file_name_func(data_structure_name, args.input)
     print ""
     print_get_file_path_func(data_structure_name, args.input)
-
-    sys.stdout = original_output_stream
 
 def print_get_table_name_func(struct_name, table_name):
     print "func (m *"+struct_name+") GetTableName() string {\n  return \""+table_name+"\"\n}" 

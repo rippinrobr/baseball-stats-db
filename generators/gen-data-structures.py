@@ -2,7 +2,8 @@ import argparse
 import csv
 import inflection
 import os, errno
-from go_data_structures import *
+from go_data_structures import create_go_datastructure
+from haskell_data_structures import create_haskell_datastructure
 
 LANG_GO = "go"
 LANG_HASKELL = "haskell"
@@ -69,20 +70,6 @@ def parse_file(args):
 
 
 
-def create_haskell_datastructure(args, headers, data_types):
-    comma = ""
-    index = 0
-
-    name = get_data_struct_name(args) 
-    print "data", name, "=", name , "{"
-    for raw_col in headers:
-        if index > 0:
-            comma=","
-        
-        col = col_name_cleaner(raw_col).lower()
-        print "  ", comma, col[:1].lower() + col[1:], "::", data_types[index].title()
-        index += 1
-    print "} deriving (Show)"
 
 def create_output_directory(dir_path):
     try:
