@@ -20,7 +20,13 @@ def print_code_file(args, headers, data_types):
         "float" : "float64"
     }
 
-    print "DON'T FORGET TO ADD YOUR PACKAGE LINE HERE\n\n "
+    package = "// DON'T FORGET TO ADD YOUR PACKAGE LINE HERE\n\n"
+    if args.package:
+        if args.output_dir != None and args.output_dir != "":
+            parts = args.output_dir.split("/")
+            package = "package " + parts[-1]  + "\n\n"
+
+    print package
     print "type", data_structure_name, "struct {"
     for raw_col in headers:
         json_tag = ""

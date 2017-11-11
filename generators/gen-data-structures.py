@@ -22,6 +22,7 @@ def define_parameters(parser):
     parser.add_argument("--language", choices=[LANG_GO, LANG_HASKELL], help="create a Haskell datastructure", required=True, type=str)
     parser.add_argument("--name", help="name of the datastructure being created", type=str)
     parser.add_argument("--output-dir", help="the directory where the generated file should be written.  If not provided file will be written to stdout")
+    parser.add_argument("--package", help="adds the package line at the top of Go files." , action="store_true")
     parser.add_argument("--verbose", help="more output during the parsing and creation of the datastructures", action="store_true")
 
 def get_data_type(col_val):
