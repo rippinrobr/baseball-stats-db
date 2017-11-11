@@ -88,7 +88,7 @@ def main():
         LANG_GO: create_go_datastructure
     }
 
-    if args.output_dir != None or args.output_dir != "":
+    if args.output_dir != None and args.output_dir != "":
         create_output_directory(args.output_dir)
         
     headers, data_types = parse_file(args)
