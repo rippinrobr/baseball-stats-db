@@ -6,3 +6,8 @@ out
 .vscode
 
 db/
+/bin
+/.go
+/.push-*
+/.container-*
+/.dockerfile-*
