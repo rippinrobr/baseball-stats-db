@@ -1,54 +1,41 @@
-##Data Related Scripts
+# Go app template build environment
+[![Build Status](https://travis-ci.org/thockin/go-build-template.svg?branch=master)](https://travis-ci.org/thockin/go-build-template) 
 
-The scripts in this directory are used to load the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) into MongoDb database.
+This is a skeleton project for a Go application, which captures the best build
+techniques I have learned to date.  It uses a Makefile to drive the build (the
+universal API to software projects) and a Dockerfile to build a docker image.
 
-----------
-### Running the load scripts
-**0. Install node packages** - In the scripts directory run:
+This has only been tested on Linux, and depends on Docker to build.
 
-<pre>
-npm install
-</pre>
+## Customizing it
 
-**1. Setting the environment variables** - Before running the load scripts you may need to set an the environment variable `MONGO_URL` to indicate which server to connect to and which database to use.  If you choose not to set the variable the scripts assume that there is MongoDB server running on the same machine as the scripts.  The default database name is `bdb`.  That is the only setting that you will need to worry about.  The data is fetched from github and parsed.
+To use this, simply copy these files and make the following changes:
 
-**2. Loading the Data** - The easiest way to do that is to change into the scripts directory and run:
+Makefile:
+   - change `BIN` to your binary name
+   - rename `cmd/myapp` to `cmd/$BIN`
+   - change `PKG` to the Go import path of this repo
+   - change `REGISTRY` to the Docker registry you want to use
+   - maybe change `SRC_DIRS` if you use some other layout
+   - choose a strategy for `VERSION` values - git tags or manual
 
-<pre>
-./load-all.sh
-</pre>
+Dockerfile.in:
+   - change the `MAINTAINER` to you
+   - maybe change or remove the `USER` if you need
 
-<code>load-all.sh</code> runs the <code>load-managers.sh</code>, <code>load-players.sh</code> and the <code>load-seasons.sh</code> scripts. Each of these scripts in turn call the appropriate javascript files ot load the <code>managers</code>, <code>players</code>, and <code>seasons</code> collections.
+## Building
 
-----------
+Run `make` or `make build` to compile your app.  This will use a Docker image
+to build your app, with the current directory volume-mounted into place.  This
+will store incremental state for the fastest possible build.  Run `make
+all-build` to build for all architectures.
 
-### The *.sh files
-**load-all.sh** - a wrapper script that calls <code>load-managers.sh</code>, <code>load-players.sh</code>, and <code>load-seasons.sh</code>.
+Run `make container` to build the container image.  It will calculate the image
+tag based on the most recent git tag, and whether the repo is "dirty" since
+that tag (see `make version`).  Run `make all-container` to build containers
+for all architectures.
 
-**load-managers.sh** - calls all of the manager related load scripts.
-  - load-managers.js    => creates the manager's document in the collectoin.  Adds the manager's record to the document. 
-  - load-mgr-demog.js   => adds the manager's demographics to the document.
-  - load-half-mgrs.js   => loads the manager's record for the 1981 season pre and post strike.
-  - load-manager-awards => loads any awards the manager may have won into the awards array.
-  
+Run `make push` to push the container image to `REGISTRY`.  Run `make all-push`
+to push the container images for all architectures.
 
-**load-players.sh** - calls all of the player related load scripts.
-  - load-plyr-demog.js => creates the player's document in the players collection and adds his demographic information
-  - load-allstars.js => populates the allstars array with the year(s) the player made the all star team.
-  - load-appearances.js => adds records to the appearances array indicating how many games they played in a particular role.
-  - load-batting.js => loads regular season batting stats
-  - load-fielding.js => loads regular season fielding stats
-  - load-pitching.js => loads regular season pitching stats
-  - load-player-awards.js => populates the awards array with any awards the player may have won
-  - load-postseason-batting.js  => loads playoff batting stats
-  - load-postseason-fielding.js => loads playoff fielding stats
-  - load-postseason-pitching.js => loads playoff pitching stats
-  - load-salaries.js => adds seasonal salary info to the salaries array if it exists.
-  - create-player-stat.indexes.js => creates the indexes on the players collection
-  
-
-**load-teams.sh** - calls all of the team related load scripts.
-  - load-teams.js => creates the documents for each team loading in the team stats and record
-  - load-teams-managers.js => adds the managers to managers array for each season
-  - load-half-season.js => adds the 1981 half season stats to the document.
-  - load-playoff-records => loads w-l records for the playoffs
+Run `make clean` to clean up.
