@@ -57,8 +57,11 @@ def parse_file(args):
             if have_columns:
                 index = 0
                 for col in line:
-                    if col != "" and data_types[index] != TYPE_STRING:
-                        data_types[index] = get_data_type(col)
+                    if col != "": 
+                        if data_types[index] != TYPE_STRING:
+                            data_types[index] = get_data_type(col)
+                    else:
+                        data_types[index] = TYPE_STRING
                     index += 1
 
             else:

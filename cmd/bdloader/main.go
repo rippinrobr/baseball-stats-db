@@ -17,7 +17,8 @@ limitations under the License.
 package main
 
 import "log"
+import "github.com/rippinrobr/baseball-databank-tools/pkg/bd/models"
 
 func main() {
-	log.Printf("hello, world!")
+	log.Printf("hello, world! %+v\n", models.AllstarFull{})
 }

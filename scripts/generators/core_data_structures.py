@@ -7,7 +7,7 @@ def col_name_cleaner(col_name):
         if col_name == "3B":
             return "triples"
     
-    return col_name
+    return col_name.replace(".", "")
 
 def convert_to_lang_specific_type(typeMap, type):
     if type in typeMap:
