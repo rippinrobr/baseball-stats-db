@@ -16,9 +16,17 @@ limitations under the License.
 
 package main
 
-import "log"
-import "github.com/rippinrobr/baseball-databank-tools/pkg/bd/models"
+import (
+	"log"
+
+	"github.com/rippinrobr/baseball-databank-tools/pkg/db"
+)
 
 func main() {
-	log.Printf("hello, world! %+v\n", models.AllstarFull{})
+	repo := db.SQLiteRepo{}
+	connErr := repo.OpenConn("./db/baseball_datatank_2016.sqlite")
+	if connErr != nil {
+		log.Fatal("Connection error" + connErr.Error())
+	}
+	defer repo.CloseConn()
 }
