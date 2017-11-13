@@ -9,33 +9,35 @@ import (
 	"upper.io/db.v3/sqlite"
 )
 
-// SQLiteRepo manages interaction with SQLite dbs
-type SQLiteRepo struct {
+func CreateSQLiteConn(dbpath string) (sqlbuilder.Database, error) {
+	var cURL = sqlite.ConnectionURL{
+		Database: dbpath,
+	}
+
+	return sqlite.Open(cURL)
+}
+
+type Repo struct {
 	dbsess sqlbuilder.Database
 }
 
-// CloseConn closes the connection to the database
-func (s *SQLiteRepo) CloseConn() error {
-	return s.dbsess.Close()
+func CreateRepo(sd sqlbuilder.Database) Repository {
+	return Repo{
+		dbsess: sd,
+	}
 }
 
-// OpenConn opens a connection to the given database or
-// returns an error
-func (s *SQLiteRepo) OpenConn(dbPath string) error {
-	var cURL = sqlite.ConnectionURL{
-		Database: dbPath,
-	}
+// SQLiteRepo manages interaction with SQLite dbs
+//type SQLiteRepo struct {
+//dbsess sqlbuilder.Database
+//}
 
-	sess, err := sqlite.Open(cURL)
-	if err != nil {
-		return err
-	}
-	s.dbsess = sess
-
-	return nil
+// CloseConn closes the connection to the database
+func (r Repo) CloseConn() error {
+	return r.dbsess.Close()
 }
 
 // Insert adds a new record to the database
-func (s *SQLiteRepo) Insert(o models.TableObject) error {
+func (r Repo) Insert(o models.TableObject) error {
 	return errors.New("Not implemented")
 }

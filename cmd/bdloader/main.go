@@ -23,10 +23,10 @@ import (
 )
 
 func main() {
-	repo := db.SQLiteRepo{}
-	connErr := repo.OpenConn("./db/baseball_datatank_2016.sqlite")
+	conn, connErr := db.CreateSQLiteConn("./db/baseball_datatank_2016.sqlite")
 	if connErr != nil {
 		log.Fatal("Connection error" + connErr.Error())
 	}
+	repo := db.CreateRepo(conn)
 	defer repo.CloseConn()
 }
