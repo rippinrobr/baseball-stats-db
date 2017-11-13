@@ -10,3 +10,5 @@ out
 /.push-*
 /.container-*
 /.dockerfile-*
+db
+vendor
