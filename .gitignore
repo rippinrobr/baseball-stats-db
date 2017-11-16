@@ -12,3 +12,4 @@ out
 /.dockerfile-*
 db
 vendor
+.DS_Store

@@ -21,11 +21,16 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
+
+	"github.com/gocarina/gocsv"
 
 	"github.com/rippinrobr/baseball-databank-tools/pkg/bd/models"
 	"github.com/rippinrobr/baseball-databank-tools/pkg/db"
 )
+
+type optionalConfig struct {
+	Verbose bool
+}
 
 func main() {
 	// cmd line args
@@ -44,14 +49,14 @@ func main() {
 	}
 
 	if dbconn == "" {
-		if strings.ToLower(dbtype) == db.DBSQLite {
-			log.Println("No dbconn value given for SQLite DB, create the baseball_databank.sqlite3 db in this dir.")
-			dbconn = db.DefaultSQLiteDBName
-		} else {
-			log.Fatalf("A -dbconn value is required for the database type '%s'\n", dbtype)
-		}
+		log.Fatalf("A -dbconn value is required for the database type '%s'\n", dbtype)
 	}
 
+	processFiles(dbtype, dbconn, &optionalConfig{verbose})
+
+}
+
+func processFiles(dbtype, dbconn string, opts *optionalConfig) {
 	conn, connErr := db.CreateConnection(dbtype, dbconn)
 	if connErr != nil {
 		log.Fatal("Connection error: " + connErr.Error())
@@ -60,13 +65,28 @@ func main() {
 	defer repo.CloseConn()
 
 	for _, o := range models.GetTableObjects() {
-		log.Printf("Loading the table %s\n", o.GetTableName())
-		if verbose {
-			log.Printf("File Path: %s\n", o.GetFilePath())
+		if opts.Verbose {
+			//log.Printf("File Path: '%s'\n", o.GetFilePath())
 			log.Printf("File Name: %s\n", o.GetFileName())
 		}
-		log.Printf("Loaded %d rows into %s\n\n", -1, o.GetTableName())
-		// Get the Type of the object here and create an array of pointers
-		// of the object's type to pass into the CSV parser
+
+		csvFile, fileErr := os.Open(o.GetFilePath())
+		if fileErr != nil {
+			log.Printf("Error: Unable to open file '%s'. %s\n", o.GetFilePath(), fileErr)
+			continue
+		}
+
+		psFunc := o.GenParseAndStoreCSV(csvFile, repo, gocsv.UnmarshalFile)
+		psErr := psFunc()
+		if psErr != nil {
+			log.Printf("There was an error while attempting to parse and storethe file %s\nError: %s\n", o.GetFilePath(), psErr.Error())
+		}
+
+		csvFile.Close()
+		// if dbtype == db.DBSQLite {
+		// 	log.Println("Since I'm loading SQLite I need to sleep 10 secs so SQLite can catch up")
+		// 	time.Sleep(10 * time.Second)
+		// 	log.Println("I'm awake")
+		// }
 	}
 }

@@ -24,3 +24,6 @@
 [[constraint]]
   name = "upper.io/db.v3"
   version = "3.5.0"
+
+[[constraint]]
+  name = "github.com/gocarina/gocsv"

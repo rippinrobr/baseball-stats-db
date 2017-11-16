@@ -11,7 +11,7 @@ def main():
     args = param_parser.parse_args()
 
     bdb_db = ""
-    sqlite_db_name = "baseball_databank.sqlite"
+    sqlite_db_name = "baseball_databank.sqlite3"
     if args.dbpath != None and args.dbpath != "":
         if args.dbtype == SQLITE:
             sqlite_db_name = args.dbpath 

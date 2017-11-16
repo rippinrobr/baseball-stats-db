@@ -15,6 +15,10 @@ const (
 	DefaultSQLiteDBName string = "baseball_databank.sqlite3"
 )
 
+// InsertFunc  Inserts the data into the table specified in the
+// first parameter
+type InsertFunc func(string, interface{}) error
+
 //ErrorDBNotSupported is used to inform the caller that the
 // database type the provided is not a supporeted database
 var ErrorDBNotSupported = errors.New("Database not supported")

@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/gocarina/gocsv"
+  packages = ["."]
+  revision = "7099e67763c29f812fa2ed7083f32e38be60125a"
+
+[[projects]]
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
   revision = "5160b48509cf5c877bc22c11c373f8c7738cdb38"
@@ -22,6 +28,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d04cc26a4d4ca753e07498fcddf9e90ec8f43c4c81a5f8a41ced76b1fe3f40f1"
+  inputs-digest = "fa694d1b89ec9863fa1cc30c63bff1de42296df32ec465980574b5e9f57c4761"
   solver-name = "gps-cdcl"
   solver-version = 1
