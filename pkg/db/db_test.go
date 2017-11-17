@@ -2,7 +2,6 @@ package db
 
 import (
 	"testing"
-	"fmt"
 )
   
 func TestCreateConnection(t *testing.T) {
