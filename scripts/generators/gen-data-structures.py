@@ -1,6 +1,7 @@
 import argparse
 import csv
 import inflection
+import glob
 import os, errno, sys
 from go_data_structures import create_go_datastructure
 from haskell_data_structures import create_haskell_datastructure
@@ -103,9 +104,26 @@ def main():
 
     if args.output_dir != None and args.output_dir != "":
         create_output_directory(args.output_dir)
-    
-    generate_struct(args, LANGUAGE_FUNCS[args.language])
-    
+
+    if args.input_dir != None and args.input_dir != "":    
+        # 1. Check to see if the directory exists
+        if os.path.exists(args.input_dir):
+            if os.path.isdir(args.input_dir):
+                process_files(args,  LANGUAGE_FUNCS[args.language])
+            else:
+                print "\nERROR: The value of --input-dir '"+args.input_dir+" is not a directory. Please provide a directory\n"
+                parser.print_help()
+                sys.exit(1)
+        else:
+            print "\nERROR: The directory, '"+args.input_dir+"' does not exist. Please provide a valid directory path for --input-dir\n"
+            os.exit(1)
+    else:
+        generate_struct(args, LANGUAGE_FUNCS[args.language])
+
+def process_files(args, gen_func):
+    for file in glob.glob(os.path.join(args.input_dir, "*.csv")):
+        args.input = file
+        generate_struct(args,gen_func) 
 
 def generate_struct(args, gen_func):
     headers, data_types = parse_file(args)
