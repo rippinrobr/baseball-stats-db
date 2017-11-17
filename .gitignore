@@ -13,4 +13,4 @@ out
 ./db
 vendor
 .DS_Store
-baseball_databank.sqlite3
+baseball_databank_*.sqlite3
