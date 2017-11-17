@@ -141,8 +141,6 @@ def print_test_file(args, headers, data_types, interface_name):
 
     print "import ("
     print "  \"testing\""
-    print "  \"fmt\""
-    print "  \"reflect\""
     print ")\n"
 
     print_get_table_name_test_func(data_structure_name, table_name)
@@ -186,8 +184,7 @@ def print_get_file_path_test_func(struct_name, file_path):
 def print_parse_csv_test_func(struct_name):
     print "func TestGenParseAndStoreCSV"+struct_name+"ForError(t *testing.T) {"
     print "  out := "+struct_name+"{}"
-    print "  actualFunc, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)"
-    print "  fmt.Println(reflect.TypeOf(actualFunc).Name())"
+    print "  _, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)"
     print "  if actualErr == nil {"
     print "       t.Errorf(\"Calling "+struct_name+".GenParseAndStoreCSV with a nil file pointer should have returned an error\\n\")"
     print "  }"

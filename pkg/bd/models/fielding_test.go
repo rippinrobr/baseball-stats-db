@@ -3,8 +3,6 @@ package models
 
 import (
   "testing"
-  "fmt"
-  "reflect"
 )
 
 func TestGetTableNameFielding(t *testing.T) {
@@ -39,8 +37,7 @@ func TestGetFilePathFielding(t *testing.T) {
 
 func TestGenParseAndStoreCSVFieldingForError(t *testing.T) {
   out := Fielding{}
-  actualFunc, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)
-  fmt.Println(reflect.TypeOf(actualFunc).Name())
+  _, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)
   if actualErr == nil {
        t.Errorf("Calling Fielding.GenParseAndStoreCSV with a nil file pointer should have returned an error\n")
   }

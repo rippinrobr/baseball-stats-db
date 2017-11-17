@@ -78,7 +78,7 @@ func processFiles(dbtype, dbconn string, opts *optionalConfig) {
 
 		psFunc, genErr := o.GenParseAndStoreCSV(csvFile, repo, gocsv.UnmarshalFile)
 		if genErr != nil {
-			log.Error("There was an issue generating the ParseAnStoreCSV func")
+			log.Println("ERROR: There was an issue generating the ParseAnStoreCSV func\n")
 		} else {
 			psErr := psFunc()
 			if psErr != nil {
