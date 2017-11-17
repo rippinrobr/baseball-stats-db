@@ -40,7 +40,7 @@ def print_code_file(args, headers, data_types, interface_name):
     }
 
     print get_package_name(args)
-    print "import (\n  \"os\"\n  \"log\"\n"
+    print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n"
     print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv\"\n"
     print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/db\"\n"
     print ")\n"
@@ -100,7 +100,10 @@ def print_get_file_path_func(struct_name, file_path):
 
 def print_parse_csv_func(struct_name):
     print "// GenParseAndStoreCSV returns a function that will parse the source file,\\n//create a slice with an object per line and store the data in the db"
-    print "func (m *"+struct_name+") GenParseAndStoreCSV(f *os.File, repo db.Repository, pfunc csv.ParserFunc) ParseAndStoreCSVFunc {"
+    print "func (m *"+struct_name+") GenParseAndStoreCSV(f *os.File, repo db.Repository, pfunc csv.ParserFunc) (ParseAndStoreCSVFunc, error) {"
+    print "  if f == nil {"
+    print "    return func() error{return nil}, errors.New(\"nil File\")"
+    print "  }\n"
     print "  return func() error {"
     print "    rows := make([]*"+struct_name+", 0)"
     print "    numErrors := 0"
@@ -127,7 +130,7 @@ def print_parse_csv_func(struct_name):
     print "    }"
     print ""
     print "    return err"
-    print "   }"
+    print "   }, nil"
     print "}"
 
 def print_test_file(args, headers, data_types, interface_name):
@@ -138,8 +141,8 @@ def print_test_file(args, headers, data_types, interface_name):
 
     print "import ("
     print "  \"testing\""
-    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/db\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv\"\n"
+    print "  \"fmt\""
+    print "  \"reflect\""
     print ")\n"
 
     print_get_table_name_test_func(data_structure_name, table_name)
@@ -147,6 +150,8 @@ def print_test_file(args, headers, data_types, interface_name):
     print_get_file_name_test_func(data_structure_name, get_file_name(args.input))
     print ""
     print_get_file_path_test_func(data_structure_name, args.input)
+    print ""
+    print_parse_csv_test_func(data_structure_name)
 
 def print_get_table_name_test_func(struct_name, table_name):
     print "func TestGetTableName"+struct_name+"(t *testing.T) {"
@@ -181,8 +186,9 @@ def print_get_file_path_test_func(struct_name, file_path):
 def print_parse_csv_test_func(struct_name):
     print "func TestGenParseAndStoreCSV"+struct_name+"ForError(t *testing.T) {"
     print "  out := "+struct_name+"{}"
-    print "  actualValue := out.TestGenParseAndStoreCSV(nil, RepositoryMock{}, ParserTestingFunc)"
-    print "  if actualValue == nil {"
-    print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
+    print "  actualFunc, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)"
+    print "  fmt.Println(reflect.TypeOf(actualFunc).Name())"
+    print "  if actualErr == nil {"
+    print "       t.Errorf(\"Calling "+struct_name+".GenParseAndStoreCSV with a nil file pointer should have returned an error\\n\")"
     print "  }"
     print "}"

@@ -76,12 +76,15 @@ func processFiles(dbtype, dbconn string, opts *optionalConfig) {
 			continue
 		}
 
-		psFunc := o.GenParseAndStoreCSV(csvFile, repo, gocsv.UnmarshalFile)
-		psErr := psFunc()
-		if psErr != nil {
-			log.Printf("There was an error while attempting to parse and storethe file %s\nError: %s\n", o.GetFilePath(), psErr.Error())
+		psFunc, genErr := o.GenParseAndStoreCSV(csvFile, repo, gocsv.UnmarshalFile)
+		if genErr != nil {
+			log.Error("There was an issue generating the ParseAnStoreCSV func")
+		} else {
+			psErr := psFunc()
+			if psErr != nil {
+				log.Printf("There was an error while attempting to parse and storethe file %s\nError: %s\n", o.GetFilePath(), psErr.Error())
+			}
 		}
-
 		csvFile.Close()
 		// if dbtype == db.DBSQLite {
 		// 	log.Println("Since I'm loading SQLite I need to sleep 10 secs so SQLite can catch up")

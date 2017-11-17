@@ -3,6 +3,8 @@ package models
 
 import (
   "testing"
+  "fmt"
+  "reflect"
 )
 
 func TestGetTableNameSeriesPost(t *testing.T) {
@@ -32,5 +34,14 @@ func TestGetFilePathSeriesPost(t *testing.T) {
 
   if actualValue != expectedValue {
     t.Errorf("actualValue (%s) != expectedValue (%s)\n", actualValue, expectedValue)
+  }
+}
+
+func TestGenParseAndStoreCSVSeriesPostForError(t *testing.T) {
+  out := SeriesPost{}
+  actualFunc, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)
+  fmt.Println(reflect.TypeOf(actualFunc).Name())
+  if actualErr == nil {
+       t.Errorf("Calling SeriesPost.GenParseAndStoreCSV with a nil file pointer should have returned an error\n")
   }
 }

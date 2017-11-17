@@ -4,6 +4,7 @@ package models
 import (
   "os"
   "log"
+  "errors"
 
   "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
 
@@ -41,7 +42,11 @@ func (m *ManagersHalf) GetFilePath() string {
 }
 
 // GenParseAndStoreCSV returns a function that will parse the source file,\n//create a slice with an object per line and store the data in the db
-func (m *ManagersHalf) GenParseAndStoreCSV(f *os.File, repo db.Repository, pfunc csv.ParserFunc) ParseAndStoreCSVFunc {
+func (m *ManagersHalf) GenParseAndStoreCSV(f *os.File, repo db.Repository, pfunc csv.ParserFunc) (ParseAndStoreCSVFunc, error) {
+  if f == nil {
+    return func() error{return nil}, errors.New("nil File")
+  }
+
   return func() error {
     rows := make([]*ManagersHalf, 0)
     numErrors := 0
@@ -68,5 +73,5 @@ func (m *ManagersHalf) GenParseAndStoreCSV(f *os.File, repo db.Repository, pfunc
     }
 
     return err
-   }
+   }, nil
 }
