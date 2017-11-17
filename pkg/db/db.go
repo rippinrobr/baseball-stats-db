@@ -39,10 +39,5 @@ func CreateConnection(dbtype, dbconn string) (sqlbuilder.Database, error) {
 // IsSupportedDB checks to see if the database name given is
 // one of the dbs supported by Baseball Databank Tools
 func IsSupportedDB(s string) bool {
-
-	if strings.ToLower(s) == DBSQLite {
-		return true
-	}
-
-	return false
+	return strings.ToLower(s) == DBSQLite
 }
