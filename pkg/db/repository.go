@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"upper.io/db.v3/lib/sqlbuilder"
 )
 
@@ -22,7 +21,6 @@ type Repo struct {
 
 // CloseConn closes the connection to the database
 func (r Repo) CloseConn() error {
-	fmt.Printf("in CloseConn %+v\n", r.dbsess)
 	return r.dbsess.Close()
 }
 
