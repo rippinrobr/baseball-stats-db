@@ -139,7 +139,7 @@ def print_test_file(args, headers, data_types, interface_name):
     print "import ("
     print "  \"testing\""
     print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/db\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers\"\n"
+    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv\"\n"
     print ")\n"
 
     print_get_table_name_test_func(data_structure_name, table_name)
@@ -179,10 +179,10 @@ def print_get_file_path_test_func(struct_name, file_path):
     print "}"
 
 def print_parse_csv_test_func(struct_name):
-    print "func TestGenParseAndStoreCSV"+struct_name+"(t *testing.T) {"
+    print "func TestGenParseAndStoreCSV"+struct_name+"ForError(t *testing.T) {"
     print "  out := "+struct_name+"{}"
-    print "  r := db.Repo{}"
-    print "  if out.TestGenParseAndStoreCSV(nil, ) != nil {"
+    print "  actualValue := out.TestGenParseAndStoreCSV(nil, RepositoryMock{}, ParserTestingFunc)"
+    print "  if actualValue == nil {"
     print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
     print "  }"
     print "}"
