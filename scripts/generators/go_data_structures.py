@@ -4,14 +4,33 @@ from core_data_structures import *
 
 def create_go_datastructure(args, headers, data_types):
     original_output_stream = sys.stdout
+    test_file = ""
+    file_name = get_file_name(args.input).lower().replace(".csv", "")
+        
     if args.output_dir != None:
-        file_name = get_file_name(args.input).lower().replace(".csv", ".go")
-        output_file = os.path.join(args.output_dir, file_name)
+        output_file = os.path.join(args.output_dir, file_name+".go")
         print "Writing to the file", output_file
         sys.stdout = open(output_file, "w+")
 
     print_code_file(args, headers, data_types, "TableObject")
     sys.stdout = original_output_stream
+
+    if args.output_dir != None:
+        test_file = os.path.join(args.output_dir, file_name +"_test.go")
+        print "Writing to the file", test_file
+        sys.stdout = open(test_file, "w+")
+
+    print_test_file(args, headers, data_types, "TableObject")
+    sys.stdout = original_output_stream
+    
+def get_package_name(args):
+    package = "// DON'T FORGET TO ADD YOUR PACKAGE LINE HERE\n\n"
+    if args.package:
+        if args.output_dir != None and args.output_dir != "":
+            parts = args.output_dir.split("/")
+            package = "package " + parts[-1]  + "\n\n"
+
+    return package
 
 def print_code_file(args, headers, data_types, interface_name):
     data_structure_name, table_name = get_data_struct_name(args)
@@ -20,13 +39,7 @@ def print_code_file(args, headers, data_types, interface_name):
         "float" : "float64"
     }
 
-    package = "// DON'T FORGET TO ADD YOUR PACKAGE LINE HERE\n\n"
-    if args.package:
-        if args.output_dir != None and args.output_dir != "":
-            parts = args.output_dir.split("/")
-            package = "package " + parts[-1]  + "\n\n"
-
-    print package
+    print get_package_name(args)
     print "import (\n  \"os\"\n  \"log\"\n"
     print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv\"\n"
     print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/db\"\n"
@@ -115,4 +128,61 @@ def print_parse_csv_func(struct_name):
     print ""
     print "    return err"
     print "   }"
+    print "}"
+
+def print_test_file(args, headers, data_types, interface_name):
+    data_structure_name, table_name = get_data_struct_name(args)
+    index = 0
+
+    print get_package_name(args)
+
+    print "import ("
+    print "  \"testing\""
+    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/db\"\n"
+    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers\"\n"
+    print ")\n"
+
+    print_get_table_name_test_func(data_structure_name, table_name)
+    print ""
+    print_get_file_name_test_func(data_structure_name, get_file_name(args.input))
+    print ""
+    print_get_file_path_test_func(data_structure_name, args.input)
+
+def print_get_table_name_test_func(struct_name, table_name):
+    print "func TestGetTableName"+struct_name+"(t *testing.T) {"
+    print "  out := "+struct_name+"{}"
+    print "  expectedValue := \""+table_name+"\""
+    print "  actualValue := out.GetTableName()\n"
+    print "  if actualValue != expectedValue {"
+    print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
+    print "  }"
+    print "}"
+
+def print_get_file_name_test_func(struct_name, file_name):
+    print "func TestGetFileName"+struct_name+"(t *testing.T) {"
+    print "  out := "+struct_name+"{}"
+    print "  expectedValue := \""+file_name+"\""
+    print "  actualValue := out.GetFileName()\n"
+    print "  if actualValue != expectedValue {"
+    print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
+    print "  }"
+    print "}"
+
+def print_get_file_path_test_func(struct_name, file_path):
+    print "func TestGetFilePath"+struct_name+"(t *testing.T) {"
+    print "  out := "+struct_name+"{}"
+    print "  expectedValue := \""+file_path+"\""
+    print "  actualValue := out.GetFilePath()\n"
+    print "  if actualValue != expectedValue {"
+    print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
+    print "  }"
+    print "}"
+
+def print_parse_csv_test_func(struct_name):
+    print "func TestGenParseAndStoreCSV"+struct_name+"(t *testing.T) {"
+    print "  out := "+struct_name+"{}"
+    print "  r := db.Repo{}"
+    print "  if out.TestGenParseAndStoreCSV(nil, ) != nil {"
+    print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
+    print "  }"
     print "}"

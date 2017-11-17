@@ -10,6 +10,6 @@ out
 /.push-*
 /.container-*
 /.dockerfile-*
-db
+./db
 vendor
 .DS_Store

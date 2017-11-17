@@ -33,13 +33,12 @@ def get_data_type(col_val):
 
     original_col_val = col_val
     digits_only = col_val.replace ('-', '',1).replace(',', '', -1)    
-    if '.' in col_val and digits_only.isdigit(): #col_val.replace('.', '',1).isdigit():
+    if '.' in col_val and digits_only.isdigit(): 
         dtype = TYPE_FLOAT
     else:
         if col_val.isdigit():
             dtype = TYPE_INT
 
-    print original_col_val, col_val, dtype
     return dtype
 
 def parse_file(args):
