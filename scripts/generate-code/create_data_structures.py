@@ -7,7 +7,6 @@ from go_data_structures import create_go_datastructure
 from haskell_data_structures import create_haskell_datastructure
 
 LANG_GO = "go"
-LANG_HASKELL = "haskell"
 
 TYPE_STRING = "string"
 TYPE_INT = "int"
@@ -21,7 +20,7 @@ def define_parameters(parser):
     parser.add_argument("--input", default="", help="the path to the input CSV file",type=str )
     parser.add_argument("--input-dir", default="", help="the path to the directory that contains the CSV files to parse",type=str )
     parser.add_argument("--json", help="If the language supports add JSON tags or JSON representation to the structure", action="store_true")
-    parser.add_argument("--language", choices=[LANG_GO, LANG_HASKELL], help="create a Haskell datastructure", required=True, type=str)
+    parser.add_argument("--language", choices=[LANG_GO], default=LANG_GO, help="create a Haskell datastructure", required=True, type=str)
     parser.add_argument("--name", help="name of the datastructure being created", type=str)
     parser.add_argument("--output-dir", help="the directory where the generated file should be written.  If not provided file will be written to stdout")
     parser.add_argument("--package", help="adds the package line at the top of Go files." , action="store_true")
@@ -98,7 +97,6 @@ def main():
         sys.exit(1)
 
     LANGUAGE_FUNCS = {
-        LANG_HASKELL: create_haskell_datastructure,
         LANG_GO: create_go_datastructure
     }
 
@@ -106,20 +104,24 @@ def main():
         create_output_directory(args.output_dir)
 
     if args.input_dir != None and args.input_dir != "":    
-        # 1. Check to see if the directory exists
-        if os.path.exists(args.input_dir):
-            if os.path.isdir(args.input_dir):
-                process_files(args,  LANGUAGE_FUNCS[args.language])
-            else:
-                print "\nERROR: The value of --input-dir '"+args.input_dir+" is not a directory. Please provide a directory\n"
-                parser.print_help()
-                sys.exit(1)
-        else:
-            print "\nERROR: The directory, '"+args.input_dir+"' does not exist. Please provide a valid directory path for --input-dir\n"
-            os.exit(1)
+       process_directory(args, LANGUAGE_FUNCS[args.language])
     else:
-        generate_struct(args, LANGUAGE_FUNCS[args.language])
+       generate_struct(args, LANGUAGE_FUNCS[args.language])
 
+def process_directory(args, gen_func):
+    success = False
+    if os.path.exists(args.input_dir):
+        if os.path.isdir(args.input_dir):
+            process_files(args,  gen_func)
+            success = True
+        else:
+            print "\nERROR: The value of --input-dir '"+args.input_dir+" is not a directory. Please provide a directory\n"
+            parser.print_help()
+    else:
+        print "\nERROR: The directory, '"+args.input_dir+"' does not exist. Please provide a valid directory path for --input-dir\n"
+    
+    return success 
+        
 def process_files(args, gen_func):
     for file in glob.glob(os.path.join(args.input_dir, "*.csv")):
         args.input = file
