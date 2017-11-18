@@ -1,12 +1,18 @@
 package db
 
 import (
+	"fmt"
 	upperdb "upper.io/db.v3"
 )
 
-type mockCollection struct{}
+type mockCollection struct {
+	WasInsertCalled   bool
+	WasTruncateCalled bool
+}
 
-func (s mockCollection) Insert(interface{}) (interface{}, error) {
+func (s *mockCollection) Insert(interface{}) (interface{}, error) {
+	s.WasInsertCalled = true
+	fmt.Println("Insert", s.WasInsertCalled)
 	return nil, nil
 }
 
@@ -40,7 +46,8 @@ func (s mockCollection) Find(...interface{}) upperdb.Result {
 
 // Truncate removes all elements on the collection and resets the
 // collection's IDs.
-func (s mockCollection) Truncate() error {
+func (s *mockCollection) Truncate() error {
+	s.WasTruncateCalled = true
 	return nil
 }
 

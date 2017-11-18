@@ -4,13 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	upperdb "upper.io/db.v3"
 	"upper.io/db.v3/lib/sqlbuilder"
 )
 
 type mockDatabase struct {
-	WasCloseCalled bool
+	WasCloseCalled       bool
+	CollectionNamePassed string
+	TestCollection       *mockCollection
 	mockSettings
 }
 
@@ -27,13 +28,13 @@ func (s *mockDatabase) Ping() error {
 }
 
 func (s *mockDatabase) Close() error {
-	fmt.Println("in mockDatabase.Close()")
 	s.WasCloseCalled = true
 	return nil
 }
 
 func (s *mockDatabase) Collection(c string) upperdb.Collection {
-	return mockCollection{}
+	s.CollectionNamePassed = c
+	return s.TestCollection
 }
 
 func (s *mockDatabase) Collections() ([]string, error) {
