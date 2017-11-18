@@ -294,7 +294,7 @@ class Awards_Players(BaseModel):
     notes = CharField(null='true')
 
     class Meta(object):
-        #primary_key = CompositeKey('playerID', 'awardID', 'yearID')
+        primary_key = CompositeKey('yearID', 'lgID', 'awardID', 'playerID')
         db_table = 'awardsplayers'
     
 class Fielding_OF(BaseModel):
