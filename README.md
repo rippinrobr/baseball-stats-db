@@ -1,6 +1,5 @@
-# Baseball Databank Tools
+# Baseball Databank Tools - still in alpha under heavy development
 
-This is a project created to make creating databases based off of the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank).  The project includes the `bdloader` utility 
-that parsers and loads the CSV files into a PostgreSQL, MySQL, or SQLite database.  Future
-releases will include docker containers with fully loaded databases for all supported databases except
-the SQLite.   
+The tools provided in this project are intended to make creating databases from the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) easier.
+
+Currently only SQLite is supported but support for PostgreSQL, MySQL, and MongoDb will be added.
