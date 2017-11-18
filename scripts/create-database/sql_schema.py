@@ -43,86 +43,86 @@ class People(BaseModel):
     def Meta(object):
         db_table = 'people'
 
-def load_people_table(records):
-    with BDB_DB.atomic() as txn:
-        for rec in records:
-            if any(rec):
-                if not create_people(rec):
-                    print "Didnt save %s" % rec
+# def load_people_table(records):
+#     with BDB_DB.atomic() as txn:
+#         for rec in records:
+#             if any(rec):
+#                 if not create_people(rec):
+#                     print "Didnt save %s" % rec
 
-def create_people(rec):
-    try:
-        try:
-            birthYear = None
-            if 'birthYear' in rec and rec['birthYear']:
-                birthYear = int(rec['birthYear'])
+# def create_people(rec):
+#     try:
+#         try:
+#             birthYear = None
+#             if 'birthYear' in rec and rec['birthYear']:
+#                 birthYear = int(rec['birthYear'])
             
-            birthMonth = None
-            if 'birthMonth' in rec and rec['birthMonth'] and rec['birthMonth'] != '':
-                birthMonth = int(rec['birthMonth'])
+#             birthMonth = None
+#             if 'birthMonth' in rec and rec['birthMonth'] and rec['birthMonth'] != '':
+#                 birthMonth = int(rec['birthMonth'])
             
-            birthDay = None
-            if 'birthDay' in rec and rec['birthDay'] and rec['birthDay'] != '':
-                birthDay = int(rec['birthDay'])
+#             birthDay = None
+#             if 'birthDay' in rec and rec['birthDay'] and rec['birthDay'] != '':
+#                 birthDay = int(rec['birthDay'])
 
-            deathYear = None
-            if 'deathYear' in rec and rec['deathYear'] and rec['deathYear'] != '':
-                deathYear = int(rec['deathYear'])
+#             deathYear = None
+#             if 'deathYear' in rec and rec['deathYear'] and rec['deathYear'] != '':
+#                 deathYear = int(rec['deathYear'])
                 
-            deathMonth = None
-            if 'deathMonth' in rec and  rec['deathMonth'] and rec['deathMonth'] != '':
-                deathMonth = int(rec['deathMonth'])
+#             deathMonth = None
+#             if 'deathMonth' in rec and  rec['deathMonth'] and rec['deathMonth'] != '':
+#                 deathMonth = int(rec['deathMonth'])
             
-            deathDay = None
-            if 'deathDay' in rec and rec['deathDay'] and rec['deathDay'] != '':
-                deathDay = int(rec['deathDay'])
+#             deathDay = None
+#             if 'deathDay' in rec and rec['deathDay'] and rec['deathDay'] != '':
+#                 deathDay = int(rec['deathDay'])
 
-            weight = None
-            if 'weight' in rec and rec['weight'] and rec['weight'] != '':
-                weight = int(rec['weight'])
+#             weight = None
+#             if 'weight' in rec and rec['weight'] and rec['weight'] != '':
+#                 weight = int(rec['weight'])
 
-            height = None
-            if 'height' in rec and rec['height'] and rec['height'] != '':
-                height = int(rec['height'])
+#             height = None
+#             if 'height' in rec and rec['height'] and rec['height'] != '':
+#                 height = int(rec['height'])
 
-        except:
-            for e in sys.exc_info():
-                print "converstions: %s" % e
-                return False
+#         except:
+#             for e in sys.exc_info():
+#                 print "converstions: %s" % e
+#                 return False
 
-        m = People.create(
-            playerID=rec['playerID'],
-            birthYear=birthYear,
-            birthMonth=birthMonth,
-            birthDay=birthDay,
-            birthCountry=rec['birthCountry'],
-            birthState=rec['birthState'],
-            birthCity=rec['birthCity'],
-            deathYear=deathYear,
-            deathMonth=deathMonth,
-            deathDay=deathDay,
-            deathCountry=rec['deathCountry'],
-            deathState=rec['deathState'],
-            deathCity=rec['deathCity'],
-            nameFirst=rec['nameFirst'],
-            nameLast=rec['nameLast'],
-            nameGiven=rec['nameGiven'],
-            weight=weight,
-            height=height,
-            bats=rec['bats'],
-            throws=rec['throws'],
-        #    debut=rec['debut'],
-        #    finalGame=rec['finalGame'],
-        #    retroID=rec['retroID'],
-            bbrefID=rec['bbrefID']
-        )
-        m.save()
-        BDB_DB.commit()
-        return True
-    except:
-        for e in sys.exc_info():
-            print "%s" % e
-        return False
+#         m = People.create(
+#             playerID=rec['playerID'],
+#             birthYear=birthYear,
+#             birthMonth=birthMonth,
+#             birthDay=birthDay,
+#             birthCountry=rec['birthCountry'],
+#             birthState=rec['birthState'],
+#             birthCity=rec['birthCity'],
+#             deathYear=deathYear,
+#             deathMonth=deathMonth,
+#             deathDay=deathDay,
+#             deathCountry=rec['deathCountry'],
+#             deathState=rec['deathState'],
+#             deathCity=rec['deathCity'],
+#             nameFirst=rec['nameFirst'],
+#             nameLast=rec['nameLast'],
+#             nameGiven=rec['nameGiven'],
+#             weight=weight,
+#             height=height,
+#             bats=rec['bats'],
+#             throws=rec['throws'],
+#         #    debut=rec['debut'],
+#         #    finalGame=rec['finalGame'],
+#         #    retroID=rec['retroID'],
+#             bbrefID=rec['bbrefID']
+#         )
+#         m.save()
+#         BDB_DB.commit()
+#         return True
+#     except:
+#         for e in sys.exc_info():
+#             print "%s" % e
+#         return False
 
 
 
@@ -218,7 +218,7 @@ class Managers(BaseModel):
     plyrMgr = CharField(null='true')
 
     class Meta(object):
-        #primary_key = CompositeKey('playerID', 'yearID', 'lgID', 'teamID', 'rank')
+        primary_key = CompositeKey('yearID', 'lgID', 'teamID', 'playerID', 'inseason')
         db_table = 'managers'
 
 class ManagersHalf(BaseModel):
