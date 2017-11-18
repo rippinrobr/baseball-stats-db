@@ -1,2 +1,16 @@
 *~
 node_modules
+.*.swp
+out
+*.pyc
+.vscode
+
+/bin
+/.go
+/.push-*
+/.container-*
+/.dockerfile-*
+./db
+vendor
+.DS_Store
+baseball_databank_*.sqlite3
