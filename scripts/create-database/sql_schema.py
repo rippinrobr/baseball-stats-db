@@ -490,7 +490,7 @@ class Awards_Managers(BaseModel):
     notes = CharField(null='true')
     
     class Meta(object):
-        #primary_key = CompositeKey('yearID', 'playerID', 'lgID', 'tie')
+        primary_key = CompositeKey('yearID', 'lgID', 'awardID', 'playerID')
         db_table = 'awardsmanagers'
 
 class Awards_Share_Managers(BaseModel):
