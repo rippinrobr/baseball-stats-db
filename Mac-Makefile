@@ -1,3 +1,0 @@
-BIN := bdloader
-all:  cmd/bdloader/main.go
-	go build -o ./bin/$(BIN) cmd/bdloader/main.go

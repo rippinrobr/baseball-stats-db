@@ -33,7 +33,7 @@ optional arguments:
   If you were to run the script this way when the script finished you would have a new SQLite database in the directory that you ran the script in.  If you pass a path to the script of a pre-existing database you will receive an error.  In future version of the script this will be handled more gracefully.
 
   ## Generating Data Structures
-  This script creates the data structures code that describes the data in each of the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank)] CSV files.  The script reads each of the CSV files, determines the data types of the columns and will write source code files for each of the CSV files. In order to run this script you will need to have the package `inflection` installed. The script has been tested using `inflection` 0.3.1.  As of now Go is the only supported language, C#, Python, JavaScript and other languages are planned.  If there is a particular language you would like to see you can create an issue or even better, submit a pull request.
+  This script creates the data structures code that describes the data in each of the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) CSV files.  The script reads each of the CSV files, determines the data types of the columns and will write source code files for each of the CSV files. In order to run this script you will need to have the package `inflection` installed. The script has been tested using `inflection` 0.3.1.  As of now Go is the only supported language, C#, Python, JavaScript and other languages are planned.  If there is a particular language you would like to see you can create an issue or even better, submit a pull request.
 
   ### create_data_structures.py
   ```
