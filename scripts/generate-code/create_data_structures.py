@@ -4,7 +4,6 @@ import inflection
 import glob
 import os, errno, sys
 from go_data_structures import create_go_datastructure
-from haskell_data_structures import create_haskell_datastructure
 
 LANG_GO = "go"
 
@@ -20,11 +19,10 @@ def define_parameters(parser):
     parser.add_argument("--input", default="", help="the path to the input CSV file",type=str )
     parser.add_argument("--input-dir", default="", help="the path to the directory that contains the CSV files to parse",type=str )
     parser.add_argument("--json", help="If the language supports add JSON tags or JSON representation to the structure", action="store_true")
-    parser.add_argument("--language", choices=[LANG_GO], default=LANG_GO, help="create a Haskell datastructure", required=True, type=str)
-    parser.add_argument("--name", help="name of the datastructure being created", type=str)
+    parser.add_argument("--language", choices=[LANG_GO], default=LANG_GO, help="create language specific data structures", required=True, type=str)
+    parser.add_argument("--name", help="name of the datas tructure being created", type=str)
     parser.add_argument("--output-dir", help="the directory where the generated file should be written.  If not provided file will be written to stdout")
-    parser.add_argument("--package", help="adds the package line at the top of Go files." , action="store_true")
-    parser.add_argument("--verbose", help="more output during the parsing and creation of the datastructures", action="store_true")
+    parser.add_argument("--verbose", help="more output during the parsing and creation of the data structures", action="store_true")
 
 def get_data_type(col_val):
     """Deterimes if the current value is numeric or a string"""
@@ -87,7 +85,7 @@ def create_output_directory(dir_path):
             raise
 
 def main():
-    parser = argparse.ArgumentParser(description="Test the SMS notification Service.")
+    parser = argparse.ArgumentParser(description="Generate language specific data structures that model each of the Baseball Databank CSV files.")
     define_parameters(parser)
     args = parser.parse_args()
 
