@@ -16,7 +16,7 @@ If you want to build the database yourself you'll need to run the `create_databa
 Create the schema is as simple as running `python create_database_schema.py`.  The script lives in the `scripts/create-database` directory and has the options listed below.
 
 ```
-usage: create_database_schema.py [-h] [--dbtype {sqlite}] [--dbpath DBPATH]
+usage: create_database_schema.py [-h] [--dbtype {sqlite,postgres}] [--dbpath DBPATH]
 
 Generates a DB schema based on the Baseball Databank csv files.
 
@@ -25,6 +25,8 @@ optional arguments:
   --dbtype {sqlite}  the database type you'd like to generate the schema for
   --dbpath DBPATH    SQLITE ONLY - the path for the newly created database
   ```
+
+_For all databases except SQLite the database referenced by the --dbname option must already exist_
 
   Since SQLite is currently the only supported database running the `create_database_schema.py` script really only requires one command line argument since `--dbtype` defaults to `SQLite`.  Here's how to create the database:
 
