@@ -1,12 +1,8 @@
 from sql_schema import *
 import sys
 
-MYSQL = "mysql"
-POSTGRES = "postgres"
-SQLITE = "sqlite"
-
 def define_parameters(parser):
-    parser.add_argument("--dbtype", choices=[SQLITE,POSTGRES,MYSQL], help="the database type you'd like to generate the schema for", type=str, required=True)
+    parser.add_argument("--dbtype", choices=SUPPORTED_DBS, help="the database type you'd like to generate the schema for", type=str, required=True)
     parser.add_argument("--dbhost", help="host of the database server", default="localhost", type=str)
     parser.add_argument("--dbname", help="Name of the database where the tables are to be added. REQUIRED if not sqlite", type=str)
     parser.add_argument("--dbpath", help="SQLITE ONLY - the path for the newly created database", type=str)
@@ -56,9 +52,9 @@ def main():
     except ProgrammingError as e:
         print "ERROR: An issue occurred while trying to create the database schema:", e
     except InternalError as i:
-        print "ERROR: An issue occurred while trying to create the datbase schema:", i[1]
+        print "ERROR: An issue occurred while trying to create the datbase schema:", i
     except OperationalError as o:
-        print "ERROR: An error occurred while attempting to create the database schema:", o[1]
+        print "ERROR: An error occurred while attempting to create the database schema:", o
     
 if __name__ == "__main__":
     main()

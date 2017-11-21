@@ -4,6 +4,11 @@ import logging
 import sys
 import argparse
 
+MYSQL = "mysql"
+POSTGRES = "postgres"
+SQLITE = "sqlite"
+
+SUPPORTED_DBS = [MYSQL, POSTGRES, SQLITE]
 #  THIS IS HOW TO MAKE THIS PART DYNAMIC http://docs.peewee-orm.com/en/latest/peewee/database.html#dynamic-db
 database_proxy =  Proxy() 
 
@@ -556,8 +561,6 @@ def initialize_db_and_connect(bdb_db):
     database_proxy.initialize(bdb_db)
     database_proxy.connect()
     database_proxy.create_tables(TABLE_NAMES)
-    # TODO: ADD SECOND INDEX CREATING HERE WHEN DB != SQLITE
-    
 
 TABLE_NAMES = [ 
     People, TeamsFranchises, Parks, Teams, Managers, ManagersHalf, Schools,
