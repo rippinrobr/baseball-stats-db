@@ -14,27 +14,14 @@ def define_parameters(parser):
     parser.add_argument("--dbport", help="The port the database servier is listeing on, ignored for SQLite, defaults to appropriate value for server type if not provided", type=int)
     parser.add_argument("--dbuser", help="username to use when creating the database, ignorred for SQLite databases, REQUIRED for others.", type=str)
 
-def main():
-    param_parser = argparse.ArgumentParser(description="Generates a DB schema based on the Baseball Databank csv files.")    
-    define_parameters(param_parser)
-    args = param_parser.parse_args()
-
-    if args.dbname == None and args.dbtype.tolower() != SQLITE:
-        print "ERROR: If --dbtype is not sqlite then --dbname is required"
-        param_parser.print_help()
-        sys.exit(1)
-
-    bdb_db = ""
-    
-    sqlite_db_name = "baseball_databank.sqlite3"
-    if args.dbpath != None and args.dbpath != "":
-        if args.dbtype == SQLITE:
-            sqlite_db_name = args.dbpath 
-        else:
-            print "The argument --dbpath is only needed for Sqlite databases, ignoring."
-
+def create_db_connection(args):
     if args.dbtype == SQLITE:
-        bdb_db = SqliteDatabase(sqlite_db_name)
+        sqlite_db_name = "baseball_databank.sqlite3"
+        if args.dbpath:
+            sqlite_db_name = args.dbpath
+        
+        return SqliteDatabase(sqlite_db_name)
+
     else:
         if args.dbuser == None:
             param_parser.print_help() 
@@ -44,19 +31,34 @@ def main():
             port = 5432
             if port > 0:
                 port = args.dbport
-            bdb_db = PostgresqlDatabase('baseballdatabank', host=args.dbhost, user=args.dbuser, port=port)
+            return PostgresqlDatabase(args.dbname, host=args.dbhost, user=args.dbuser, port=args.dbport, password=args.dbpass)
 
         if args.dbtype == MYSQL:  #>r#(-t:Hu4&w
             port = 3306
-            password = ""
             if args.dbport > 0:
                 port = args.dbport
             
-            if args.dbpass != None:
-                password = args.dbpass
-            bdb_db = MySQLDatabase('baseballdatabank',  host=args.dbhost, port=port, user=args.dbuser, password=args.dbpass)
-       
-    initialize_db_and_connect(bdb_db)
+            return MySQLDatabase(args.dbname,  host=args.dbhost, port=port, user=args.dbuser, password=args.dbpass)
+
+def main():
+    param_parser = argparse.ArgumentParser(description="Generates a DB schema based on the Baseball Databank csv files.")    
+    define_parameters(param_parser)
+    args = param_parser.parse_args()
+
+    if args.dbname == None and args.dbtype.lower() != SQLITE:
+        print "ERROR: If --dbtype is not sqlite then --dbname is required"
+        param_parser.print_help()
+        sys.exit(1)
+    
+    try:
+        bdb_db = create_db_connection(args)
+        initialize_db_and_connect(bdb_db)
+    except ProgrammingError as e:
+        print "ERROR: An issue occurred while trying to create the database schema:", e
+    except InternalError as i:
+        print "ERROR: An issue occurred while trying to create the datbase schema:", i[1]
+    except OperationalError as o:
+        print "ERROR: An error occurred while attempting to create the database schema:", o[1]
     
 if __name__ == "__main__":
     main()
