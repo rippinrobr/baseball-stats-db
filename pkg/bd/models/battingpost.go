@@ -6,36 +6,36 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // BattingPost is a model that maps the CSV to a DB Table
 type BattingPost struct {
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Round   string `json:"round"  csv:"round"  db:"round"`
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Round   string `json:"round"  csv:"round"  db:"round,omitempty"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
    G   int `json:"g"  csv:"G"  db:"G"`
-   Ab   int `json:"ab"  csv:"AB"  db:"AB"`
+   Ab   int `json:"aB"  csv:"AB"  db:"AB"`
    R   int `json:"r"  csv:"R"  db:"R"`
    H   int `json:"h"  csv:"H"  db:"H"`
-   Doubles   int `json:"doubles"  csv:"2B"  db:"2B"`
-   Triples   int `json:"triples"  csv:"3B"  db:"3B"`
-   Hr   int `json:"hr"  csv:"HR"  db:"HR"`
-   Rbi   int `json:"rbi"  csv:"RBI"  db:"RBI"`
-   Sb   int `json:"sb"  csv:"SB"  db:"SB"`
-   Cs   string `json:"cs"  csv:"CS"  db:"CS"`
-   Bb   int `json:"bb"  csv:"BB"  db:"BB"`
-   So   int `json:"so"  csv:"SO"  db:"SO"`
-   Ibb   int `json:"ibb"  csv:"IBB"  db:"IBB"`
-   Hbp   string `json:"hbp"  csv:"HBP"  db:"HBP"`
-   Sh   string `json:"sh"  csv:"SH"  db:"SH"`
-   Sf   string `json:"sf"  csv:"SF"  db:"SF"`
-   Gidp   string `json:"gidp"  csv:"GIDP"  db:"GIDP"`
+   Doubles   int `json:"doubles"  csv:"2B"  db:"doubles"`
+   Triples   int `json:"triples"  csv:"3B"  db:"triples"`
+   Hr   int `json:"hR"  csv:"HR"  db:"HR"`
+   Rbi   int `json:"rBI"  csv:"RBI"  db:"RBI"`
+   Sb   int `json:"sB"  csv:"SB"  db:"SB"`
+   Cs   int `json:"cS"  csv:"CS"  db:"CS"`
+   Bb   int `json:"bB"  csv:"BB"  db:"BB"`
+   So   int `json:"sO"  csv:"SO"  db:"SO"`
+   Ibb   int `json:"iBB"  csv:"IBB"  db:"IBB"`
+   Hbp   int `json:"hBP"  csv:"HBP"  db:"HBP"`
+   Sh   int `json:"sH"  csv:"SH"  db:"SH"`
+   Sf   int `json:"sF"  csv:"SF"  db:"SF"`
+   Gidp   int `json:"gIDP"  csv:"GIDP"  db:"GIDP"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

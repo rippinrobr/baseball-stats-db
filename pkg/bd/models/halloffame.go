@@ -6,23 +6,23 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // HallOfFame is a model that maps the CSV to a DB Table
 type HallOfFame struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearid"  db:"yearid"`
-   Votedby   string `json:"votedby"  csv:"votedBy"  db:"votedBy"`
-   Ballots   string `json:"ballots"  csv:"ballots"  db:"ballots"`
-   Needed   string `json:"needed"  csv:"needed"  db:"needed"`
-   Votes   string `json:"votes"  csv:"votes"  db:"votes"`
-   Inducted   string `json:"inducted"  csv:"inducted"  db:"inducted"`
-   Category   string `json:"category"  csv:"category"  db:"category"`
-   Needednote   string `json:"needednote"  csv:"needed_note"  db:"needed_note"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearid"  db:"yearID"`
+   Votedby   string `json:"votedBy"  csv:"votedBy"  db:"votedBy,omitempty"`
+   Ballots   int `json:"ballots"  csv:"ballots"  db:"ballots"`
+   Needed   int `json:"needed"  csv:"needed"  db:"needed"`
+   Votes   int `json:"votes"  csv:"votes"  db:"votes"`
+   Inducted   string `json:"inducted"  csv:"inducted"  db:"inducted,omitempty"`
+   Category   string `json:"category"  csv:"category"  db:"category,omitempty"`
+   Needednote   string `json:"needednote"  csv:"needed_note"  db:"needed_note,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

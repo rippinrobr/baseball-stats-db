@@ -6,18 +6,18 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // ManagersHalf is a model that maps the CSV to a DB Table
 type ManagersHalf struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
    Inseason   int `json:"inseason"  csv:"inseason"  db:"inseason"`
    Half   int `json:"half"  csv:"half"  db:"half"`
    G   int `json:"g"  csv:"G"  db:"G"`

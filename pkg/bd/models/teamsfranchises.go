@@ -6,18 +6,18 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // TeamsFranchises is a model that maps the CSV to a DB Table
 type TeamsFranchises struct {
-   Franchid   string `json:"franchid"  csv:"franchID"  db:"franchID"`
-   Franchname   string `json:"franchname"  csv:"franchName"  db:"franchName"`
-   Active   string `json:"active"  csv:"active"  db:"active"`
-   Naassoc   string `json:"naassoc"  csv:"NAassoc"  db:"NAassoc"`
+   Franchid   string `json:"franchID"  csv:"franchID"  db:"franchID,omitempty"`
+   Franchname   string `json:"franchName"  csv:"franchName"  db:"franchName,omitempty"`
+   Active   string `json:"active"  csv:"active"  db:"active,omitempty"`
+   Naassoc   string `json:"nAassoc"  csv:"NAassoc"  db:"NAassoc,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

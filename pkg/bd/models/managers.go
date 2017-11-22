@@ -6,24 +6,24 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // Managers is a model that maps the CSV to a DB Table
 type Managers struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
    Inseason   int `json:"inseason"  csv:"inseason"  db:"inseason"`
    G   int `json:"g"  csv:"G"  db:"G"`
    W   int `json:"w"  csv:"W"  db:"W"`
    L   int `json:"l"  csv:"L"  db:"L"`
-   Rank   string `json:"rank"  csv:"rank"  db:"rank"`
-   Plyrmgr   string `json:"plyrmgr"  csv:"plyrMgr"  db:"plyrMgr"`
+   Rank   int `json:"rank"  csv:"rank"  db:"rank"`
+   Plyrmgr   string `json:"plyrMgr"  csv:"plyrMgr"  db:"plyrMgr,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

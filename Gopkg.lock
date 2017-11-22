@@ -8,6 +8,12 @@
   revision = "7099e67763c29f812fa2ed7083f32e38be60125a"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/lib/pq"
+  packages = [".","oid"]
+  revision = "8c6ee72f3e6bcb1542298dd5f76cb74af9742cec"
+
+[[projects]]
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
   revision = "5160b48509cf5c877bc22c11c373f8c7738cdb38"
@@ -21,13 +27,13 @@
 
 [[projects]]
   name = "upper.io/db.v3"
-  packages = [".","internal/cache","internal/cache/hashstructure","internal/immutable","internal/sqladapter","internal/sqladapter/compat","internal/sqladapter/exql","lib/reflectx","lib/sqlbuilder","sqlite"]
+  packages = [".","internal/cache","internal/cache/hashstructure","internal/immutable","internal/sqladapter","internal/sqladapter/compat","internal/sqladapter/exql","lib/reflectx","lib/sqlbuilder","postgresql","sqlite"]
   revision = "4ceccb1227aba5fc0f71ca3adc5dd759dfbc093e"
   version = "v3.5.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fa694d1b89ec9863fa1cc30c63bff1de42296df32ec465980574b5e9f57c4761"
+  inputs-digest = "ae8135121c258baebdd81565b50ae1c6a892d34b75ac4d990ce3c27fa8583215"
   solver-name = "gps-cdcl"
   solver-version = 1

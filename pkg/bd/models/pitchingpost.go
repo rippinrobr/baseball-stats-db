@@ -6,44 +6,44 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // PitchingPost is a model that maps the CSV to a DB Table
 type PitchingPost struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Round   string `json:"round"  csv:"round"  db:"round"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Round   string `json:"round"  csv:"round"  db:"round,omitempty"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
    W   int `json:"w"  csv:"W"  db:"W"`
    L   int `json:"l"  csv:"L"  db:"L"`
    G   int `json:"g"  csv:"G"  db:"G"`
-   Gs   int `json:"gs"  csv:"GS"  db:"GS"`
-   Cg   int `json:"cg"  csv:"CG"  db:"CG"`
-   Sho   int `json:"sho"  csv:"SHO"  db:"SHO"`
-   Sv   int `json:"sv"  csv:"SV"  db:"SV"`
-   Ipouts   int `json:"ipouts"  csv:"IPouts"  db:"IPouts"`
+   Gs   int `json:"gS"  csv:"GS"  db:"GS"`
+   Cg   int `json:"cG"  csv:"CG"  db:"CG"`
+   Sho   int `json:"sHO"  csv:"SHO"  db:"SHO"`
+   Sv   int `json:"sV"  csv:"SV"  db:"SV"`
+   Ipouts   int `json:"iPouts"  csv:"IPouts"  db:"IPouts"`
    H   int `json:"h"  csv:"H"  db:"H"`
-   Er   int `json:"er"  csv:"ER"  db:"ER"`
-   Hr   int `json:"hr"  csv:"HR"  db:"HR"`
-   Bb   int `json:"bb"  csv:"BB"  db:"BB"`
-   So   int `json:"so"  csv:"SO"  db:"SO"`
-   Baopp   string `json:"baopp"  csv:"BAOpp"  db:"BAOpp"`
-   Era   string `json:"era"  csv:"ERA"  db:"ERA"`
-   Ibb   string `json:"ibb"  csv:"IBB"  db:"IBB"`
-   Wp   string `json:"wp"  csv:"WP"  db:"WP"`
-   Hbp   string `json:"hbp"  csv:"HBP"  db:"HBP"`
-   Bk   string `json:"bk"  csv:"BK"  db:"BK"`
-   Bfp   string `json:"bfp"  csv:"BFP"  db:"BFP"`
-   Gf   int `json:"gf"  csv:"GF"  db:"GF"`
+   Er   int `json:"eR"  csv:"ER"  db:"ER"`
+   Hr   int `json:"hR"  csv:"HR"  db:"HR"`
+   Bb   int `json:"bB"  csv:"BB"  db:"BB"`
+   So   int `json:"sO"  csv:"SO"  db:"SO"`
+   Baopp   float64 `json:"bAOpp"  csv:"BAOpp"  db:"BAOpp"`
+   Era   float64 `json:"eRA"  csv:"ERA"  db:"ERA"`
+   Ibb   int `json:"iBB"  csv:"IBB"  db:"IBB"`
+   Wp   int `json:"wP"  csv:"WP"  db:"WP"`
+   Hbp   int `json:"hBP"  csv:"HBP"  db:"HBP"`
+   Bk   int `json:"bK"  csv:"BK"  db:"BK"`
+   Bfp   int `json:"bFP"  csv:"BFP"  db:"BFP"`
+   Gf   int `json:"gF"  csv:"GF"  db:"GF"`
    R   int `json:"r"  csv:"R"  db:"R"`
-   Sh   string `json:"sh"  csv:"SH"  db:"SH"`
-   Sf   string `json:"sf"  csv:"SF"  db:"SF"`
-   Gidp   string `json:"gidp"  csv:"GIDP"  db:"GIDP"`
+   Sh   int `json:"sH"  csv:"SH"  db:"SH"`
+   Sf   int `json:"sF"  csv:"SF"  db:"SF"`
+   Gidp   int `json:"gIDP"  csv:"GIDP"  db:"GIDP"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

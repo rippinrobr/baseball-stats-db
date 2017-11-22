@@ -6,62 +6,62 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // Teams is a model that maps the CSV to a DB Table
 type Teams struct {
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Franchid   string `json:"franchid"  csv:"franchID"  db:"franchID"`
-   Divid   string `json:"divid"  csv:"divID"  db:"divID"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Franchid   string `json:"franchID"  csv:"franchID"  db:"franchID,omitempty"`
+   Divid   string `json:"divID"  csv:"divID"  db:"divID,omitempty"`
    Rank   int `json:"rank"  csv:"Rank"  db:"Rank"`
    G   int `json:"g"  csv:"G"  db:"G"`
-   Ghome   string `json:"ghome"  csv:"Ghome"  db:"Ghome"`
+   Ghome   int `json:"ghome"  csv:"Ghome"  db:"Ghome"`
    W   int `json:"w"  csv:"W"  db:"W"`
    L   int `json:"l"  csv:"L"  db:"L"`
-   Divwin   string `json:"divwin"  csv:"DivWin"  db:"DivWin"`
-   Wcwin   string `json:"wcwin"  csv:"WCWin"  db:"WCWin"`
-   Lgwin   string `json:"lgwin"  csv:"LgWin"  db:"LgWin"`
-   Wswin   string `json:"wswin"  csv:"WSWin"  db:"WSWin"`
+   Divwin   string `json:"divWin"  csv:"DivWin"  db:"DivWin,omitempty"`
+   Wcwin   string `json:"wCWin"  csv:"WCWin"  db:"WCWin,omitempty"`
+   Lgwin   string `json:"lgWin"  csv:"LgWin"  db:"LgWin,omitempty"`
+   Wswin   string `json:"wSWin"  csv:"WSWin"  db:"WSWin,omitempty"`
    R   int `json:"r"  csv:"R"  db:"R"`
-   Ab   int `json:"ab"  csv:"AB"  db:"AB"`
+   Ab   int `json:"aB"  csv:"AB"  db:"AB"`
    H   int `json:"h"  csv:"H"  db:"H"`
-   Doubles   int `json:"doubles"  csv:"2B"  db:"2B"`
-   Triples   int `json:"triples"  csv:"3B"  db:"3B"`
-   Hr   int `json:"hr"  csv:"HR"  db:"HR"`
-   Bb   int `json:"bb"  csv:"BB"  db:"BB"`
-   So   string `json:"so"  csv:"SO"  db:"SO"`
-   Sb   string `json:"sb"  csv:"SB"  db:"SB"`
-   Cs   string `json:"cs"  csv:"CS"  db:"CS"`
-   Hbp   string `json:"hbp"  csv:"HBP"  db:"HBP"`
-   Sf   string `json:"sf"  csv:"SF"  db:"SF"`
-   Ra   int `json:"ra"  csv:"RA"  db:"RA"`
-   Er   int `json:"er"  csv:"ER"  db:"ER"`
-   Era   string `json:"era"  csv:"ERA"  db:"ERA"`
-   Cg   int `json:"cg"  csv:"CG"  db:"CG"`
-   Sho   int `json:"sho"  csv:"SHO"  db:"SHO"`
-   Sv   int `json:"sv"  csv:"SV"  db:"SV"`
-   Ipouts   int `json:"ipouts"  csv:"IPouts"  db:"IPouts"`
-   Ha   int `json:"ha"  csv:"HA"  db:"HA"`
-   Hra   int `json:"hra"  csv:"HRA"  db:"HRA"`
-   Bba   int `json:"bba"  csv:"BBA"  db:"BBA"`
-   Soa   int `json:"soa"  csv:"SOA"  db:"SOA"`
+   Doubles   int `json:"doubles"  csv:"2B"  db:"doubles"`
+   Triples   int `json:"triples"  csv:"3B"  db:"triples"`
+   Hr   int `json:"hR"  csv:"HR"  db:"HR"`
+   Bb   int `json:"bB"  csv:"BB"  db:"BB"`
+   So   int `json:"sO"  csv:"SO"  db:"SO"`
+   Sb   int `json:"sB"  csv:"SB"  db:"SB"`
+   Cs   int `json:"cS"  csv:"CS"  db:"CS"`
+   Hbp   int `json:"hBP"  csv:"HBP"  db:"HBP"`
+   Sf   int `json:"sF"  csv:"SF"  db:"SF"`
+   Ra   int `json:"rA"  csv:"RA"  db:"RA"`
+   Er   int `json:"eR"  csv:"ER"  db:"ER"`
+   Era   float64 `json:"eRA"  csv:"ERA"  db:"ERA"`
+   Cg   int `json:"cG"  csv:"CG"  db:"CG"`
+   Sho   int `json:"sHO"  csv:"SHO"  db:"SHO"`
+   Sv   int `json:"sV"  csv:"SV"  db:"SV"`
+   Ipouts   int `json:"iPouts"  csv:"IPouts"  db:"IPouts"`
+   Ha   int `json:"hA"  csv:"HA"  db:"HA"`
+   Hra   int `json:"hRA"  csv:"HRA"  db:"HRA"`
+   Bba   int `json:"bBA"  csv:"BBA"  db:"BBA"`
+   Soa   int `json:"sOA"  csv:"SOA"  db:"SOA"`
    E   int `json:"e"  csv:"E"  db:"E"`
-   Dp   string `json:"dp"  csv:"DP"  db:"DP"`
-   Fp   string `json:"fp"  csv:"FP"  db:"FP"`
-   Name   string `json:"name"  csv:"name"  db:"name"`
-   Park   string `json:"park"  csv:"park"  db:"park"`
-   Attendance   string `json:"attendance"  csv:"attendance"  db:"attendance"`
-   Bpf   int `json:"bpf"  csv:"BPF"  db:"BPF"`
-   Ppf   int `json:"ppf"  csv:"PPF"  db:"PPF"`
-   Teamidbr   string `json:"teamidbr"  csv:"teamIDBR"  db:"teamIDBR"`
-   Teamidlahman45   string `json:"teamidlahman45"  csv:"teamIDlahman45"  db:"teamIDlahman45"`
-   Teamidretro   string `json:"teamidretro"  csv:"teamIDretro"  db:"teamIDretro"`
+   Dp   int `json:"dP"  csv:"DP"  db:"DP"`
+   Fp   float64 `json:"fP"  csv:"FP"  db:"FP"`
+   Name   string `json:"name"  csv:"name"  db:"name,omitempty"`
+   Park   string `json:"park"  csv:"park"  db:"park,omitempty"`
+   Attendance   int `json:"attendance"  csv:"attendance"  db:"attendance"`
+   Bpf   int `json:"bPF"  csv:"BPF"  db:"BPF"`
+   Ppf   int `json:"pPF"  csv:"PPF"  db:"PPF"`
+   Teamidbr   string `json:"teamIDBR"  csv:"teamIDBR"  db:"teamIDBR,omitempty"`
+   Teamidlahman45   string `json:"teamIDlahman45"  csv:"teamIDlahman45"  db:"teamIDlahman45,omitempty"`
+   Teamidretro   string `json:"teamIDretro"  csv:"teamIDretro"  db:"teamIDretro,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

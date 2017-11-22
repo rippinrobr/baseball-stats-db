@@ -6,19 +6,19 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // Schools is a model that maps the CSV to a DB Table
 type Schools struct {
-   Schoolid   string `json:"schoolid"  csv:"schoolID"  db:"schoolID"`
-   Namefull   string `json:"namefull"  csv:"name_full"  db:"name_full"`
-   City   string `json:"city"  csv:"city"  db:"city"`
-   State   string `json:"state"  csv:"state"  db:"state"`
-   Country   string `json:"country"  csv:"country"  db:"country"`
+   Schoolid   string `json:"schoolID"  csv:"schoolID"  db:"schoolID,omitempty"`
+   Namefull   string `json:"namefull"  csv:"name_full"  db:"name_full,omitempty"`
+   City   string `json:"city"  csv:"city"  db:"city,omitempty"`
+   State   string `json:"state"  csv:"state"  db:"state,omitempty"`
+   Country   string `json:"country"  csv:"country"  db:"country,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

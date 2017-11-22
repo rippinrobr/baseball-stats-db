@@ -6,32 +6,32 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // FieldingOFsplit is a model that maps the CSV to a DB Table
 type FieldingOFsplit struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
    Stint   int `json:"stint"  csv:"stint"  db:"stint"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Pos   string `json:"pos"  csv:"POS"  db:"POS"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Pos   string `json:"pOS"  csv:"POS"  db:"POS,omitempty"`
    G   int `json:"g"  csv:"G"  db:"G"`
-   Gs   string `json:"gs"  csv:"GS"  db:"GS"`
-   Innouts   string `json:"innouts"  csv:"InnOuts"  db:"InnOuts"`
-   Po   string `json:"po"  csv:"PO"  db:"PO"`
-   A   string `json:"a"  csv:"A"  db:"A"`
-   E   string `json:"e"  csv:"E"  db:"E"`
-   Dp   string `json:"dp"  csv:"DP"  db:"DP"`
-   Pb   string `json:"pb"  csv:"PB"  db:"PB"`
-   Wp   string `json:"wp"  csv:"WP"  db:"WP"`
-   Sb   string `json:"sb"  csv:"SB"  db:"SB"`
-   Cs   string `json:"cs"  csv:"CS"  db:"CS"`
-   Zr   string `json:"zr"  csv:"ZR"  db:"ZR"`
+   Gs   int `json:"gS"  csv:"GS"  db:"GS"`
+   Innouts   int `json:"innOuts"  csv:"InnOuts"  db:"InnOuts"`
+   Po   int `json:"pO"  csv:"PO"  db:"PO"`
+   A   int `json:"a"  csv:"A"  db:"A"`
+   E   int `json:"e"  csv:"E"  db:"E"`
+   Dp   int `json:"dP"  csv:"DP"  db:"DP"`
+   Pb   string `json:"pB"  csv:"PB"  db:"PB,omitempty"`
+   Wp   string `json:"wP"  csv:"WP"  db:"WP,omitempty"`
+   Sb   string `json:"sB"  csv:"SB"  db:"SB,omitempty"`
+   Cs   string `json:"cS"  csv:"CS"  db:"CS,omitempty"`
+   Zr   string `json:"zR"  csv:"ZR"  db:"ZR,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

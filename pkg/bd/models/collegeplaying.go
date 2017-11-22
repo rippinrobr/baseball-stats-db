@@ -6,17 +6,17 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // CollegePlaying is a model that maps the CSV to a DB Table
 type CollegePlaying struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Schoolid   string `json:"schoolid"  csv:"schoolID"  db:"schoolID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Schoolid   string `json:"schoolID"  csv:"schoolID"  db:"schoolID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

@@ -6,20 +6,20 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // FieldingOF is a model that maps the CSV to a DB Table
 type FieldingOF struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
    Stint   int `json:"stint"  csv:"stint"  db:"stint"`
-   Glf   string `json:"glf"  csv:"Glf"  db:"Glf"`
-   Gcf   string `json:"gcf"  csv:"Gcf"  db:"Gcf"`
-   Grf   string `json:"grf"  csv:"Grf"  db:"Grf"`
+   Glf   int `json:"glf"  csv:"Glf"  db:"Glf"`
+   Gcf   int `json:"gcf"  csv:"Gcf"  db:"Gcf"`
+   Grf   int `json:"grf"  csv:"Grf"  db:"Grf"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

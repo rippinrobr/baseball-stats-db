@@ -6,21 +6,21 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // AwardsSharePlayers is a model that maps the CSV to a DB Table
 type AwardsSharePlayers struct {
-   Awardid   string `json:"awardid"  csv:"awardID"  db:"awardID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Pointswon   string `json:"pointswon"  csv:"pointsWon"  db:"pointsWon"`
-   Pointsmax   int `json:"pointsmax"  csv:"pointsMax"  db:"pointsMax"`
-   Votesfirst   string `json:"votesfirst"  csv:"votesFirst"  db:"votesFirst"`
+   Awardid   string `json:"awardID"  csv:"awardID"  db:"awardID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Pointswon   float64 `json:"pointsWon"  csv:"pointsWon"  db:"pointsWon"`
+   Pointsmax   int `json:"pointsMax"  csv:"pointsMax"  db:"pointsMax"`
+   Votesfirst   float64 `json:"votesFirst"  csv:"votesFirst"  db:"votesFirst"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

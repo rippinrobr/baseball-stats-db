@@ -6,20 +6,20 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // Parks is a model that maps the CSV to a DB Table
 type Parks struct {
-   Parkkey   string `json:"parkkey"  csv:"park.key"  db:"parkkey"`
-   Parkname   string `json:"parkname"  csv:"park.name"  db:"parkname"`
-   Parkalias   string `json:"parkalias"  csv:"park.alias"  db:"parkalias"`
-   City   string `json:"city"  csv:"city"  db:"city"`
-   State   string `json:"state"  csv:"state"  db:"state"`
-   Country   string `json:"country"  csv:"country"  db:"country"`
+   Parkkey   string `json:"parkkey"  csv:"park.key"  db:"parkkey,omitempty"`
+   Parkname   string `json:"parkname"  csv:"park.name"  db:"parkname,omitempty"`
+   Parkalias   string `json:"parkalias"  csv:"park.alias"  db:"parkalias,omitempty"`
+   City   string `json:"city"  csv:"city"  db:"city,omitempty"`
+   State   string `json:"state"  csv:"state"  db:"state,omitempty"`
+   Country   string `json:"country"  csv:"country"  db:"country,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

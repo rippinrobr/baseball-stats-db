@@ -6,31 +6,31 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // FieldingPost is a model that maps the CSV to a DB Table
 type FieldingPost struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Round   string `json:"round"  csv:"round"  db:"round"`
-   Pos   string `json:"pos"  csv:"POS"  db:"POS"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Round   string `json:"round"  csv:"round"  db:"round,omitempty"`
+   Pos   string `json:"pOS"  csv:"POS"  db:"POS,omitempty"`
    G   int `json:"g"  csv:"G"  db:"G"`
-   Gs   int `json:"gs"  csv:"GS"  db:"GS"`
-   Innouts   int `json:"innouts"  csv:"InnOuts"  db:"InnOuts"`
-   Po   int `json:"po"  csv:"PO"  db:"PO"`
+   Gs   int `json:"gS"  csv:"GS"  db:"GS"`
+   Innouts   int `json:"innOuts"  csv:"InnOuts"  db:"InnOuts"`
+   Po   int `json:"pO"  csv:"PO"  db:"PO"`
    A   int `json:"a"  csv:"A"  db:"A"`
    E   int `json:"e"  csv:"E"  db:"E"`
-   Dp   int `json:"dp"  csv:"DP"  db:"DP"`
-   Tp   int `json:"tp"  csv:"TP"  db:"TP"`
-   Pb   string `json:"pb"  csv:"PB"  db:"PB"`
-   Sb   string `json:"sb"  csv:"SB"  db:"SB"`
-   Cs   string `json:"cs"  csv:"CS"  db:"CS"`
+   Dp   int `json:"dP"  csv:"DP"  db:"DP"`
+   Tp   int `json:"tP"  csv:"TP"  db:"TP"`
+   Pb   int `json:"pB"  csv:"PB"  db:"PB"`
+   Sb   int `json:"sB"  csv:"SB"  db:"SB"`
+   Cs   int `json:"cS"  csv:"CS"  db:"CS"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

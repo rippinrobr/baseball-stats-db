@@ -3,8 +3,8 @@ package models
 import (
 	"os"
 
-	"github.com/rippinrobr/baseball-databank-tools/pkg/db"
-	"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+	"github.com/rippinrobr/baseball-databank-db/pkg/db"
+	"github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 )
 
 // ParseAndStoreCSVFunc are functions created by the models
@@ -27,6 +27,7 @@ type TableObject interface {
 // Baseball Databank Database
 func GetTableObjects() []TableObject {
 	return []TableObject{
+		&People{},
 		&AllstarFull{},
 		&Appearances{},
 		&AwardsManagers{},
@@ -44,7 +45,6 @@ func GetTableObjects() []TableObject {
 		&HomeGames{},
 		&Managers{},
 		&ManagersHalf{},
-		&People{},
 		&Parks{},
 		&Pitching{},
 		&PitchingPost{},

@@ -6,20 +6,20 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // SeriesPost is a model that maps the CSV to a DB Table
 type SeriesPost struct {
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Round   string `json:"round"  csv:"round"  db:"round"`
-   Teamidwinner   string `json:"teamidwinner"  csv:"teamIDwinner"  db:"teamIDwinner"`
-   Lgidwinner   string `json:"lgidwinner"  csv:"lgIDwinner"  db:"lgIDwinner"`
-   Teamidloser   string `json:"teamidloser"  csv:"teamIDloser"  db:"teamIDloser"`
-   Lgidloser   string `json:"lgidloser"  csv:"lgIDloser"  db:"lgIDloser"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Round   string `json:"round"  csv:"round"  db:"round,omitempty"`
+   Teamidwinner   string `json:"teamIDwinner"  csv:"teamIDwinner"  db:"teamIDwinner,omitempty"`
+   Lgidwinner   string `json:"lgIDwinner"  csv:"lgIDwinner"  db:"lgIDwinner,omitempty"`
+   Teamidloser   string `json:"teamIDloser"  csv:"teamIDloser"  db:"teamIDloser,omitempty"`
+   Lgidloser   string `json:"lgIDloser"  csv:"lgIDloser"  db:"lgIDloser,omitempty"`
    Wins   int `json:"wins"  csv:"wins"  db:"wins"`
    Losses   int `json:"losses"  csv:"losses"  db:"losses"`
    Ties   int `json:"ties"  csv:"ties"  db:"ties"`

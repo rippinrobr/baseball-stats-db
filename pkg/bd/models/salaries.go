@@ -6,18 +6,18 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // Salaries is a model that maps the CSV to a DB Table
 type Salaries struct {
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
    Salary   int `json:"salary"  csv:"salary"  db:"salary"`
 }
 

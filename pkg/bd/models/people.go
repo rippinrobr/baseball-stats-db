@@ -6,38 +6,38 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // People is a model that maps the CSV to a DB Table
 type People struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Birthyear   string `json:"birthyear"  csv:"birthYear"  db:"birthYear"`
-   Birthmonth   string `json:"birthmonth"  csv:"birthMonth"  db:"birthMonth"`
-   Birthday   string `json:"birthday"  csv:"birthDay"  db:"birthDay"`
-   Birthcountry   string `json:"birthcountry"  csv:"birthCountry"  db:"birthCountry"`
-   Birthstate   string `json:"birthstate"  csv:"birthState"  db:"birthState"`
-   Birthcity   string `json:"birthcity"  csv:"birthCity"  db:"birthCity"`
-   Deathyear   string `json:"deathyear"  csv:"deathYear"  db:"deathYear"`
-   Deathmonth   string `json:"deathmonth"  csv:"deathMonth"  db:"deathMonth"`
-   Deathday   string `json:"deathday"  csv:"deathDay"  db:"deathDay"`
-   Deathcountry   string `json:"deathcountry"  csv:"deathCountry"  db:"deathCountry"`
-   Deathstate   string `json:"deathstate"  csv:"deathState"  db:"deathState"`
-   Deathcity   string `json:"deathcity"  csv:"deathCity"  db:"deathCity"`
-   Namefirst   string `json:"namefirst"  csv:"nameFirst"  db:"nameFirst"`
-   Namelast   string `json:"namelast"  csv:"nameLast"  db:"nameLast"`
-   Namegiven   string `json:"namegiven"  csv:"nameGiven"  db:"nameGiven"`
-   Weight   string `json:"weight"  csv:"weight"  db:"weight"`
-   Height   string `json:"height"  csv:"height"  db:"height"`
-   Bats   string `json:"bats"  csv:"bats"  db:"bats"`
-   Throws   string `json:"throws"  csv:"throws"  db:"throws"`
-   Debut   string `json:"debut"  csv:"debut"  db:"debut"`
-   Finalgame   string `json:"finalgame"  csv:"finalGame"  db:"finalGame"`
-   Retroid   string `json:"retroid"  csv:"retroID"  db:"retroID"`
-   Bbrefid   string `json:"bbrefid"  csv:"bbrefID"  db:"bbrefID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Birthyear   int `json:"birthYear"  csv:"birthYear"  db:"birthYear"`
+   Birthmonth   int `json:"birthMonth"  csv:"birthMonth"  db:"birthMonth"`
+   Birthday   int `json:"birthDay"  csv:"birthDay"  db:"birthDay"`
+   Birthcountry   string `json:"birthCountry"  csv:"birthCountry"  db:"birthCountry,omitempty"`
+   Birthstate   string `json:"birthState"  csv:"birthState"  db:"birthState,omitempty"`
+   Birthcity   string `json:"birthCity"  csv:"birthCity"  db:"birthCity,omitempty"`
+   Deathyear   int `json:"deathYear"  csv:"deathYear"  db:"deathYear"`
+   Deathmonth   int `json:"deathMonth"  csv:"deathMonth"  db:"deathMonth"`
+   Deathday   int `json:"deathDay"  csv:"deathDay"  db:"deathDay"`
+   Deathcountry   string `json:"deathCountry"  csv:"deathCountry"  db:"deathCountry,omitempty"`
+   Deathstate   string `json:"deathState"  csv:"deathState"  db:"deathState,omitempty"`
+   Deathcity   string `json:"deathCity"  csv:"deathCity"  db:"deathCity,omitempty"`
+   Namefirst   string `json:"nameFirst"  csv:"nameFirst"  db:"nameFirst,omitempty"`
+   Namelast   string `json:"nameLast"  csv:"nameLast"  db:"nameLast,omitempty"`
+   Namegiven   string `json:"nameGiven"  csv:"nameGiven"  db:"nameGiven,omitempty"`
+   Weight   int `json:"weight"  csv:"weight"  db:"weight"`
+   Height   int `json:"height"  csv:"height"  db:"height"`
+   Bats   string `json:"bats"  csv:"bats"  db:"bats,omitempty"`
+   Throws   string `json:"throws"  csv:"throws"  db:"throws,omitempty"`
+   Debut   string `json:"debut"  csv:"debut"  db:"debut,omitempty"`
+   Finalgame   string `json:"finalGame"  csv:"finalGame"  db:"finalGame,omitempty"`
+   Retroid   string `json:"retroID"  csv:"retroID"  db:"retroID,omitempty"`
+   Bbrefid   string `json:"bbrefID"  csv:"bbrefID"  db:"bbrefID,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

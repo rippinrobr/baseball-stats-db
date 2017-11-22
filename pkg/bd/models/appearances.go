@@ -6,22 +6,22 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // Appearances is a model that maps the CSV to a DB Table
 type Appearances struct {
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
    Gall   int `json:"gall"  csv:"G_all"  db:"G_all"`
-   Gs   string `json:"gs"  csv:"GS"  db:"GS"`
+   Gs   int `json:"gS"  csv:"GS"  db:"GS"`
    Gbatting   int `json:"gbatting"  csv:"G_batting"  db:"G_batting"`
-   Gdefense   string `json:"gdefense"  csv:"G_defense"  db:"G_defense"`
+   Gdefense   int `json:"gdefense"  csv:"G_defense"  db:"G_defense"`
    Gp   int `json:"gp"  csv:"G_p"  db:"G_p"`
    Gc   int `json:"gc"  csv:"G_c"  db:"G_c"`
    G1B   int `json:"g1b"  csv:"G_1b"  db:"G_1b"`
@@ -32,9 +32,9 @@ type Appearances struct {
    Gcf   int `json:"gcf"  csv:"G_cf"  db:"G_cf"`
    Grf   int `json:"grf"  csv:"G_rf"  db:"G_rf"`
    Gof   int `json:"gof"  csv:"G_of"  db:"G_of"`
-   Gdh   string `json:"gdh"  csv:"G_dh"  db:"G_dh"`
-   Gph   string `json:"gph"  csv:"G_ph"  db:"G_ph"`
-   Gpr   string `json:"gpr"  csv:"G_pr"  db:"G_pr"`
+   Gdh   int `json:"gdh"  csv:"G_dh"  db:"G_dh"`
+   Gph   int `json:"gph"  csv:"G_ph"  db:"G_ph"`
+   Gpr   int `json:"gpr"  csv:"G_pr"  db:"G_pr"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

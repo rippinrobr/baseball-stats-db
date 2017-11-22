@@ -41,8 +41,8 @@ def print_code_file(args, headers, data_types, interface_name):
 
     print get_package_name(args)
     print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/db\"\n"
+    print "  \"github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv\"\n"
+    print "  \"github.com/rippinrobr/baseball-databank-db/pkg/db\"\n"
     print ")\n"
     print "// "+data_structure_name+" is a model that maps the CSV to a DB Table"
     print "type", data_structure_name, "struct {"
@@ -52,7 +52,8 @@ def print_code_file(args, headers, data_types, interface_name):
         db_tag = ""
         tags = ""
 
-        col = col_name_cleaner(raw_col).lower()
+        col = col_name_cleaner(raw_col)#.lower()
+        col_data_type = convert_to_lang_specific_type(types, data_types[index])
         if args.json:
             json_tag = "json:\"" +inflection.camelize(col,False) +"\""
 
@@ -60,8 +61,12 @@ def print_code_file(args, headers, data_types, interface_name):
             csv_tag =  "csv:\""+raw_col+"\""  
 
         if args.db:
-            db_tag =  "db:\""+raw_col.replace(".","")+"\""  
-
+            db_tag =  "db:\""+change_col_name_for_easier_sql(raw_col).replace(".","")
+            if col_data_type == "string":
+                db_tag =  db_tag+",omitempty\""
+            else:
+                db_tag =  db_tag+"\""        
+            
         if json_tag != "" or csv_tag != "" or db_tag != "":
             if json_tag != "" and csv_tag == "" and db_tag == "":
                 tags = "`"+json_tag+"`"
@@ -73,7 +78,7 @@ def print_code_file(args, headers, data_types, interface_name):
                 tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"`"
                 
         
-        print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), tags
+        print "  ", col.title(), " ", col_data_type, tags
         index += 1
 
     print "}\n"

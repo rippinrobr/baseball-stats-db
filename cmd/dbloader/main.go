@@ -19,45 +19,71 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/gocarina/gocsv"
 	"log"
 	"os"
+	"strings"
 
-	"github.com/gocarina/gocsv"
-
-	"github.com/rippinrobr/baseball-databank-tools/pkg/bd/models"
-	"github.com/rippinrobr/baseball-databank-tools/pkg/db"
+	"github.com/rippinrobr/baseball-databank-db/pkg/bd/models"
+	"github.com/rippinrobr/baseball-databank-db/pkg/db"
 )
 
-type optionalConfig struct {
-	Verbose bool
-}
+const (
+	dbpathParam  string = "dbpath"
+	dbhostParam         = "dbhost"
+	dbnameParam         = "dbname"
+	dbpassParam         = "dbpass"
+	dbportParam         = "dbport"
+	dbtypeParam         = "dbtype"
+	dbuserParam         = "dbuser"
+	verboseParam        = "verbose"
+)
 
 func main() {
 	// cmd line args
-	var dbconn, dbtype string
+	var dbhost, dbname, dbpass, dbpath, dbtype, dbuser string
+	var dbport int
 	var verbose bool
 	// since SQLite is the only supported db at the moment then I will default to it for now
-	flag.StringVar(&dbconn, "dbconn", "", "the connection string used to log into a database")
-	flag.StringVar(&dbtype, "targetdb", db.DBSQLite, "indicates what type of database is the load target. Supported databases are SQLite")
-	flag.BoolVar(&verbose, "verbose", false, "writes more lines to the logs")
+	flag.StringVar(&dbhost, dbhostParam, "localhost", "the name or ip address of the database server.")
+	flag.StringVar(&dbname, dbnameParam, "", "the hame of the database to load")
+	flag.StringVar(&dbpass, dbpassParam, "", "the password to use when loading the database. Required for all dbtypes except SQLite")
+	flag.StringVar(&dbpath, dbpathParam, "", "the path to your SQLite database")
+	flag.IntVar(&dbport, dbportParam, 0, "the port to use when connecting to the database the database. Required for all dbtypes except SQLite")
+	flag.StringVar(&dbtype, dbtypeParam, "", "indicates what type of database is the load target. Supported databases are SQLite")
+	flag.StringVar(&dbuser, dbuserParam, "", "the username to use when loading the database. Required for all dbtypes except SQLite")
+	flag.BoolVar(&verbose, verboseParam, false, "writes more lines to the logs")
 	flag.Parse()
 
+	dbtype = strings.ToLower(dbtype)
 	if !db.IsSupportedDB(dbtype) {
 		flag.Usage()
 		fmt.Printf("\n'%s' is not a supported database\n", dbtype)
 		os.Exit(1)
 	}
 
-	if dbconn == "" {
-		log.Fatalf("A -dbconn value is required for the database type '%s'\n", dbtype)
+	if dbtype == db.DBSQLite && dbpath == "" {
+		log.Fatalf("A -dbpath value is required for the database type '%s'\n", dbtype)
 	}
 
-	processFiles(dbtype, dbconn, &optionalConfig{verbose})
-
+	processFiles(db.Options{
+		Host:    dbhost,
+		Name:    dbname,
+		Pass:    dbpass,
+		Path:    dbpath,
+		Port:    dbport,
+		Type:    dbtype,
+		User:    dbuser,
+		Verbose: verbose,
+	})
 }
 
-func processFiles(dbtype, dbconn string, opts *optionalConfig) {
-	conn, connErr := db.CreateConnection(dbtype, dbconn)
+func processFiles(opts db.Options) {
+	if opts.Verbose {
+		fmt.Println(opts)
+	}
+
+	conn, connErr := db.CreateConnection(opts)
 	if connErr != nil {
 		log.Fatal("Connection error: " + connErr.Error())
 	}
@@ -66,7 +92,6 @@ func processFiles(dbtype, dbconn string, opts *optionalConfig) {
 
 	for _, o := range models.GetTableObjects() {
 		if opts.Verbose {
-			//log.Printf("File Path: '%s'\n", o.GetFilePath())
 			log.Printf("File Name: %s\n", o.GetFileName())
 		}
 
@@ -78,18 +103,16 @@ func processFiles(dbtype, dbconn string, opts *optionalConfig) {
 
 		psFunc, genErr := o.GenParseAndStoreCSV(csvFile, repo, gocsv.UnmarshalFile)
 		if genErr != nil {
-			log.Println("ERROR: There was an issue generating the ParseAnStoreCSV func\n")
+			log.Println("ERROR: There was an issue generating the ParseAnStoreCSV func")
 		} else {
 			psErr := psFunc()
 			if psErr != nil {
 				log.Printf("There was an error while attempting to parse and storethe file %s\nError: %s\n", o.GetFilePath(), psErr.Error())
 			}
 		}
-		csvFile.Close()
-		// if dbtype == db.DBSQLite {
-		// 	log.Println("Since I'm loading SQLite I need to sleep 10 secs so SQLite can catch up")
-		// 	time.Sleep(10 * time.Second)
-		// 	log.Println("I'm awake")
-		// }
+		fileErr = csvFile.Close()
+		if fileErr != nil {
+			fmt.Printf("An error occurred while attempting to close the file '%s'. Error: %s\n", o.GetFileName(), fileErr.Error())
+		}
 	}
 }

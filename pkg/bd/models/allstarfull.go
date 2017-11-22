@@ -6,22 +6,22 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // AllstarFull is a model that maps the CSV to a DB Table
 type AllstarFull struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Gamenum   int `json:"gamenum"  csv:"gameNum"  db:"gameNum"`
-   Gameid   string `json:"gameid"  csv:"gameID"  db:"gameID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Gp   string `json:"gp"  csv:"GP"  db:"GP"`
-   Startingpos   string `json:"startingpos"  csv:"startingPos"  db:"startingPos"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Gamenum   int `json:"gameNum"  csv:"gameNum"  db:"gameNum"`
+   Gameid   string `json:"gameID"  csv:"gameID"  db:"gameID,omitempty"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Gp   int `json:"gP"  csv:"GP"  db:"GP"`
+   Startingpos   int `json:"startingPos"  csv:"startingPos"  db:"startingPos"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

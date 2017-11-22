@@ -6,20 +6,20 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // AwardsManagers is a model that maps the CSV to a DB Table
 type AwardsManagers struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Awardid   string `json:"awardid"  csv:"awardID"  db:"awardID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Tie   string `json:"tie"  csv:"tie"  db:"tie"`
-   Notes   string `json:"notes"  csv:"notes"  db:"notes"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Awardid   string `json:"awardID"  csv:"awardID"  db:"awardID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Tie   string `json:"tie"  csv:"tie"  db:"tie,omitempty"`
+   Notes   string `json:"notes"  csv:"notes"  db:"notes,omitempty"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

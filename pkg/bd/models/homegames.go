@@ -6,20 +6,20 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // HomeGames is a model that maps the CSV to a DB Table
 type HomeGames struct {
    Yearkey   int `json:"yearkey"  csv:"year.key"  db:"yearkey"`
-   Leaguekey   string `json:"leaguekey"  csv:"league.key"  db:"leaguekey"`
-   Teamkey   string `json:"teamkey"  csv:"team.key"  db:"teamkey"`
-   Parkkey   string `json:"parkkey"  csv:"park.key"  db:"parkkey"`
-   Spanfirst   string `json:"spanfirst"  csv:"span.first"  db:"spanfirst"`
-   Spanlast   string `json:"spanlast"  csv:"span.last"  db:"spanlast"`
+   Leaguekey   string `json:"leaguekey"  csv:"league.key"  db:"leaguekey,omitempty"`
+   Teamkey   string `json:"teamkey"  csv:"team.key"  db:"teamkey,omitempty"`
+   Parkkey   string `json:"parkkey"  csv:"park.key"  db:"parkkey,omitempty"`
+   Spanfirst   string `json:"spanfirst"  csv:"span.first"  db:"spanfirst,omitempty"`
+   Spanlast   string `json:"spanlast"  csv:"span.last"  db:"spanlast,omitempty"`
    Games   int `json:"games"  csv:"games"  db:"games"`
    Openings   int `json:"openings"  csv:"openings"  db:"openings"`
    Attendance   int `json:"attendance"  csv:"attendance"  db:"attendance"`

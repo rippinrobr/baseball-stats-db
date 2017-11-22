@@ -6,20 +6,20 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // TeamsHalf is a model that maps the CSV to a DB Table
 type TeamsHalf struct {
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
    Half   int `json:"half"  csv:"Half"  db:"Half"`
-   Divid   string `json:"divid"  csv:"divID"  db:"divID"`
-   Divwin   string `json:"divwin"  csv:"DivWin"  db:"DivWin"`
+   Divid   string `json:"divID"  csv:"divID"  db:"divID,omitempty"`
+   Divwin   string `json:"divWin"  csv:"DivWin"  db:"DivWin,omitempty"`
    Rank   int `json:"rank"  csv:"Rank"  db:"Rank"`
    G   int `json:"g"  csv:"G"  db:"G"`
    W   int `json:"w"  csv:"W"  db:"W"`

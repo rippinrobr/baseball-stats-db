@@ -6,32 +6,32 @@ import (
   "log"
   "errors"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+  "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
-  "github.com/rippinrobr/baseball-databank-tools/pkg/db"
+  "github.com/rippinrobr/baseball-databank-db/pkg/db"
 
 )
 
 // Fielding is a model that maps the CSV to a DB Table
 type Fielding struct {
-   Playerid   string `json:"playerid"  csv:"playerID"  db:"playerID"`
-   Yearid   int `json:"yearid"  csv:"yearID"  db:"yearID"`
+   Playerid   string `json:"playerID"  csv:"playerID"  db:"playerID,omitempty"`
+   Yearid   int `json:"yearID"  csv:"yearID"  db:"yearID"`
    Stint   int `json:"stint"  csv:"stint"  db:"stint"`
-   Teamid   string `json:"teamid"  csv:"teamID"  db:"teamID"`
-   Lgid   string `json:"lgid"  csv:"lgID"  db:"lgID"`
-   Pos   string `json:"pos"  csv:"POS"  db:"POS"`
+   Teamid   string `json:"teamID"  csv:"teamID"  db:"teamID,omitempty"`
+   Lgid   string `json:"lgID"  csv:"lgID"  db:"lgID,omitempty"`
+   Pos   string `json:"pOS"  csv:"POS"  db:"POS,omitempty"`
    G   int `json:"g"  csv:"G"  db:"G"`
-   Gs   string `json:"gs"  csv:"GS"  db:"GS"`
-   Innouts   string `json:"innouts"  csv:"InnOuts"  db:"InnOuts"`
-   Po   int `json:"po"  csv:"PO"  db:"PO"`
+   Gs   int `json:"gS"  csv:"GS"  db:"GS"`
+   Innouts   int `json:"innOuts"  csv:"InnOuts"  db:"InnOuts"`
+   Po   int `json:"pO"  csv:"PO"  db:"PO"`
    A   int `json:"a"  csv:"A"  db:"A"`
-   E   string `json:"e"  csv:"E"  db:"E"`
-   Dp   int `json:"dp"  csv:"DP"  db:"DP"`
-   Pb   string `json:"pb"  csv:"PB"  db:"PB"`
-   Wp   string `json:"wp"  csv:"WP"  db:"WP"`
-   Sb   string `json:"sb"  csv:"SB"  db:"SB"`
-   Cs   string `json:"cs"  csv:"CS"  db:"CS"`
-   Zr   string `json:"zr"  csv:"ZR"  db:"ZR"`
+   E   int `json:"e"  csv:"E"  db:"E"`
+   Dp   int `json:"dP"  csv:"DP"  db:"DP"`
+   Pb   int `json:"pB"  csv:"PB"  db:"PB"`
+   Wp   int `json:"wP"  csv:"WP"  db:"WP"`
+   Sb   int `json:"sB"  csv:"SB"  db:"SB"`
+   Cs   int `json:"cS"  csv:"CS"  db:"CS"`
+   Zr   int `json:"zR"  csv:"ZR"  db:"ZR"`
 }
 
 // GetTableName returns the name of the table that the data will be stored in

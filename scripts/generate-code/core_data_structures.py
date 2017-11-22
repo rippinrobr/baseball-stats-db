@@ -1,17 +1,25 @@
 import os
 
-def col_name_cleaner(col_name):
-    if col_name[0].isdigit():
-        if col_name == "2B":
-            return "doubles"
-        if col_name == "3B":
-            return "triples"
+def change_col_name_for_easier_sql(col_name):
+    if col_name == "2B":
+        return "doubles"
+    if col_name == "3B":
+        return "triples"
+    if col_name == "yearid":
+        return "yearID"
     
+    return col_name
+
+def col_name_cleaner(col_name):
+    col_name = change_col_name_for_easier_sql(col_name)
     return col_name.replace(".", "").replace("_","")
 
 def convert_to_lang_specific_type(typeMap, type):
     if type in typeMap:
         return typeMap[type]
+
+    if type == "":
+        return "string"
 
     return type
 
