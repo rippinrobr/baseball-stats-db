@@ -1,44 +1,43 @@
 package models
 
-
 import (
-  "testing"
+	"testing"
 )
 
 func TestGetTableNameFieldingOFsplit(t *testing.T) {
-  out := FieldingOFsplit{}
-  expectedValue := "fieldingofsplit"
-  actualValue := out.GetTableName()
+	out := FieldingOFsplit{}
+	expectedValue := "fieldingofsplit"
+	actualValue := out.GetTableName()
 
-  if actualValue != expectedValue {
-    t.Errorf("actualValue (%s) != expectedValue (%s)\n", actualValue, expectedValue)
-  }
+	if actualValue != expectedValue {
+		t.Errorf("actualValue (%s) != expectedValue (%s)\n", actualValue, expectedValue)
+	}
 }
 
 func TestGetFileNameFieldingOFsplit(t *testing.T) {
-  out := FieldingOFsplit{}
-  expectedValue := "FieldingOFsplit.csv"
-  actualValue := out.GetFileName()
+	out := FieldingOFsplit{}
+	expectedValue := "FieldingOFsplit.csv"
+	actualValue := out.GetFileName()
 
-  if actualValue != expectedValue {
-    t.Errorf("actualValue (%s) != expectedValue (%s)\n", actualValue, expectedValue)
-  }
+	if actualValue != expectedValue {
+		t.Errorf("actualValue (%s) != expectedValue (%s)\n", actualValue, expectedValue)
+	}
 }
 
 func TestGetFilePathFieldingOFsplit(t *testing.T) {
-  out := FieldingOFsplit{}
-  expectedValue := "/Users/robertrowe/src/baseballdatabank/core/FieldingOFsplit.csv"
-  actualValue := out.GetFilePath()
+	out := FieldingOFsplit{}
+	expectedValue := "/Users/robertrowe/src/baseballdatabank/core/FieldingOFsplit.csv"
+	actualValue := out.GetFilePath()
 
-  if actualValue != expectedValue {
-    t.Errorf("actualValue (%s) != expectedValue (%s)\n", actualValue, expectedValue)
-  }
+	if actualValue != expectedValue {
+		t.Errorf("actualValue (%s) != expectedValue (%s)\n", actualValue, expectedValue)
+	}
 }
 
 func TestGenParseAndStoreCSVFieldingOFsplitForError(t *testing.T) {
-  out := FieldingOFsplit{}
-  _, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)
-  if actualErr == nil {
-       t.Errorf("Calling FieldingOFsplit.GenParseAndStoreCSV with a nil file pointer should have returned an error\n")
-  }
+	out := FieldingOFsplit{}
+	_, actualErr := out.GenParseAndStoreCSV(nil, &RepositoryMock{}, ParserTestingFunc)
+	if actualErr == nil {
+		t.Errorf("Calling FieldingOFsplit.GenParseAndStoreCSV with a nil file pointer should have returned an error\n")
+	}
 }
