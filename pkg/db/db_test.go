@@ -31,6 +31,12 @@ func TestIsSupportedDBWithPostgress(t *testing.T) {
 	}
 }
 
+func TestIsSupportedDBWithMySQL(t *testing.T) {
+	if !IsSupportedDB(DBMySQL) {
+		t.Error("IsSupportedDB should have returned true for DBMySQL but it returned false")
+	}
+}
+
 func TestIsSupportedDBWithUnsupportedType(t *testing.T) {
 	if IsSupportedDB("FredDB") {
 		t.Error("IsSupportedDB should have returned true for DBPostgres but it returned false")

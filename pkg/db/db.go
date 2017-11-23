@@ -13,6 +13,8 @@ const (
 	DBSQLite string = "sqlite"
 	// DBPostgres is a string that indicates postgres is supported
 	DBPostgres string = "postgres"
+	// DBMySQL is a string that indicates mysql is supported
+	DBMySQL string = "mysql"
 	// DefaultSQLiteDBName will be used when user indicates they
 	// want to create a SQLite db but do not provide a path/name
 	DefaultSQLiteDBName string = "baseball_databank.sqlite3"
@@ -39,6 +41,7 @@ func CreateConnection(opts Options) (sqlbuilder.Database, error) {
 	connFuncs := map[string]CreateDBConnFunc{
 		DBSQLite:   createSQLiteConn,
 		DBPostgres: createPostgesqlConn,
+		DBMySQL:    createMySQLConn,
 	}
 
 	if IsSupportedDB(opts.Type) {
@@ -53,7 +56,7 @@ func CreateConnection(opts Options) (sqlbuilder.Database, error) {
 // IsSupportedDB checks to see if the database name given is
 // one of the dbs supported by Baseball Databank Tools
 func IsSupportedDB(s string) bool {
-	for _, d := range []string{DBSQLite, DBPostgres} {
+	for _, d := range []string{DBSQLite, DBPostgres, DBMySQL} {
 		if s == d {
 			return true
 		}

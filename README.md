@@ -1,12 +1,20 @@
 # Baseball Databank DB 
 
-The goal of the project is to provide the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) in databases to make using the data easier.  The data will be available in SQLite, PostgreSQL, MySQL and MongoDB.  Currently the only supported database is SQLite.  Support will be added for the other databases in the order they are listed above.  As support for the other databases is added a Docker container will be added that contains all the data preloaded.  If Docker isn't your thing you will also be able to load backups, create the schema via sql file or run the tools yourself to create your version of the database.
+The goal of the project is to provide the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) in databases to make using the data easier.  Currently there are two officially supported databases, PostgreSQL and SQLite.  MongoDB and MySQL support are planned for future releases. Users can load data into MySQL but given that I cannot store Inf in a float field I'm not officially supporting MySQL until I can come up with a way to represent infinity in MySQL that isn't a complete hack MySQL will be supported.  
 
-## Schemas and Backups
-The schema file for all the supported databases live in the `schemas` directory.  The naming convention for the files is `<type-of-database>_schema_<season>_<github-commit-hash>.sql`
-Currently `<type of database>` is sqlite, `<season>` what is the latest season in the data, and `<githhub-commit-hash>` is the hash for the commit in [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) repository.  At the time of writing the current schema file has the name `sqlite_schema_2016_4a64a55.sql`.  
+## Schemas
+The schema file for all the supported databases live in the `schemas` directory.  All schema files follow this naming convention:
 
-If want the schema AND the data you'll find backup files in the `backups/` directory.  The files have a similar naming convention `<type-of-database>_backup_<date of backup>_<season>_<github-commit-hash>.(sql|appropriate extension for db type backups)`. If I had a backup file done today for my SQLite database the name of the file would be `sqlite_backup_20171119_2016_4a64a55.sql`
+ `(postgres|sqlite)_schema_<season>_<github-commit-hash>.sql`
+
+Where `<season>` the most recent season in the databases `<githhub-commit-hash>` is the hash of the latest [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) repository update. The SQLite schema for the most recent commit, as of 2017-11-22, would be `sqlite_schema_2016_4a64a55.sql`.  
+
+## Backups
+If want the schema AND the data you'll find backup files in the `backups/` directory.  The backup file naming convention is:
+
+`(postgres|sqlite)_backup_<date of backup>_<season>_<github-commit-hash>.tgz`
+
+If I had a backup file done today would have the name `postgres_backup_20171122_2016_4a64a55.tgz`
 
 ## Building the databases yourself
 If you want to build the database yourself you'll need to run the `create_database_schema.py` script.  In order to that you'll need to have the `peewee` package installed, assuming you already have Python installed.  You can install `peewee` by running `pip install peewee`. Once you've installed the package you are ready to create the database.
@@ -16,14 +24,29 @@ If you want to build the database yourself you'll need to run the `create_databa
 Create the schema is as simple as running `python create_database_schema.py`.  The script lives in the `scripts/create-database` directory and has the options listed below.
 
 ```
-usage: create_database_schema.py [-h] [--dbtype {sqlite,postgres}] [--dbpath DBPATH]
+usage: create_database_schema.py [-h] --dbtype {mysql,postgres,sqlite}
+                                 [--dbhost DBHOST] [--dbname DBNAME]
+                                 [--dbpath DBPATH] [--dbpass DBPASS]
+                                 [--dbport DBPORT] [--dbuser DBUSER]
 
 Generates a DB schema based on the Baseball Databank csv files.
 
 optional arguments:
-  -h, --help         show this help message and exit
-  --dbtype {sqlite}  the database type you'd like to generate the schema for
-  --dbpath DBPATH    SQLITE ONLY - the path for the newly created database
+  -h, --help            show this help message and exit
+  --dbtype {mysql,postgres,sqlite}
+                        the database type you'd like to generate the schema
+                        for
+  --dbhost DBHOST       host of the database server
+  --dbname DBNAME       Name of the database where the tables are to be added.
+                        REQUIRED if not sqlite
+  --dbpath DBPATH       SQLITE ONLY - the path for the newly created database
+  --dbpass DBPASS       The password for the user given in the --dbuser
+                        option, ignored for SQLite
+  --dbport DBPORT       The port the database servier is listeing on, ignored
+                        for SQLite, defaults to appropriate value for server
+                        type if not provided
+  --dbuser DBUSER       username to use when creating the database, ignorred
+                        for SQLite databases, REQUIRED for others.
   ```
 
 _For all databases except SQLite the database referenced by the --dbname option must already exist_
@@ -55,9 +78,9 @@ Since SQLite is the only supported database at the moment the command line optio
   ### create_data_structures.py
   ```
 usage: create_data_structures.py [-h] [--csv] [--db] [--input INPUT]
-                                 [--input-dir INPUT_DIR] [--json] --language
-                                 {go} [--name NAME] [--output-dir OUTPUT_DIR]
-                                 [--verbose]
+                                 [--input-dir INPUT_DIR] [--json] [--package]
+                                 --language {go} [--name NAME]
+                                 [--output-dir OUTPUT_DIR] [--verbose]
 
 Generate language specific data structures that model each of the Baseball
 Databank CSV files.
@@ -73,6 +96,7 @@ optional arguments:
                         to parse
   --json                If the language supports add JSON tags or JSON
                         representation to the structure
+  --package             sets the package to the correct name for Go structs
   --language {go}       create language specific data structures
   --name NAME           name of the datas tructure being created
   --output-dir OUTPUT_DIR

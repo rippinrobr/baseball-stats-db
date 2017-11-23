@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/go-sql-driver/mysql"
+  packages = ["."]
+  revision = "a0583e0143b1624142adab07e0e97fe106d99561"
+  version = "v1.3"
+
+[[projects]]
   branch = "master"
   name = "github.com/gocarina/gocsv"
   packages = ["."]
@@ -27,13 +33,13 @@
 
 [[projects]]
   name = "upper.io/db.v3"
-  packages = [".","internal/cache","internal/cache/hashstructure","internal/immutable","internal/sqladapter","internal/sqladapter/compat","internal/sqladapter/exql","lib/reflectx","lib/sqlbuilder","postgresql","sqlite"]
+  packages = [".","internal/cache","internal/cache/hashstructure","internal/immutable","internal/sqladapter","internal/sqladapter/compat","internal/sqladapter/exql","lib/reflectx","lib/sqlbuilder","mysql","postgresql","sqlite"]
   revision = "4ceccb1227aba5fc0f71ca3adc5dd759dfbc093e"
   version = "v3.5.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ae8135121c258baebdd81565b50ae1c6a892d34b75ac4d990ce3c27fa8583215"
+  inputs-digest = "b61ddd87f4f97507b17db35afb50d140a3b6c463e538534441619cc214e971b1"
   solver-name = "gps-cdcl"
   solver-version = 1
