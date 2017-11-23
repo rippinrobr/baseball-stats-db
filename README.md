@@ -16,66 +16,24 @@ If want the schema AND the data you'll find backup files in the `backups/` direc
 
 If I had a backup file done today would have the name `postgres_backup_20171122_2016_4a64a55.tgz`
 
+
 ## Building the databases yourself
-If you want to build the database yourself you'll need to run the `create_database_schema.py` script.  In order to that you'll need to have the `peewee` package installed, assuming you already have Python installed.  You can install `peewee` by running `pip install peewee`. Once you've installed the package you are ready to create the database.
+_If you want to build the database yourself as of this writing you will need to create the data structures, database and build `dbloader` yourself.  The way the parsing is done relies on the path to the CSV file that was used to create the data structure which currently defaults to my environment.  I will be adding a command line option and changing the data structure generation script to fix this hard-coded requirement.  In the mean time you can use the backup files mentioned above._ 
 
-
-### create_database_schema.py
-Create the schema is as simple as running `python create_database_schema.py`.  The script lives in the `scripts/create-database` directory and has the options listed below.
+Before running either of the python scripts you will need to install both `peewee` for creating the database schemas and  `inflection` (I used version 0.3.1 during development) for the data structure creation script. I installed the two packages using `pip`.
 
 ```
-usage: create_database_schema.py [-h] --dbtype {mysql,postgres,sqlite}
-                                 [--dbhost DBHOST] [--dbname DBNAME]
-                                 [--dbpath DBPATH] [--dbpass DBPASS]
-                                 [--dbport DBPORT] [--dbuser DBUSER]
-
-Generates a DB schema based on the Baseball Databank csv files.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --dbtype {mysql,postgres,sqlite}
-                        the database type you'd like to generate the schema
-                        for
-  --dbhost DBHOST       host of the database server
-  --dbname DBNAME       Name of the database where the tables are to be added.
-                        REQUIRED if not sqlite
-  --dbpath DBPATH       SQLITE ONLY - the path for the newly created database
-  --dbpass DBPASS       The password for the user given in the --dbuser
-                        option, ignored for SQLite
-  --dbport DBPORT       The port the database servier is listeing on, ignored
-                        for SQLite, defaults to appropriate value for server
-                        type if not provided
-  --dbuser DBUSER       username to use when creating the database, ignorred
-                        for SQLite databases, REQUIRED for others.
-  ```
-
-_For all databases except SQLite the database referenced by the --dbname option must already exist_
-
-  Since SQLite is currently the only supported database running the `create_database_schema.py` script really only requires one command line argument since `--dbtype` defaults to `SQLite`.  Here's how to create the database:
-
-  `python create_database_schema.py --dbpath ./baseball_database_db.py`
-
-  If you were to run the script this way when the script finished you would have a new SQLite database in the directory that you ran the script in.  If you pass a path to the script of a pre-existing database you will receive an error.  In future version of the script this will be handled more gracefully.
-
-### dbloader 
-Once you have a database setup the `dbloader` executable can be used to [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) CSV files and load the data into the specified database. 
-
-```
-Usage of ./bin/dbloader:
-  -dbconn string
-    	the connection string used to log into a database
-  -targetdb string
-    	indicates what type of database is the load target. Supported databases are SQLite (default "sqlite")
-  -verbose
-    	writes more lines to the logs
+pip install peewee
+pip install inflection
 ```
 
-Since SQLite is the only supported database at the moment the command line options are limited.  The only one that is required is the `-dbconn` option and it requires a path to the database to load.   In the near future the -dbconn string value will be determined by the value of the `-targetdb` option.  When there are new releases there will be executables for Linux, MacOS and Windows.
+Once you have those two dependencies installed you are ready to run the scripts.
 
-  ## Generating Data Structures
-  This script creates the data structures code that describes the data in each of the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) CSV files.  The script reads each of the CSV files, determines the data types of the columns and will write source code files for each of the CSV files. In order to run this script you will need to have the package `inflection` installed. The script has been tested using `inflection` 0.3.1.  As of now Go is the only supported language, C#, Python, JavaScript and other languages are planned.  If there is a particular language you would like to see you can create an issue or even better, submit a pull request.
 
-  ### create_data_structures.py
+## Generating Data Structures
+I start by creating the Go data structures that will be used to parse and store the data. There is a data structure created for each  [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) CSV files.  The script reads each of the CSV files, determines the data types of the columns and will write source code files for each of the CSV files. Currently only Go data structures are supported but in the future I will add others as I need them. If there is a particular language you would like to see you can create an issue or even better, submit a pull request.
+
+### create_data_structures.py
   ```
 usage: create_data_structures.py [-h] [--csv] [--db] [--input INPUT]
                                  [--input-dir INPUT_DIR] [--json] [--package]
@@ -107,11 +65,106 @@ optional arguments:
                         data structures
 ```
 
-The required options are `--language` and either the `--input` or `--input-dir` flags.  Since Go is the only supported language now if `--language` is not provided it defaults to go.  This behavior will change as soon as another language is added. The `--input` flag expects a path to a single CSV file.  THe `--input-dir` expects a path to a directory that contains *.CSV files.  
+Before running this script you will need to have already downloaded repo.  In order to run the script you need to be in the `scripts/generate-code` directory. I ran the following to generate the models in this project:
 
-Optional parameters are `--name`, `--output-dir` and `--verbose`.  The `--name` parameter is what will be used to name the generated data structure.  If `--name` is not provided the name of the file will be used to create the name following the language's naming conventions.  The `--ouptut-dir` takes a path to the directory that the files should be written to.
+`python create_data_structures.py --language go --csv --db --json --input-dir ~/src/baseballdatabank/core --package --output-dir ../../pkg/bd/models`
+
+Required options: `--language` and one of the following `--input` or `--input-dir`.  `--input` takes a path to a single csv file while `--input-dir` takes a path to a directory of CSV files.
+
+Since Go is the only supported language if `--language` is not provided it defaults to go.  This behavior will change as soon as another language is added. 
+
+Optional parameters are `--name`, `--output-dir` and `--verbose`.  
+
+The `--name` parameter is what will be used to name the generated data structure.  If `--name` is not provided the name of the file will be used to create the name following the language's naming conventions.  
+
+The `--ouptut-dir` takes a path to the directory that the files should be written to.  If not provided the file(s) will be written to stdout.
 
 #### Go specific command line options
 
 There following arguments depend on language support `--csv`, `--db`, and `--json`. If any of the `--csv`, `--db`, and `--json` flags are used the generated structs will contain the `csv`, `db` and/or `json` tags.
+
+
+
+### create_database_schema.py
+Order of the data structure creation and schema script doesn't really matter but I typically create the schema after creating the structures.  Create the schema is as simple as running `python create_database_schema.py`.  The script lives in the `scripts/create-database` directory and has the options listed below.
+
+```
+usage: create_database_schema.py [-h] --dbtype {mysql,postgres,sqlite}
+                                 [--dbhost DBHOST] [--dbname DBNAME]
+                                 [--dbpath DBPATH] [--dbpass DBPASS]
+                                 [--dbport DBPORT] [--dbuser DBUSER]
+
+Generates a DB schema based on the Baseball Databank csv files.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --dbtype {mysql,postgres,sqlite}
+                        the database type you'd like to generate the schema
+                        for
+  --dbhost DBHOST       host of the database server
+  --dbname DBNAME       Name of the database where the tables are to be added.
+                        REQUIRED if not sqlite
+  --dbpath DBPATH       SQLITE ONLY - the path for the newly created database
+  --dbpass DBPASS       The password for the user given in the --dbuser
+                        option, ignored for SQLite
+  --dbport DBPORT       The port the database servier is listeing on, ignored
+                        for SQLite, defaults to appropriate value for server
+                        type if not provided
+  --dbuser DBUSER       username to use when creating the database, ignorred
+                        for SQLite databases, REQUIRED for others.
+  ```
+
+Before you can use this script you will need to have already created the database in Postgres.  In future versions the database will be created for you.
+
+#### Creating the Schema in a SQLite DB
+`python create_database_schema.py --dbtype sqlite --dbpath ./baseball_database_db.py`
+
+For SQLite any of the other command line arguments given besides the two used above will be ignored
+
+#### Creating the Schema in a Postgres DB
+`python create_database_schema.py --dbtype postgres --dbname baseballdatabank --dbuser myusername --dbpass mypassword`
+
+For PostgreSQL if `--dbport` is not given the default port 5432 is used. 
+
+After creating the schema you will have a db with a matching table for each of the CSV files
+
+
+### dbloader 
+After creating the database schema and the data structures you are ready to build the `dbloader`.  In the base directory of the project there is a `Makefile` that allows you to build the binary for your specific platform.  I built mine for my Mac using `make mac`. As you might expect if you want to build on a linux or windows machine you'd swap the mac for either of those two options.  The binary will bin the ./bin directory and has the following command line argmuments.
+
+(https://github.com/chadwickbureau/baseballdatabank) CSV files.  You will need to clone the repository locally before running the utility.  In a future version you will have the ability to parse the files directly from github.  The following lists out the command line options.  Official releases will be on the github repository and will be available for Linux, MacOS and Windows.
+
+```
+Usage of ./bin/dbloader:
+  -dbhost string
+    	the name or ip address of the database server. (default "localhost")
+  -dbname string
+    	the hame of the database to load
+  -dbpass string
+    	the password to use when loading the database. Required for all dbtypes except SQLite
+  -dbpath string
+    	the path to your SQLite database
+  -dbport int
+    	the port to use when connecting to the database the database. Required for all dbtypes except SQLite
+  -dbtype string
+    	indicates what type of database is the load target. Supported databases are SQLite
+  -dbuser string
+    	the username to use when loading the database. Required for all dbtypes except SQLite
+  -verbose
+    	writes more lines to the logs
+```
+
+
+#### Loading a Postgres DB
+
+`./bin/dbloader -dbtype postgres -dbname baseballdatabank -dbuser myusername -dbpass mypassword`
+
+This will load the data into your `baseballdatabank` database stored on the db server that lives on localhost since a `-dbhost` value wasn't provided.  Since the -dbport option was provided the connection will attempt to use teh default Postgres port 5432.  The `-dbpath` option is only valid for SQLite databases.  
+
+#### Loading a SQLite DB
+
+`./bin/dbloader -dbtype sqlite -dbpath=./baseball_databank_2016_4a64a55.sqlite3`
+
+Since this is a SQLite database there are only two required parameters, `-dbtype` and `-dbpath`.  The loader will create the SQLite database using the value of `-dbpath`.
+
 
