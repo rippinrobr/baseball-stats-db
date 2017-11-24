@@ -56,7 +56,7 @@ optional arguments:
                         representation to the structure
   --package             sets the package to the correct name for Go structs
   --language {go}       create language specific data structures
-  --name NAME           name of the datas tructure being created
+  --name NAME           name of the data structure being created
   --output-dir OUTPUT_DIR
                         the directory where the generated file should be
                         written. If not provided file will be written to
@@ -150,6 +150,8 @@ Usage of ./bin/dbloader:
     	indicates what type of database is the load target. Supported databases are SQLite
   -dbuser string
     	the username to use when loading the database. Required for all dbtypes except SQLite
+  -inputdir string
+    	the directory where the Baseball Databank CSV files live. Required
   -verbose
     	writes more lines to the logs
 ```
@@ -157,13 +159,13 @@ Usage of ./bin/dbloader:
 
 #### Loading a Postgres DB
 
-`./bin/dbloader -dbtype postgres -dbname baseballdatabank -dbuser myusername -dbpass mypassword`
+`./bin/dbloader -dbtype postgres -dbname baseballdatabank -dbuser myusername -dbpass mypassword -inputdir ~/my-baseball-databank-dir/core`
 
 This will load the data into your `baseballdatabank` database stored on the db server that lives on localhost since a `-dbhost` value wasn't provided.  Since the -dbport option was provided the connection will attempt to use teh default Postgres port 5432.  The `-dbpath` option is only valid for SQLite databases.  
 
 #### Loading a SQLite DB
 
-`./bin/dbloader -dbtype sqlite -dbpath=./baseball_databank_2016_4a64a55.sqlite3`
+`./bin/dbloader -dbtype sqlite -dbpath=./baseball_databank_2016_4a64a55.sqlite3 -inputdir ~/my-baseball-databank-dir/core`
 
 Since this is a SQLite database there are only two required parameters, `-dbtype` and `-dbpath`.  The loader will create the SQLite database using the value of `-dbpath`.
 
