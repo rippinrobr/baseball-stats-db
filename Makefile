@@ -4,10 +4,10 @@ MAIN := cmd/dbloader/main.go
 mac: $(MAIN) vet test
 	GOOS=darwin GOARCH=amd64 go build -o bin/$(BIN) $(MAIN) 
 
-linux: $(MAIN)
+linux: $(MAIN) vet test
 	GOOS=linux GOARCH=amd64 go build -o bin/$(BIN) $(MAIN)
 
-windows: $(MAIN)
+windows: $(MAIN) vet test
 	GOOS=windows GOARCH=amd64 go build -o bin/$(BIN) $(MAIN)
 
 vet: $(MAIN)
