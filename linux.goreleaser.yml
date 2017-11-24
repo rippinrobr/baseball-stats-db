@@ -1,0 +1,16 @@
+# Build customization
+builds:
+  - main: cmd/dbloader/main.go
+    binary: dbloader
+    goos:
+      - linux
+    goarch:
+      - amd64
+# Archive customization
+archive:
+  format: tar.gz
+  files:
+    - schemas/*.sql
+    - backups/*
+    - LICENSE
+    - README.md 

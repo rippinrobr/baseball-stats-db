@@ -1,0 +1,19 @@
+# Build customization
+builds:
+  - main: cmd/dbloader/main.go
+    binary: dbloader
+    goos:
+            #- windows
+            #- darwin
+      - linux
+    goarch:
+      - amd64
+# Archive customization
+archive:
+  format: tar.gz
+  replacements:
+    amd64: 64-bit
+    darwin: macOS
+    linux: Tux
+  files:
+    - schemas/*.sql
