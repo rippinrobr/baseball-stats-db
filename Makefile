@@ -4,6 +4,9 @@ MAIN := cmd/dbloader/main.go
 mac: $(MAIN) vet test
 	GOOS=darwin GOARCH=amd64 go build -o bin/$(BIN) $(MAIN) 
 
+mac-release: mac
+	goreleaser --snapshot --rm-dist -c mac.goreleaser.yml
+
 linux: $(MAIN) vet test
 	GOOS=linux GOARCH=amd64 go build -o bin/$(BIN) $(MAIN)
 
