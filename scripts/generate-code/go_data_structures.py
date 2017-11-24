@@ -81,12 +81,15 @@ def print_code_file(args, headers, data_types, interface_name):
         print "  ", col.title(), " ", col_data_type, tags
         index += 1
 
+    print "  inputDir string"
     print "}\n"
     print_get_table_name_func(data_structure_name, table_name)
     print ""
     print_get_file_name_func(data_structure_name, args.input)
     print ""
     print_get_file_path_func(data_structure_name, args.input)
+    print ""
+    print_set_input_directory_func(data_structure_name)
     print ""
     print_parse_csv_func(data_structure_name)
 
@@ -100,8 +103,13 @@ def print_get_file_name_func(struct_name, file_path):
     print "func (m *"+struct_name+") GetFileName() string {\n  return \""+file_name+"\"\n}" 
 
 def print_get_file_path_func(struct_name, file_path):
+    file_name = get_file_name(file_path)
     print "// GetFilePath returns the path of the source file"
-    print "func (m *"+struct_name+") GetFilePath() string {\n  return \""+file_path+"\"\n}" 
+    print "func (m *"+struct_name+") GetFilePath() string {\n  return m.inputDir+\""+file_name+"\"\n}" 
+
+def print_set_input_directory_func(struct_name):
+    print "// SetInputDirectory sets the input directory's path so it can be used to create the full path to the file"
+    print "func (m *"+struct_name+") SetInputDirectory(inputDir string) {\n  m.inputDir=inputDir\n}" 
 
 def print_parse_csv_func(struct_name):
     print "// GenParseAndStoreCSV returns a function that will parse the source file,\\n//create a slice with an object per line and store the data in the db"
@@ -152,7 +160,9 @@ def print_test_file(args, headers, data_types, interface_name):
     print ""
     print_get_file_name_test_func(data_structure_name, get_file_name(args.input))
     print ""
-    print_get_file_path_test_func(data_structure_name, args.input)
+    print_get_file_path_test_func(data_structure_name, get_file_name(args.input))
+    print ""
+    print_set_input_directory_test_func(data_structure_name, get_file_name(args.input))
     print ""
     print_parse_csv_test_func(data_structure_name)
 
@@ -176,10 +186,23 @@ def print_get_file_name_test_func(struct_name, file_name):
     print "  }"
     print "}"
 
-def print_get_file_path_test_func(struct_name, file_path):
+def print_get_file_path_test_func(struct_name, file_name):
     print "func TestGetFilePath"+struct_name+"(t *testing.T) {"
     print "  out := "+struct_name+"{}"
-    print "  expectedValue := \""+file_path+"\""
+    print "  expectedValue := \"/mytestpath/"+file_name+"\""
+    print "  out.SetInputDirectory(\"/mytestpath/\")"
+    print "  actualValue := out.GetFilePath()\n"
+    print "  if actualValue != expectedValue {"
+    print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
+    print "  }"
+    print "}"
+
+def print_set_input_directory_test_func(struct_name, file_name):
+    print "func TestSetInputDirectory"+struct_name+"(t *testing.T) {"
+    print "  out := "+struct_name+"{}"
+    print "  testPath := \"/mytestpath/\""
+    print "  expectedValue := testPath + \""+file_name+"\"\n"
+    print "  out.SetInputDirectory(testPath)"
     print "  actualValue := out.GetFilePath()\n"
     print "  if actualValue != expectedValue {"
     print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
