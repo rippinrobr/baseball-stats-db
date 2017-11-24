@@ -5,6 +5,7 @@ import (
   "os"
   "log"
   "errors"
+  "path/filepath"
 
   "github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 
@@ -37,7 +38,7 @@ func (m *AllstarFull) GetFileName() string {
 
 // GetFilePath returns the path of the source file
 func (m *AllstarFull) GetFilePath() string {
-  return m.inputDir+"AllstarFull.csv"
+  return filepath.Join(m.inputDir, "AllstarFull.csv")
 }
 
 // SetInputDirectory sets the input directory's path so it can be used to create the full path to the file

@@ -19,29 +19,31 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/gocarina/gocsv"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/gocarina/gocsv"
 
 	"github.com/rippinrobr/baseball-databank-db/pkg/bd/models"
 	"github.com/rippinrobr/baseball-databank-db/pkg/db"
 )
 
 const (
-	dbpathParam  string = "dbpath"
-	dbhostParam         = "dbhost"
-	dbnameParam         = "dbname"
-	dbpassParam         = "dbpass"
-	dbportParam         = "dbport"
-	dbtypeParam         = "dbtype"
-	dbuserParam         = "dbuser"
-	verboseParam        = "verbose"
+	dbpathParam   string = "dbpath"
+	dbhostParam          = "dbhost"
+	dbnameParam          = "dbname"
+	dbpassParam          = "dbpass"
+	dbportParam          = "dbport"
+	dbtypeParam          = "dbtype"
+	dbuserParam          = "dbuser"
+	inputdirParam        = "inputdir"
+	verboseParam         = "verbose"
 )
 
 func main() {
 	// cmd line args
-	var dbhost, dbname, dbpass, dbpath, dbtype, dbuser string
+	var dbhost, dbname, dbpass, dbpath, dbtype, dbuser, inputdir string
 	var dbport int
 	var verbose bool
 	// since SQLite is the only supported db at the moment then I will default to it for now
@@ -52,6 +54,7 @@ func main() {
 	flag.IntVar(&dbport, dbportParam, 0, "the port to use when connecting to the database the database. Required for all dbtypes except SQLite")
 	flag.StringVar(&dbtype, dbtypeParam, "", "indicates what type of database is the load target. Supported databases are SQLite")
 	flag.StringVar(&dbuser, dbuserParam, "", "the username to use when loading the database. Required for all dbtypes except SQLite")
+	flag.StringVar(&inputdir, inputdirParam, "", "the directory where the Baseball Databank CSV files live. Required")
 	flag.BoolVar(&verbose, verboseParam, false, "writes more lines to the logs")
 	flag.Parse()
 
@@ -66,6 +69,12 @@ func main() {
 		log.Fatalf("A -dbpath value is required for the database type '%s'\n", dbtype)
 	}
 
+	if inputdir == "" {
+		flag.Usage()
+		fmt.Printf("\n-inputdir is required.")
+		os.Exit(1)
+	}
+
 	processFiles(db.Options{
 		Host:    dbhost,
 		Name:    dbname,
@@ -75,10 +84,10 @@ func main() {
 		Type:    dbtype,
 		User:    dbuser,
 		Verbose: verbose,
-	})
+	}, inputdir)
 }
 
-func processFiles(opts db.Options) {
+func processFiles(opts db.Options, indir string) {
 	if opts.Verbose {
 		fmt.Println(opts)
 	}
@@ -95,6 +104,7 @@ func processFiles(opts db.Options) {
 			log.Printf("File Name: %s\n", o.GetFileName())
 		}
 
+		o.SetInputDirectory(indir)
 		csvFile, fileErr := os.Open(o.GetFilePath())
 		if fileErr != nil {
 			log.Printf("Error: Unable to open file '%s'. %s\n", o.GetFilePath(), fileErr)

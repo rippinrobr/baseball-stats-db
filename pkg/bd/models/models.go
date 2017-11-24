@@ -20,6 +20,7 @@ type TableObject interface {
 	GetFileName() string
 	GetFilePath() string
 	GenParseAndStoreCSV(*os.File, db.Repository, csv.ParserFunc) (ParseAndStoreCSVFunc, error)
+	SetInputDirectory(string)
 }
 
 // GetTableObjects returns an array of pointers to

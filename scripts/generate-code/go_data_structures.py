@@ -40,7 +40,7 @@ def print_code_file(args, headers, data_types, interface_name):
     }
 
     print get_package_name(args)
-    print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n"
+    print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n  \"path/filepath\"\n"
     print "  \"github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv\"\n"
     print "  \"github.com/rippinrobr/baseball-databank-db/pkg/db\"\n"
     print ")\n"
@@ -105,7 +105,7 @@ def print_get_file_name_func(struct_name, file_path):
 def print_get_file_path_func(struct_name, file_path):
     file_name = get_file_name(file_path)
     print "// GetFilePath returns the path of the source file"
-    print "func (m *"+struct_name+") GetFilePath() string {\n  return m.inputDir+\""+file_name+"\"\n}" 
+    print "func (m *"+struct_name+") GetFilePath() string {\n  return filepath.Join(m.inputDir, \""+file_name+"\")\n}" 
 
 def print_set_input_directory_func(struct_name):
     print "// SetInputDirectory sets the input directory's path so it can be used to create the full path to the file"
