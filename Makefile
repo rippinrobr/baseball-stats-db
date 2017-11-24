@@ -11,7 +11,7 @@ windows: $(MAIN) vet test
 	GOOS=windows GOARCH=amd64 go build -o bin/$(BIN) $(MAIN)
 
 vet: $(MAIN)
-	govet -all ./pkg/db ./pkg/bd ./pkg/parsers ./cmd/dbloader
+	go vet -all ./pkg/db ./pkg/bd/models ./pkg/parsers/csv ./cmd/dbloader
 
 test: $(MAIN)
 	go test ./...
