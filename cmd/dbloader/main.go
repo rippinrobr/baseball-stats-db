@@ -75,6 +75,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	stat, inputdirErr := os.Stat(inputdir)
+	if inputdirErr != nil {
+		log.Fatalf("The directory '%s' does not exist. Please provide a valid directory for -inputdir", inputdir)
+	}
+
+	if !stat.IsDir() {
+		log.Fatalf("The path '%s' is not a directory. Please provide the path for the directory that contains the CSV files", inputdir)
+	}
+
 	processFiles(db.Options{
 		Host:    dbhost,
 		Name:    dbname,
