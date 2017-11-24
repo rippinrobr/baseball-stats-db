@@ -40,9 +40,9 @@ def print_code_file(args, headers, data_types, interface_name):
     }
 
     print get_package_name(args)
-    print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-tools/pkg/db\"\n"
+    print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n  \"path/filepath\"\n"
+    print "  \"github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv\"\n"
+    print "  \"github.com/rippinrobr/baseball-databank-db/pkg/db\"\n"
     print ")\n"
     print "// "+data_structure_name+" is a model that maps the CSV to a DB Table"
     print "type", data_structure_name, "struct {"
@@ -52,7 +52,8 @@ def print_code_file(args, headers, data_types, interface_name):
         db_tag = ""
         tags = ""
 
-        col = col_name_cleaner(raw_col).lower()
+        col = col_name_cleaner(raw_col)#.lower()
+        col_data_type = convert_to_lang_specific_type(types, data_types[index])
         if args.json:
             json_tag = "json:\"" +inflection.camelize(col,False) +"\""
 
@@ -60,8 +61,12 @@ def print_code_file(args, headers, data_types, interface_name):
             csv_tag =  "csv:\""+raw_col+"\""  
 
         if args.db:
-            db_tag =  "db:\""+raw_col.replace(".","")+"\""  
-
+            db_tag =  "db:\""+change_col_name_for_easier_sql(raw_col).replace(".","")
+            if col_data_type == "string":
+                db_tag =  db_tag+",omitempty\""
+            else:
+                db_tag =  db_tag+"\""        
+            
         if json_tag != "" or csv_tag != "" or db_tag != "":
             if json_tag != "" and csv_tag == "" and db_tag == "":
                 tags = "`"+json_tag+"`"
@@ -73,15 +78,18 @@ def print_code_file(args, headers, data_types, interface_name):
                 tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"`"
                 
         
-        print "  ", col.title(), " ", convert_to_lang_specific_type(types, data_types[index]), tags
+        print "  ", col.title(), " ", col_data_type, tags
         index += 1
 
+    print "  inputDir string"
     print "}\n"
     print_get_table_name_func(data_structure_name, table_name)
     print ""
     print_get_file_name_func(data_structure_name, args.input)
     print ""
     print_get_file_path_func(data_structure_name, args.input)
+    print ""
+    print_set_input_directory_func(data_structure_name)
     print ""
     print_parse_csv_func(data_structure_name)
 
@@ -95,8 +103,13 @@ def print_get_file_name_func(struct_name, file_path):
     print "func (m *"+struct_name+") GetFileName() string {\n  return \""+file_name+"\"\n}" 
 
 def print_get_file_path_func(struct_name, file_path):
+    file_name = get_file_name(file_path)
     print "// GetFilePath returns the path of the source file"
-    print "func (m *"+struct_name+") GetFilePath() string {\n  return \""+file_path+"\"\n}" 
+    print "func (m *"+struct_name+") GetFilePath() string {\n  return filepath.Join(m.inputDir, \""+file_name+"\")\n}" 
+
+def print_set_input_directory_func(struct_name):
+    print "// SetInputDirectory sets the input directory's path so it can be used to create the full path to the file"
+    print "func (m *"+struct_name+") SetInputDirectory(inputDir string) {\n  m.inputDir=inputDir\n}" 
 
 def print_parse_csv_func(struct_name):
     print "// GenParseAndStoreCSV returns a function that will parse the source file,\\n//create a slice with an object per line and store the data in the db"
@@ -147,7 +160,9 @@ def print_test_file(args, headers, data_types, interface_name):
     print ""
     print_get_file_name_test_func(data_structure_name, get_file_name(args.input))
     print ""
-    print_get_file_path_test_func(data_structure_name, args.input)
+    print_get_file_path_test_func(data_structure_name, get_file_name(args.input))
+    print ""
+    print_set_input_directory_test_func(data_structure_name, get_file_name(args.input))
     print ""
     print_parse_csv_test_func(data_structure_name)
 
@@ -171,10 +186,23 @@ def print_get_file_name_test_func(struct_name, file_name):
     print "  }"
     print "}"
 
-def print_get_file_path_test_func(struct_name, file_path):
+def print_get_file_path_test_func(struct_name, file_name):
     print "func TestGetFilePath"+struct_name+"(t *testing.T) {"
     print "  out := "+struct_name+"{}"
-    print "  expectedValue := \""+file_path+"\""
+    print "  expectedValue := \"/mytestpath/"+file_name+"\""
+    print "  out.SetInputDirectory(\"/mytestpath/\")"
+    print "  actualValue := out.GetFilePath()\n"
+    print "  if actualValue != expectedValue {"
+    print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"
+    print "  }"
+    print "}"
+
+def print_set_input_directory_test_func(struct_name, file_name):
+    print "func TestSetInputDirectory"+struct_name+"(t *testing.T) {"
+    print "  out := "+struct_name+"{}"
+    print "  testPath := \"/mytestpath/\""
+    print "  expectedValue := testPath + \""+file_name+"\"\n"
+    print "  out.SetInputDirectory(testPath)"
     print "  actualValue := out.GetFilePath()\n"
     print "  if actualValue != expectedValue {"
     print "    t.Errorf(\"actualValue (%s) != expectedValue (%s)\\n\", actualValue, expectedValue)"

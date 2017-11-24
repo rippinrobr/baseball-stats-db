@@ -4,8 +4,13 @@ import logging
 import sys
 import argparse
 
+MYSQL = "mysql"
+POSTGRES = "postgres"
+SQLITE = "sqlite"
+
+SUPPORTED_DBS = [MYSQL, POSTGRES, SQLITE]
 #  THIS IS HOW TO MAKE THIS PART DYNAMIC http://docs.peewee-orm.com/en/latest/peewee/database.html#dynamic-db
-database_proxy =  Proxy() #SqliteDatabase('db/bdb_v0.0.1.sqlite')
+database_proxy =  Proxy() 
 
 class BaseModel(Model):
     """BaseModel is used to connect to the database"""
@@ -16,7 +21,7 @@ class BaseModel(Model):
 # Print the connection info here for sqlite
 class People(BaseModel):
     playerID = CharField(null='false',primary_key=True, max_length=9)
-    birthYear = IntegerField(null='true')
+    birthYear = IntegerField(null='true',)
     birthMonth = IntegerField(null='true')
     birthDay = IntegerField(null='true')
     birthCountry = CharField(null='true', max_length=14)
@@ -71,7 +76,7 @@ class Parks(BaseModel):
 class Teams(BaseModel):
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
-    teamID = CharField(null='true')
+    teamID = CharField(null='false')
     franchID = CharField(null='false')
     divID = CharField(null='true')
     Rank = IntegerField(null='true')
@@ -86,8 +91,8 @@ class Teams(BaseModel):
     R = IntegerField(null='false', default=0)
     AB = IntegerField(null='false', default=0)
     H = IntegerField(null='false', default=0)
-    doubles = IntegerField(null='false', db_column="2B", default=0)
-    triples = IntegerField(null='false', db_column="3B", default=0)
+    doubles = IntegerField(null='false', default=0)
+    triples = IntegerField(null='false', default=0)
     HR = IntegerField(null='false', default=0)
     BB = IntegerField(null='false', default=0)
     SO = IntegerField(null='false', default=0)
@@ -110,7 +115,7 @@ class Teams(BaseModel):
     DP = IntegerField(null='false', default=0)
     FP = FloatField(null='true')
     name = CharField(null='false')
-    park = CharField(null='true')
+    park = CharField(null='false')
     attendance = IntegerField(null='false', default=0)
     BPF = IntegerField(null='false', default=0)
     PPF = IntegerField(null='false', default=0)
@@ -142,7 +147,7 @@ class Managers(BaseModel):
 class ManagersHalf(BaseModel):
     playerID = CharField(null='false')
     yearID = IntegerField(null='false')
-    teamID = CharField(null=False)
+    teamID = CharField(null='false')
     lgID = CharField(null='false')
     inseason = IntegerField(null='true')
     half = IntegerField(null='false')
@@ -170,14 +175,14 @@ class Batting_Post(BaseModel):
     yearID = IntegerField(null='false')
     round = CharField(null='true')
     playerID = CharField(null='false')
-    teamID = CharField(null=False)
+    teamID = CharField(null='false')
     lgID = CharField(null='false')
     G = IntegerField(null='false', default=0)
     AB = IntegerField(null='false', default=0)
     R = IntegerField(null='false', default=0)
     H = IntegerField(null='false', default=0)
-    doubles = IntegerField(null='false', db_column="2b", default=0)
-    triples = IntegerField(null='false', db_column="3b", default=0)
+    doubles = IntegerField(null='false', default=0)
+    triples = IntegerField(null='false', default=0)
     HR = IntegerField(null='false', default=0)
     RBI = IntegerField(null='false', default=0)
     SB = IntegerField(null='false', default=0)
@@ -233,13 +238,13 @@ class Fielding_OF_Split(BaseModel):
     playerID = CharField(null='false')
     yearID = IntegerField(null='false', default=0)
     stint = IntegerField(null='false', default=0)
-    teamid  = CharField(null='false')
-    lgid = CharField(null='false')
-    pos = CharField(null='false')
-    g = IntegerField(null='false',default=0)
-    gs = IntegerField(null='false',default=0)
-    innouts = IntegerField(null='false',default=0)
-    po = IntegerField(null='false',default=0)
+    teamID  = CharField(null='false')
+    lgID = CharField(null='false')
+    pos = CharField(null='false', db_column="POS")
+    G = IntegerField(null='false',default=0)
+    GS = IntegerField(null='false',default=0)
+    InnOuts = IntegerField(null='false',default=0)
+    PO = IntegerField(null='false',default=0)
     A = IntegerField(null='false',default=0)
     E = IntegerField(null='false',default=0)
     DP = IntegerField(null='false',default=0)
@@ -250,14 +255,14 @@ class Fielding_OF_Split(BaseModel):
     ZR = IntegerField(null='false',default=0)
    
     class Meta(object):
-        primary_key = CompositeKey('playerID', 'yearID', 'teamid', 'pos', 'stint')
+        primary_key = CompositeKey('playerID', 'yearID', 'teamID', 'pos', 'stint')
         db_table = 'fieldingofsplit'
     
 class Pitching(BaseModel):
     playerID = CharField(null='false')
     yearID = IntegerField(null='false', default=0)
     stint = IntegerField(null='false', default=0)
-    teamID = CharField(null=False)
+    teamID = CharField(null='false')
     lgID = CharField(null='false', default=0)
     W = IntegerField(null='false', default=0)
     L = IntegerField(null='false', default=0)
@@ -352,12 +357,12 @@ class Hall_Of_Fame(BaseModel):
     ballots = IntegerField(null='true')
     needed = IntegerField(null='true')
     votes = IntegerField(null='true')
-    inducted = CharField(null='true')
-    category = CharField(null='true')
+    inducted = CharField(null='false')
+    category = CharField(null='false')
     needed_note = CharField(null='true')
 
     class Meta(object):
-        primary_key = CompositeKey('playerID', 'category', 'yearID', 'votes', 'ballots')
+        primary_key = CompositeKey('playerID', 'category', 'yearID', 'votedBy')
         db_table = 'halloffame'
     
 class Fielding_Post(BaseModel):
@@ -366,7 +371,7 @@ class Fielding_Post(BaseModel):
     teamID = CharField(null='false')
     lgID = CharField(null='false')
     round = CharField(null='false')
-    pos = CharField(null='false')
+    pos = CharField(null='false', db_column="POS")
     G = IntegerField(null='false', default=0)
     GS = IntegerField(null='false', default=0)
     InnOuts = IntegerField(null='false', default=0)
@@ -426,7 +431,7 @@ class Awards_Share_Managers(BaseModel):
 
 class Salaries(BaseModel):
     yearID = IntegerField(null='true')
-    teamID = CharField(null='true')
+    teamID = CharField(null='false')
     lgID = CharField(null='true')
     playerID = CharField(null='false')
     salary = IntegerField(null='true')
@@ -439,7 +444,7 @@ class Pitching_Post(BaseModel):
     playerID = CharField(null='false')
     yearID = IntegerField(null='true')
     round = CharField(null='true')
-    teamID = CharField(null='true')
+    teamID = CharField(null='false')
     lgID = CharField(null='true')
     W = IntegerField(null='false', default=0)
     L = IntegerField(null='false', default=0)
@@ -476,9 +481,9 @@ class Awards_Share_Players(BaseModel):
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
     playerID = CharField(null='false')
-    pointsWon = DecimalField(null='fails', default=0)
-    pointsMax = IntegerField(null='fails', default=0)
-    votesFirst = DecimalField(null='fails', default=0)
+    pointsWon = DecimalField(null='false', default=0)
+    pointsMax = IntegerField(null='false', default=0)
+    votesFirst = DecimalField(null='false', default=0)
 
     class Meta(object):
         primary_key = CompositeKey('awardID', 'yearID', 'lgID', 'playerID')
@@ -490,7 +495,7 @@ class Fielding(BaseModel):
     stint = IntegerField(null='false', default=0)
     teamID = CharField(null='false')
     lgID = CharField(null='true')
-    Pos = CharField(null='true')
+    Pos = CharField(null='true', db_column='POS')
     A = IntegerField(null='false', default=0)
     GS = IntegerField(null='false', default=0)
     G = IntegerField(null='false', default=0)
@@ -511,31 +516,31 @@ class Fielding(BaseModel):
 class Teams_Half(BaseModel):
     yearID = IntegerField(null='true')
     lgID = CharField(null='true')
-    teamID = CharField(null='true')
-    half = IntegerField(null='false', default=1)
+    teamID = CharField(null='false')
+    Half = IntegerField(null='false', default=1)
     divID = CharField(null='true')
-    divWin = CharField(null='true')
+    DivWin = CharField(null='true')
     Rank = IntegerField(null='false', default=0)
     G = IntegerField(null='false', default=0)
     W = IntegerField(null='false', default=0)
     L = IntegerField(null='false', default=0)
 
     class Meta(object):
-        primary_key = CompositeKey('yearID', 'teamID', 'half')
+        primary_key = CompositeKey('yearID', 'teamID', 'Half')
         db_table = 'teamshalf'
 
 class Batting(BaseModel):
     playerID = CharField(null='false')
     yearID = IntegerField(null='false')
     stint = IntegerField(null='false')
-    teamID = CharField(null='true')
+    teamID = CharField(null='false')
     lgID = CharField(null='true')
     G = IntegerField(null='false', default=0)
     AB = IntegerField(null='false', default=0)
     R = IntegerField(null='false', default=0)
     H = IntegerField(null='false', default=0)
-    doubles = IntegerField(null='false', db_column="2B", default=0)
-    triples = IntegerField(null='false', db_column="3B", default=0)
+    doubles = IntegerField(null='false', db_column="doubles", default=0)
+    triples = IntegerField(null='false', db_column="triples", default=0)
     HR = IntegerField(null='false', default=0)
     RBI = IntegerField(null='false', default=0)
     SB = IntegerField(null='false', default=0)
@@ -549,17 +554,16 @@ class Batting(BaseModel):
     GIDP = IntegerField(null='false', default=0)
     
     class Meta(object):
-        primary_key = CompositeKey('playerID', 'yearID', 'stint')
+        primary_key = CompositeKey('playerID', 'yearID', 'teamID', 'stint')
         db_table = 'batting'
 
 def initialize_db_and_connect(bdb_db):
     database_proxy.initialize(bdb_db)
     database_proxy.connect()
     database_proxy.create_tables(TABLE_NAMES)
-    
 
 TABLE_NAMES = [ 
-    People, TeamsFranchises, Parks, Managers, Teams , ManagersHalf, Schools,
+    People, TeamsFranchises, Parks, Teams, Managers, ManagersHalf, Schools,
     Batting_Post, College_Playing, Awards_Players, Fielding_OF, Fielding_OF_Split,
     Pitching, Allstar_Full, Home_Games, Appearances , Hall_Of_Fame, Fielding_Post,
     Series_Post, Awards_Managers, Awards_Share_Managers, Salaries, Pitching_Post,

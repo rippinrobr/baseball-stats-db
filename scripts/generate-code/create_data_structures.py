@@ -3,6 +3,7 @@ import csv
 import inflection
 import glob
 import os, errno, sys
+import re
 from go_data_structures import create_go_datastructure
 
 LANG_GO = "go"
@@ -19,6 +20,7 @@ def define_parameters(parser):
     parser.add_argument("--input", default="", help="the path to the input CSV file",type=str )
     parser.add_argument("--input-dir", default="", help="the path to the directory that contains the CSV files to parse",type=str )
     parser.add_argument("--json", help="If the language supports add JSON tags or JSON representation to the structure", action="store_true")
+    parser.add_argument("--package", help="sets the package to the correct name for Go structs", action="store_true")
     parser.add_argument("--language", choices=[LANG_GO], default=LANG_GO, help="create language specific data structures", required=True, type=str)
     parser.add_argument("--name", help="name of the datas tructure being created", type=str)
     parser.add_argument("--output-dir", help="the directory where the generated file should be written.  If not provided file will be written to stdout")
@@ -26,16 +28,37 @@ def define_parameters(parser):
 
 def get_data_type(col_val):
     """Deterimes if the current value is numeric or a string"""
-    dtype = TYPE_STRING
-
+    dtype = ""
 
     original_col_val = col_val
-    digits_only = col_val.replace ('-', '',1).replace(',', '', -1)    
-    if '.' in col_val and digits_only.isdigit(): 
-        dtype = TYPE_FLOAT
-    else:
-        if col_val.isdigit():
+    digits_only = col_val.replace('-', '',1).replace(',', '', -1).replace(".", "")
+    if digits_only.isdigit():
+        try:
+            int(original_col_val)
             dtype = TYPE_INT
+        except ValueError:
+            dtype = TYPE_FLOAT
+    #original_col_val = col_val
+    # remove any commas or decimals if they are there so I can 
+    # check to see if this is a numeric value or not
+    # TODO: change to check for floats like this: 
+    #int_re = re.compile(r"^-?\d+$")
+    # number_re = re.compile(r"^-?\d*\.?\d*$")
+    # if number_re.match(col_val):
+    #     dtype = TYPE_INT
+    #     if re.match("^\d+?\.\d+?$", col_val) != None:
+    #         dtype = TYPE_FLOAT
+    # else:
+    #     int_re = re.compile(r"^-?\d+$")
+    #     if int_re.match(col_val):
+    #         dtype = TYPE_INT
+    # digits_only = col_val.replace ('-', '',1).replace(',', '', -1).replace('.', '', 1)  
+    # if '.' in col_val and digits_only.isdigit(): 
+    #     dtype = TYPE_FLOAT
+    # else:
+    #     # change this to use re.compile(r"^-?\d+$")
+    #     if col_val.isdigit():
+    #         dtype = TYPE_INT
 
     return dtype
 
@@ -60,10 +83,10 @@ def parse_file(args):
                 index = 0
                 for col in line:
                     if col != "": 
-                        if data_types[index] != TYPE_STRING:
+                        if data_types[index] != TYPE_STRING and data_types[index] != TYPE_FLOAT:
                             data_types[index] = get_data_type(col)
-                    else:
-                        data_types[index] = TYPE_STRING
+                    # else:
+                    #     data_types[index] = TYPE_STRING
                     index += 1
 
             else:

@@ -3,8 +3,8 @@ package models
 import (
 	"os"
 
-	"github.com/rippinrobr/baseball-databank-tools/pkg/db"
-	"github.com/rippinrobr/baseball-databank-tools/pkg/parsers/csv"
+	"github.com/rippinrobr/baseball-databank-db/pkg/db"
+	"github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
 )
 
 // ParseAndStoreCSVFunc are functions created by the models
@@ -20,6 +20,7 @@ type TableObject interface {
 	GetFileName() string
 	GetFilePath() string
 	GenParseAndStoreCSV(*os.File, db.Repository, csv.ParserFunc) (ParseAndStoreCSVFunc, error)
+	SetInputDirectory(string)
 }
 
 // GetTableObjects returns an array of pointers to
@@ -27,6 +28,7 @@ type TableObject interface {
 // Baseball Databank Database
 func GetTableObjects() []TableObject {
 	return []TableObject{
+		&People{},
 		&AllstarFull{},
 		&Appearances{},
 		&AwardsManagers{},
@@ -44,7 +46,6 @@ func GetTableObjects() []TableObject {
 		&HomeGames{},
 		&Managers{},
 		&ManagersHalf{},
-		&People{},
 		&Parks{},
 		&Pitching{},
 		&PitchingPost{},

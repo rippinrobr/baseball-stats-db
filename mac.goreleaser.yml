@@ -1,0 +1,19 @@
+# Build customization
+builds:
+  - main: cmd/dbloader/main.go
+    binary: dbloader
+    goos:
+      - darwin
+    goarch:
+      - amd64
+# Archive customization
+archive:
+  format: tar.gz
+  replacements:
+    darwin: macOS
+  files:
+    - schemas/*.sql
+    - backups/*
+    - LICENSE
+    - README.md 
+
