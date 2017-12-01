@@ -1,4 +1,5 @@
 *~
+Release.make
 node_modules
 .*.swp
 out

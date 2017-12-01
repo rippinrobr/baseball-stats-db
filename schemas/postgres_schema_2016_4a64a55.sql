@@ -42,9 +42,9 @@ CREATE TABLE allstarfull (
     "playerID" character varying(255) NOT NULL,
     "yearID" integer NOT NULL,
     "gameNum" integer NOT NULL,
-    "gameID" character varying(255),
-    "teamID" character varying(255),
-    "lgID" character varying(255),
+    "gameID" character varying(255) DEFAULT '',
+    "teamID" character varying(255) DEFAULT '',
+    "lgID" character varying(255) DEFAULT '',
     "GP" integer,
     "startingPos" integer
 );
@@ -59,7 +59,7 @@ ALTER TABLE allstarfull OWNER TO postgres;
 CREATE TABLE appearances (
     "yearID" integer NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "playerID" character varying(255) NOT NULL,
     "G_all" integer NOT NULL,
     "GS" integer,
@@ -92,7 +92,7 @@ CREATE TABLE awardsmanagers (
     "awardID" character varying(255) NOT NULL,
     "yearID" integer NOT NULL,
     "lgID" character varying(255) NOT NULL,
-    tie character varying(255),
+    tie character varying(255) DEFAULT '',
     notes character varying(255)
 );
 
@@ -108,7 +108,7 @@ CREATE TABLE awardsplayers (
     "awardID" character varying(255) NOT NULL,
     "yearID" integer NOT NULL,
     "lgID" character varying(255) NOT NULL,
-    tie character varying(255),
+    tie character varying(255) DEFAULT '',
     notes character varying(255)
 );
 
@@ -158,7 +158,7 @@ CREATE TABLE batting (
     "yearID" integer NOT NULL,
     stint integer NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "G" integer,
     "AB" integer,
     "R" integer,
@@ -190,7 +190,7 @@ CREATE TABLE battingpost (
     round character varying(255) NOT NULL,
     "playerID" character varying(255) NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "G" integer,
     "AB" integer,
     "R" integer,
@@ -235,7 +235,7 @@ CREATE TABLE fielding (
     "yearID" integer NOT NULL,
     stint integer NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "POS" character varying(255) NOT NULL,
     "A" integer,
     "GS" integer,
@@ -279,7 +279,7 @@ CREATE TABLE fieldingofsplit (
     "yearID" integer NOT NULL,
     stint integer NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "POS" character varying(255) NOT NULL,
     "G" integer,
     "GS" integer,
@@ -305,8 +305,8 @@ ALTER TABLE fieldingofsplit OWNER TO postgres;
 CREATE TABLE fieldingpost (
     "playerID" character varying(255) NOT NULL,
     "yearID" integer NOT NULL,
-    "teamID" character varying(255),
-    "lgID" character varying(255),
+    "teamID" character varying(255) DEFAULT '',
+    "lgID" character varying(255) DEFAULT '',
     round character varying(255) NOT NULL,
     "POS" character varying(255) NOT NULL,
     "G" integer,
@@ -336,7 +336,7 @@ CREATE TABLE halloffame (
     ballots integer,
     needed integer,
     votes integer,
-    inducted character varying(255),
+    inducted character varying(255) DEFAULT '',
     category character varying(255) NOT NULL,
     needed_note character varying(255)
 );
@@ -352,11 +352,11 @@ CREATE TABLE homegames (
     yearkey integer NOT NULL,
     parkkey character varying(255) NOT NULL,
     teamkey character varying(255) NOT NULL,
-    leaguekey character varying(255),
+    leaguekey character varying(255) DEFAULT '',
     attendance integer,
     games integer,
-    spanfirst character varying(255),
-    spanlast character varying(255),
+    spanfirst character varying(255) DEFAULT '',
+    spanlast character varying(255) DEFAULT '',
     openings integer
 );
 
@@ -409,11 +409,11 @@ ALTER TABLE managershalf OWNER TO postgres;
 
 CREATE TABLE parks (
     parkkey character varying(255) NOT NULL,
-    parkname character varying(255),
-    parkalias character varying(255),
-    alias character varying(255),
-    city character varying(255),
-    state character varying(255),
+    parkname character varying(255) DEFAULT '',
+    parkalias character varying(255) DEFAULT '',
+    alias character varying(255) DEFAULT '',
+    city character varying(255) DEFAULT '',
+    state character varying(255) DEFAULT '',
     country character varying(255)
 );
 
@@ -443,11 +443,11 @@ CREATE TABLE people (
     "nameGiven" character varying(43),
     weight integer,
     height integer,
-    bats character varying(255),
-    throws character varying(255),
-    debut character varying(255),
-    "finalGame" character varying(255),
-    "retroID" character varying(255),
+    bats character varying(255) DEFAULT '',
+    throws character varying(255) DEFAULT '',
+    debut character varying(255) DEFAULT '',
+    "finalGame" character varying(255) DEFAULT '',
+    "retroID" character varying(255) DEFAULT '',
     "bbrefID" character varying(9)
 );
 
@@ -463,7 +463,7 @@ CREATE TABLE pitching (
     "yearID" integer NOT NULL,
     stint integer NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "W" integer,
     "L" integer,
     "G" integer,
@@ -502,8 +502,8 @@ CREATE TABLE pitchingpost (
     "playerID" character varying(255) NOT NULL,
     "yearID" integer NOT NULL,
     round character varying(255) NOT NULL,
-    "teamID" character varying(255),
-    "lgID" character varying(255),
+    "teamID" character varying(255) DEFAULT '',
+    "lgID" character varying(255) DEFAULT '',
     "W" integer,
     "L" integer,
     "G" integer,
@@ -541,7 +541,7 @@ ALTER TABLE pitchingpost OWNER TO postgres;
 CREATE TABLE salaries (
     "yearID" integer NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "playerID" character varying(255) NOT NULL,
     salary integer
 );
@@ -555,9 +555,9 @@ ALTER TABLE salaries OWNER TO postgres;
 
 CREATE TABLE schools (
     "schoolID" character varying(255) NOT NULL,
-    name_full character varying(255),
-    city character varying(255),
-    state character varying(255),
+    name_full character varying(255) DEFAULT '',
+    city character varying(255) DEFAULT '',
+    state character varying(255) DEFAULT '',
     country character varying(255)
 );
 
@@ -571,10 +571,10 @@ ALTER TABLE schools OWNER TO postgres;
 CREATE TABLE seriespost (
     "yearID" integer NOT NULL,
     round character varying(255) NOT NULL,
-    "teamIDwinner" character varying(255),
-    "lgIDwinner" character varying(255),
-    "teamIDloser" character varying(255),
-    "lgIDloser" character varying(255),
+    "teamIDwinner" character varying(255) DEFAULT '',
+    "lgIDwinner" character varying(255) DEFAULT '',
+    "teamIDloser" character varying(255) DEFAULT '',
+    "lgIDloser" character varying(255) DEFAULT '',
     wins integer,
     losses integer,
     ties integer
@@ -591,17 +591,17 @@ CREATE TABLE teams (
     "yearID" integer NOT NULL,
     "lgID" character varying(255) NOT NULL,
     "teamID" character varying(255) NOT NULL,
-    "franchID" character varying(255),
-    "divID" character varying(255),
+    "franchID" character varying(255) DEFAULT '',
+    "divID" character varying(255) DEFAULT '',
     "Rank" integer,
     "G" integer,
     "Ghome" integer,
     "W" integer,
     "L" integer,
-    "DivWin" character varying(255),
-    "WCWin" character varying(255),
-    "LgWin" character varying(255),
-    "WSWin" character varying(255),
+    "DivWin" character varying(255) DEFAULT '',
+    "WCWin" character varying(255) DEFAULT '',
+    "LgWin" character varying(255) DEFAULT '',
+    "WSWin" character varying(255) DEFAULT '',
     "R" integer,
     "AB" integer,
     "H" integer,
@@ -628,13 +628,13 @@ CREATE TABLE teams (
     "E" integer,
     "DP" integer,
     "FP" real,
-    name character varying(255),
-    park character varying(255),
+    name character varying(255) DEFAULT '',
+    park character varying(255) DEFAULT '',
     attendance integer,
     "BPF" integer,
     "PPF" integer,
-    "teamIDBR" character varying(255),
-    "teamIDlahman45" character varying(255),
+    "teamIDBR" character varying(255) DEFAULT '',
+    "teamIDlahman45" character varying(255) DEFAULT '',
     "teamIDretro" character varying(255)
 );
 
@@ -647,8 +647,8 @@ ALTER TABLE teams OWNER TO postgres;
 
 CREATE TABLE teamsfranchises (
     "franchID" character varying(255) NOT NULL,
-    "franchName" character varying(255),
-    active character varying(255),
+    "franchName" character varying(255) DEFAULT '',
+    active character varying(255) DEFAULT '',
     "NAassoc" character varying(255)
 );
 
@@ -661,11 +661,11 @@ ALTER TABLE teamsfranchises OWNER TO postgres;
 
 CREATE TABLE teamshalf (
     "yearID" integer NOT NULL,
-    "lgID" character varying(255),
+    "lgID" character varying(255) DEFAULT '',
     "teamID" character varying(255) NOT NULL,
     "Half" integer NOT NULL,
-    "divID" character varying(255),
-    "DivWin" character varying(255),
+    "divID" character varying(255) DEFAULT '',
+    "DivWin" character varying(255) DEFAULT '',
     "Rank" integer,
     "G" integer,
     "W" integer,
