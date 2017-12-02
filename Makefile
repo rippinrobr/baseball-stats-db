@@ -12,7 +12,7 @@ windows: $(MAIN) vet test
 
 
 vet: $(MAIN)
-	go vet -all ./pkg/db ./pkg/bd/models ./pkg/parsers/csv ./cmd/databank-dbloader
+	go vet -all ./pkg/db ./internal/databank ./pkg/parsers/csv ./cmd/databank-dbloader
 
 test: $(MAIN)
 	go test ./...
