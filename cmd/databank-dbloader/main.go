@@ -9,8 +9,8 @@ import (
 
 	"github.com/gocarina/gocsv"
 
-	"github.com/rippinrobr/baseball-databank-db/pkg/bd/models"
-	"github.com/rippinrobr/baseball-databank-db/pkg/db"
+	"github.com/rippinrobr/baseball-stats-db/internal/databank"
+	"github.com/rippinrobr/baseball-stats-db/pkg/db"
 )
 
 const (
@@ -92,7 +92,7 @@ func processFiles(opts db.Options, indir string) {
 	repo := db.CreateRepo(conn)
 	defer repo.CloseConn()
 
-	for _, o := range models.GetTableObjects() {
+	for _, o := range databank.GetTableObjects() {
 		if opts.Verbose {
 			log.Printf("File Name: %s\n", o.GetFileName())
 		}

@@ -15,6 +15,7 @@ TYPE_FLOAT = "float"
 
 def define_parameters(parser):
     """Creates the support command line options"""
+    parser.add_argument("--bson", help="If the language supports add bson tags or bson representation to the structure", action="store_true")
     parser.add_argument("--csv", help="If the language supports add CSV tags or CSV representation to the structure", action="store_true")
     parser.add_argument("--db", help="adds db tags to Go structs." , action="store_true")
     parser.add_argument("--input", default="", help="the path to the input CSV file",type=str )
@@ -27,7 +28,7 @@ def define_parameters(parser):
     parser.add_argument("--verbose", help="more output during the parsing and creation of the data structures", action="store_true")
 
 def get_data_type(col_val):
-    """Deterimes if the current value is numeric or a string"""
+    """Determines if the current value is numeric or a string"""
     dtype = ""
 
     original_col_val = col_val
@@ -38,28 +39,7 @@ def get_data_type(col_val):
             dtype = TYPE_INT
         except ValueError:
             dtype = TYPE_FLOAT
-    #original_col_val = col_val
-    # remove any commas or decimals if they are there so I can 
-    # check to see if this is a numeric value or not
-    # TODO: change to check for floats like this: 
-    #int_re = re.compile(r"^-?\d+$")
-    # number_re = re.compile(r"^-?\d*\.?\d*$")
-    # if number_re.match(col_val):
-    #     dtype = TYPE_INT
-    #     if re.match("^\d+?\.\d+?$", col_val) != None:
-    #         dtype = TYPE_FLOAT
-    # else:
-    #     int_re = re.compile(r"^-?\d+$")
-    #     if int_re.match(col_val):
-    #         dtype = TYPE_INT
-    # digits_only = col_val.replace ('-', '',1).replace(',', '', -1).replace('.', '', 1)  
-    # if '.' in col_val and digits_only.isdigit(): 
-    #     dtype = TYPE_FLOAT
-    # else:
-    #     # change this to use re.compile(r"^-?\d+$")
-    #     if col_val.isdigit():
-    #         dtype = TYPE_INT
-
+    
     return dtype
 
 def parse_file(args):

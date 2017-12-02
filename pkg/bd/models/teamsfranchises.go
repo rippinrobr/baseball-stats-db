@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv"
+	"github.com/rippinrobr/baseball-stats-db/pkg/parsers/csv"
 
-	"github.com/rippinrobr/baseball-databank-db/pkg/db"
+	"github.com/rippinrobr/baseball-stats-db/pkg/db"
 )
 
 // TeamsFranchises is a model that maps the CSV to a DB Table

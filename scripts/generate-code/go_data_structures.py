@@ -41,13 +41,14 @@ def print_code_file(args, headers, data_types, interface_name):
 
     print get_package_name(args)
     print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n  \"path/filepath\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-db/pkg/parsers/csv\"\n"
-    print "  \"github.com/rippinrobr/baseball-databank-db/pkg/db\"\n"
+    print "  \"github.com/rippinrobr/baseball-stats-db/pkg/parsers/csv\"\n"
+    print "  \"github.com/rippinrobr/baseball-stats-db/pkg/db\"\n"
     print ")\n"
     print "// "+data_structure_name+" is a model that maps the CSV to a DB Table"
     print "type", data_structure_name, "struct {"
     for raw_col in headers:
         json_tag = ""
+        bson_tag = ""
         csv_tag = ""
         db_tag = ""
         tags = ""
@@ -60,6 +61,10 @@ def print_code_file(args, headers, data_types, interface_name):
         if args.csv:
             csv_tag =  "csv:\""+raw_col+"\""  
 
+        if args.bson: 
+            cleaned_col_name = change_col_name_for_easier_sql(raw_col).replace(".","")
+            bson_tag = "bson:\""+mongo_key_checks(data_structure_name, cleaned_col_name)+"\""
+            
         if args.db:
             db_tag =  "db:\""+change_col_name_for_easier_sql(raw_col).replace(".","")
             if col_data_type == "string":
@@ -67,15 +72,17 @@ def print_code_file(args, headers, data_types, interface_name):
             else:
                 db_tag =  db_tag+"\""        
             
-        if json_tag != "" or csv_tag != "" or db_tag != "":
-            if json_tag != "" and csv_tag == "" and db_tag == "":
+        if json_tag != "" or csv_tag != "" or db_tag != "" or bson_tag != "":
+            if json_tag != "" and csv_tag == "" and db_tag == "" and bson_tag == "":
                 tags = "`"+json_tag+"`"
-            elif csv_tag != "" and json_tag == "" and db_tag == "":
+            elif csv_tag != "" and json_tag == "" and db_tag == "" and bson_tag == "":
                 tags = "`"+csv_tag+"`"
-            elif db_tag != "" and json_tag == "" and csv_tag == "":
+            elif db_tag != "" and json_tag == "" and csv_tag == "" and bson_tag == "":
                 tags = "`"+csv_tag+"`"
+            elif bson_tag != "" and json_tag == "" and csv_tag == "" and db_tag == "":
+                tags = "`"+bson_tag+"`"
             else:
-                tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"`"
+                tags = "`"+json_tag+"  "+csv_tag+"  "+db_tag+"  "+bson_tag+"`"
                 
         
         print "  ", col.title(), " ", col_data_type, tags
