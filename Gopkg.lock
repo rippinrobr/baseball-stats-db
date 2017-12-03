@@ -32,14 +32,20 @@
   revision = "a337091b0525af65de94df2eb7e98bd9962dcbe2"
 
 [[projects]]
+  branch = "v2"
+  name = "gopkg.in/mgo.v2"
+  packages = [".","bson","internal/json","internal/sasl","internal/scram"]
+  revision = "3f83fa5005286a7fe593b055f0d7771a7dce4655"
+
+[[projects]]
   name = "upper.io/db.v3"
-  packages = [".","internal/cache","internal/cache/hashstructure","internal/immutable","internal/sqladapter","internal/sqladapter/compat","internal/sqladapter/exql","lib/reflectx","lib/sqlbuilder","mysql","postgresql","sqlite"]
+  packages = [".","internal/cache","internal/cache/hashstructure","internal/immutable","internal/sqladapter","internal/sqladapter/compat","internal/sqladapter/exql","lib/reflectx","lib/sqlbuilder","mongo","mysql","postgresql","sqlite"]
   revision = "4ceccb1227aba5fc0f71ca3adc5dd759dfbc093e"
   version = "v3.5.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6525904fcc8bf43de791490cabb3b3ce51c6f46a564eb0df682f351f07f19f08"
+  inputs-digest = "6bd593feb9d7cf0e337d926ec7a69fc863ddd737cadb1a51a817a2464ed44441"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -68,7 +68,7 @@ func main() {
 		log.Fatalf("The path '%s' is not a directory. Please provide the path for the directory that contains the CSV files", inputdir)
 	}
 
-	processFiles(db.Options{
+	opts := db.Options{
 		Host:    dbhost,
 		Name:    dbname,
 		Pass:    dbpass,
@@ -77,27 +77,40 @@ func main() {
 		Type:    dbtype,
 		User:    dbuser,
 		Verbose: verbose,
-	}, inputdir)
-}
+	}
 
-func processFiles(opts db.Options, indir string) {
 	if opts.Verbose {
 		fmt.Println(opts)
 	}
 
-	conn, connErr := db.CreateConnection(opts)
-	if connErr != nil {
-		log.Fatal("Connection error: " + connErr.Error())
+	var repo db.Repository
+
+	switch dbtype {
+	case db.DBMongoDB:
+		conn, err := db.CreateNoSQLConnection(opts)
+		if err != nil {
+			log.Fatal("Connection error: " + err.Error())
+		}
+		repo = db.CreateNoSQLRepo(conn)
+	default:
+		conn, connErr := db.CreateConnection(opts)
+		if connErr != nil {
+			log.Fatal("Connection error: " + connErr.Error())
+		}
+		repo = db.CreateRepo(conn)
 	}
-	repo := db.CreateRepo(conn)
 	defer repo.CloseConn()
 
+	processFiles(repo, opts.Verbose, inputdir)
+}
+
+func processFiles(repo db.Repository, isVerbose bool, inDir string) {
 	for _, o := range databank.GetTableObjects() {
-		if opts.Verbose {
+		if isVerbose {
 			log.Printf("File Name: %s\n", o.GetFileName())
 		}
 
-		o.SetInputDirectory(indir)
+		o.SetInputDirectory(inDir)
 		csvFile, fileErr := os.Open(o.GetFilePath())
 		if fileErr != nil {
 			log.Printf("Error: Unable to open file '%s'. %s\n", o.GetFilePath(), fileErr)
