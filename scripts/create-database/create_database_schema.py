@@ -7,8 +7,8 @@ def define_parameters(parser):
     parser.add_argument("--dbname", help="Name of the database where the tables are to be added. REQUIRED if not sqlite", type=str)
     parser.add_argument("--dbpath", help="SQLITE ONLY - the path for the newly created database", type=str)
     parser.add_argument("--dbpass", help="The password for the user given in the --dbuser option, ignored for SQLite", type=str)
-    parser.add_argument("--dbport", help="The port the database servier is listeing on, ignored for SQLite, defaults to appropriate value for server type if not provided", type=int)
-    parser.add_argument("--dbuser", help="username to use when creating the database, ignorred for SQLite databases, REQUIRED for others.", type=str)
+    parser.add_argument("--dbport", help="The port the database server is listening on, ignored for SQLite, defaults to appropriate value for server type if not provided", type=int)
+    parser.add_argument("--dbuser", help="username to use when creating the database, ignored for SQLite databases, REQUIRED for others.", type=str)
 
 def create_db_connection(args):
     if args.dbtype == SQLITE:

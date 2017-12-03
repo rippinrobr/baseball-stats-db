@@ -23,7 +23,7 @@ def define_parameters(parser):
     parser.add_argument("--json", help="If the language supports add JSON tags or JSON representation to the structure", action="store_true")
     parser.add_argument("--package", help="sets the package to the correct name for Go structs", action="store_true")
     parser.add_argument("--language", choices=[LANG_GO], default=LANG_GO, help="create language specific data structures", required=True, type=str)
-    parser.add_argument("--name", help="name of the datas tructure being created", type=str)
+    parser.add_argument("--name", help="name of the data structure being created", type=str)
     parser.add_argument("--output-dir", help="the directory where the generated file should be written.  If not provided file will be written to stdout")
     parser.add_argument("--verbose", help="more output during the parsing and creation of the data structures", action="store_true")
 

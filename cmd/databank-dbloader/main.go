@@ -36,7 +36,7 @@ func main() {
 	flag.StringVar(&dbpass, dbpassParam, "", "the password to use when loading the database. Required for all dbtypes except SQLite")
 	flag.StringVar(&dbpath, dbpathParam, "", "the path to your SQLite database")
 	flag.IntVar(&dbport, dbportParam, 0, "the port to use when connecting to the database the database. Required for all dbtypes except SQLite")
-	flag.StringVar(&dbtype, dbtypeParam, "", "indicates what type of database is the load target. Supported databases are SQLite")
+	flag.StringVar(&dbtype, dbtypeParam, "", "indicates what type of database is the load target. Supported databases are MongoDB, Postgres, and SQLite")
 	flag.StringVar(&dbuser, dbuserParam, "", "the username to use when loading the database. Required for all dbtypes except SQLite")
 	flag.StringVar(&inputdir, inputdirParam, "", "the directory where the Baseball Databank CSV files live. Required")
 	flag.BoolVar(&verbose, verboseParam, false, "writes more lines to the logs")
