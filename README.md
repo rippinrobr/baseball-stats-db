@@ -1,4 +1,4 @@
-# Baseball Databank DB 
+# Baseball Stats DB 
 
 The goal of the project is to provide the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) in databases to make using the data easier.  Currently there are three officially supported databases PostgreSQL, SQLite and MongoDB.  _If you are wondering why MySQL isn't support [read this](#about_mysql)_.  
 
