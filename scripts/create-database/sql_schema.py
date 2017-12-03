@@ -22,26 +22,26 @@ class BaseModel(Model):
 class People(BaseModel):
     playerID = CharField(null='false',primary_key=True, max_length=9)
     birthYear = IntegerField(null='true',)
-    birthMonth = IntegerField(null='true')
-    birthDay = IntegerField(null='true')
+    birthMonth = IntegerField(null='false', default=0)
+    birthDay = IntegerField(null='false', default=0)
     birthCountry = CharField(null='true', max_length=14)
     birthState = CharField(null='true', max_length=22)
     birthCity = CharField(null='true', max_length=26)
-    deathYear = IntegerField(null='true')
-    deathMonth = IntegerField(null='true')
-    deathDay = IntegerField(null='true')
+    deathYear = IntegerField(null='false', default=0)
+    deathMonth = IntegerField(null='false', default=0)
+    deathDay = IntegerField(null='false', default=0)
     deathCountry = CharField(null='true', max_length=14)
     deathState = CharField(null='true', max_length=20)
     deathCity = CharField(null='true', max_length=28)
     nameFirst = CharField(null='false', max_length=12)
     nameLast = CharField(null='false', max_length=14)
     nameGiven = CharField(null='true', max_length=43)
-    weight = IntegerField(null='true')
-    height = IntegerField(null='true')
+    weight = IntegerField(null='false', default=0)
+    height = IntegerField(null='false', default=0)
     bats = CharField(null='false')
     throws = CharField(null='false')
-    debut = CharField(null='true')
-    finalGame = CharField(null='true')
+    debut = CharField(null='false', default="")
+    finalGame = CharField(null='false', default="")
     retroID = CharField(null='false')
     bbrefID = CharField(null='false', max_length=9) 
 
@@ -52,8 +52,8 @@ class People(BaseModel):
 class TeamsFranchises(BaseModel):
     franchID = CharField(null='false', primary_key=True)
     franchName = CharField(null='false')
-    active = CharField(null='true')
-    NAassoc = CharField(null='true')
+    active = CharField(null='false', default="")
+    NAassoc = CharField(null='false', default="")
 
     def Meta(object):
         db_table = 'teamsfranchises'
@@ -63,8 +63,8 @@ class TeamsFranchises(BaseModel):
 class Parks(BaseModel):
     parkkey = CharField(null='false', primary_key=True)
     parkname = CharField(null='false')
-    parkalias = CharField(null='true')
-    alias = CharField(null='true')
+    parkalias = CharField(null='false', default="")
+    alias = CharField(null='false', default="")
     city = CharField(null='false')
     state = CharField(null='false')
     country = CharField(null='false')
@@ -78,16 +78,16 @@ class Teams(BaseModel):
     lgID = CharField(null='false')
     teamID = CharField(null='false')
     franchID = CharField(null='false')
-    divID = CharField(null='true')
-    Rank = IntegerField(null='true')
+    divID = CharField(null='false', default="")
+    Rank = IntegerField(null='false', default=0)
     G = IntegerField(null='false', default=0)
     Ghome = IntegerField(null='false', default=0)
     W = IntegerField(null='false', default=0)
     L = IntegerField(null='false', default=0)
-    DivWin = CharField(null='true')
-    WCWin = CharField(null='true')
-    LgWin = CharField(null='true')
-    WSWin = CharField(null='true')
+    DivWin = CharField(null='false', default="")
+    WCWin = CharField(null='false', default="")
+    LgWin = CharField(null='false', default="")
+    WSWin = CharField(null='false', default="")
     R = IntegerField(null='false', default=0)
     AB = IntegerField(null='false', default=0)
     H = IntegerField(null='false', default=0)
@@ -113,7 +113,7 @@ class Teams(BaseModel):
     SOA = IntegerField(null='false', default=0)
     E = IntegerField(null='false', default=0)
     DP = IntegerField(null='false', default=0)
-    FP = FloatField(null='true')
+    FP = FloatField(null='false', default=0.0)
     name = CharField(null='false')
     park = CharField(null='false')
     attendance = IntegerField(null='false', default=0)
@@ -138,7 +138,7 @@ class Managers(BaseModel):
     W = IntegerField(null='false', default=0)
     L = IntegerField(null='false', default=0)
     rank = IntegerField(null='false', default=0)
-    plyrMgr = CharField(null='true')
+    plyrMgr = CharField(null='false', default="")
 
     class Meta(object):
         primary_key = CompositeKey('yearID', 'lgID', 'teamID', 'playerID', 'inseason')
@@ -149,12 +149,12 @@ class ManagersHalf(BaseModel):
     yearID = IntegerField(null='false')
     teamID = CharField(null='false')
     lgID = CharField(null='false')
-    inseason = IntegerField(null='true')
+    inseason = IntegerField(null='false', default=0)
     half = IntegerField(null='false')
     G = IntegerField(null='false', default=0)
     W = IntegerField(null='false', default=0)
     L = IntegerField(null='false', default=0)
-    rank = IntegerField(null='true')
+    rank = IntegerField(null='false', default=0)
     
     class Meta(object):
         primary_key = CompositeKey('playerID', 'teamID', 'lgID', 'yearID', 'half')
@@ -173,7 +173,7 @@ class Schools(BaseModel):
    
 class Batting_Post(BaseModel):
     yearID = IntegerField(null='false')
-    round = CharField(null='true')
+    round = CharField(null='false', default="")
     playerID = CharField(null='false')
     teamID = CharField(null='false')
     lgID = CharField(null='false')
@@ -213,8 +213,8 @@ class Awards_Players(BaseModel):
     awardID = CharField(null='false')
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
-    tie = CharField(null='true')
-    notes = CharField(null='true')
+    tie = CharField(null='false', default="")
+    notes = CharField(null='false', default="")
 
     class Meta(object):
         primary_key = CompositeKey('yearID', 'lgID', 'awardID', 'playerID')
@@ -313,11 +313,11 @@ class Home_Games(BaseModel):
     parkkey = CharField(null='false')
     teamkey = CharField(null='false')
     leaguekey = CharField(null='false')
-    attendance = IntegerField(null='true')
-    games = IntegerField(null='true')
-    spanfirst = CharField(null='true')
-    spanlast = CharField(null='true')
-    openings = IntegerField(null='true')
+    attendance = IntegerField(null='false', default=0)
+    games = IntegerField(null='false', default=0)
+    spanfirst = CharField(null='false', default="")
+    spanlast = CharField(null='false', default="")
+    openings = IntegerField(null='false', default=0)
 
     class Meta(object):
         primary_key = CompositeKey('yearkey', 'parkkey', 'teamkey')
@@ -352,14 +352,14 @@ class Appearances(BaseModel):
 
 class Hall_Of_Fame(BaseModel):
     playerID = CharField(null='false')
-    yearID = IntegerField(null='true')
-    votedBy = CharField(null='true')
-    ballots = IntegerField(null='true')
-    needed = IntegerField(null='true')
-    votes = IntegerField(null='true')
+    yearID = IntegerField(null='false', default=0)
+    votedBy = CharField(null='false', default="")
+    ballots = IntegerField(null='false', default=0)
+    needed = IntegerField(null='false', default=0)
+    votes = IntegerField(null='false', default=0)
     inducted = CharField(null='false')
     category = CharField(null='false')
-    needed_note = CharField(null='true')
+    needed_note = CharField(null='false', default="")
 
     class Meta(object):
         primary_key = CompositeKey('playerID', 'category', 'yearID', 'votedBy')
@@ -410,31 +410,31 @@ class Awards_Managers(BaseModel):
     yearID = IntegerField(null='false')
     lgID = CharField(null='false')
     tie = CharField(null='false', default='N')
-    notes = CharField(null='true')
+    notes = CharField(null='false', default="")
     
     class Meta(object):
         primary_key = CompositeKey('yearID', 'lgID', 'awardID', 'playerID')
         db_table = 'awardsmanagers'
 
 class Awards_Share_Managers(BaseModel):
-    awardID = CharField(null='true')
-    yearID = IntegerField(null='true')
-    lgID = CharField(null='true')
+    awardID = CharField(null='false', default="")
+    yearID = IntegerField(null='false', default=0)
+    lgID = CharField(null='false', default="")
     playerID = CharField(null='false')
-    pointsWon = IntegerField(null='true')
-    pointsMax = IntegerField(null='true')
-    votesFirst = IntegerField(null='true')
+    pointsWon = IntegerField(null='false', default=0)
+    pointsMax = IntegerField(null='false', default=0)
+    votesFirst = IntegerField(null='false', default=0)
     
     class Meta(object):
         primary_key = CompositeKey('awardID', 'yearID', 'lgID', 'playerID')
         db_table = 'awardssharemanagers'
 
 class Salaries(BaseModel):
-    yearID = IntegerField(null='true')
+    yearID = IntegerField(null='false', default=0)
     teamID = CharField(null='false')
-    lgID = CharField(null='true')
+    lgID = CharField(null='false', default="")
     playerID = CharField(null='false')
-    salary = IntegerField(null='true')
+    salary = IntegerField(null='false', default=0)
 
     class Meta(object):
         primary_key = CompositeKey('yearID', 'teamID', 'playerID')
@@ -442,10 +442,10 @@ class Salaries(BaseModel):
     
 class Pitching_Post(BaseModel):
     playerID = CharField(null='false')
-    yearID = IntegerField(null='true')
-    round = CharField(null='true')
+    yearID = IntegerField(null='false', default=0)
+    round = CharField(null='false', default="")
     teamID = CharField(null='false')
-    lgID = CharField(null='true')
+    lgID = CharField(null='false', default="")
     W = IntegerField(null='false', default=0)
     L = IntegerField(null='false', default=0)
     G = IntegerField(null='false', default=0)
@@ -494,7 +494,7 @@ class Fielding(BaseModel):
     yearID = IntegerField(null='false', default=0)
     stint = IntegerField(null='false', default=0)
     teamID = CharField(null='false')
-    lgID = CharField(null='true')
+    lgID = CharField(null='false', default="")
     Pos = CharField(null='true', db_column='POS')
     A = IntegerField(null='false', default=0)
     GS = IntegerField(null='false', default=0)
@@ -514,12 +514,12 @@ class Fielding(BaseModel):
         db_table = 'fielding'
 
 class Teams_Half(BaseModel):
-    yearID = IntegerField(null='true')
-    lgID = CharField(null='true')
+    yearID = IntegerField(null='false', default=0)
+    lgID = CharField(null='false', default="")
     teamID = CharField(null='false')
     Half = IntegerField(null='false', default=1)
-    divID = CharField(null='true')
-    DivWin = CharField(null='true')
+    divID = CharField(null='false', default="")
+    DivWin = CharField(null='false', default="")
     Rank = IntegerField(null='false', default=0)
     G = IntegerField(null='false', default=0)
     W = IntegerField(null='false', default=0)
@@ -534,7 +534,7 @@ class Batting(BaseModel):
     yearID = IntegerField(null='false')
     stint = IntegerField(null='false')
     teamID = CharField(null='false')
-    lgID = CharField(null='true')
+    lgID = CharField(null='false', default="")
     G = IntegerField(null='false', default=0)
     AB = IntegerField(null='false', default=0)
     R = IntegerField(null='false', default=0)
