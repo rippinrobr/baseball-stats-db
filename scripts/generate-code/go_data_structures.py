@@ -63,7 +63,7 @@ def print_code_file(args, headers, data_types, interface_name):
 
         if args.bson: 
             cleaned_col_name = change_col_name_for_easier_sql(raw_col).replace(".","")
-            bson_tag = "bson:\""+mongo_key_checks(data_structure_name, cleaned_col_name)+"\""
+            bson_tag = "bson:\""+cleaned_col_name+"\""
             
         if args.db:
             db_tag =  "db:\""+change_col_name_for_easier_sql(raw_col).replace(".","")

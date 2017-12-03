@@ -1,18 +1,5 @@
 import os
 
-player_id_tables = [
-    "People", "AllstarFull", "Appearances", "AwardsManagers", "AwardsPlayers",
-    "AwardsShareManagers", "AwardsSharePlayers", "Batting", "BattingPost", 
-    "CollegePlaying", "Fielding", "FieldingOF", "FieldingPost", "FieldingOFsplit",
-    "HallOfFame", "Managers", "ManagersHalf", "Pitching", "PitchingPost", "Salaries"
-]
-
-park_key_tables = ["Parks"]
-school_id_tables = ["Schools"]
-team_franchises_tables = [ "TeamsFranchises"]
-team_id_tables = [ "Teams", "TeamsHalf"]
-team_key_tables = [ "HomeGames"]
-
 def change_col_name_for_easier_sql(col_name):
     if col_name == "2B":
         return "doubles"
@@ -45,24 +32,3 @@ def get_data_struct_name(args):
 
 def get_file_name(file_path):
     return os.path.basename(file_path)
-
-def mongo_key_checks(struct_name, col_name):
-    if struct_name in player_id_tables and col_name == "playerID":
-        return "_id"
-
-    if struct_name in team_id_tables and col_name == "teamID":
-        return "_id"
-    
-    if struct_name in school_id_tables and col_name == "schoolID":
-        return "_id"
-    
-    if struct_name in team_franchises_tables and col_name == "franchID":
-        return "_id"
-
-    if struct_name in team_key_tables and col_name == "teamkey":
-        return "_id"
-
-    if struct_name in park_key_tables and col_name == "parkkey":
-        return "_id"
-
-    return col_name
