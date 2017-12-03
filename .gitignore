@@ -16,3 +16,4 @@ vendor
 .DS_Store
 baseball_databank_*.sqlite3
 dist/
+*goreleaser.yml
