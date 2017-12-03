@@ -10,7 +10,7 @@ import (
 	"github.com/gocarina/gocsv"
 
 	"github.com/rippinrobr/baseball-stats-db/internal/databank"
-	"github.com/rippinrobr/baseball-stats-db/pkg/db"
+	"github.com/rippinrobr/baseball-stats-db/internal/platform/db"
 )
 
 const (

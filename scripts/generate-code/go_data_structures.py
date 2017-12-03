@@ -41,8 +41,8 @@ def print_code_file(args, headers, data_types, interface_name):
 
     print get_package_name(args)
     print "import (\n  \"os\"\n  \"log\"\n  \"errors\"\n  \"path/filepath\"\n"
-    print "  \"github.com/rippinrobr/baseball-stats-db/pkg/parsers/csv\"\n"
-    print "  \"github.com/rippinrobr/baseball-stats-db/pkg/db\"\n"
+    print "  \"github.com/rippinrobr/baseball-stats-db/internal/platform/parsers/csv\"\n"
+    print "  \"github.com/rippinrobr/baseball-stats-db/internal/platform/db\"\n"
     print ")\n"
     print "// "+data_structure_name+" is a model that maps the CSV to a DB Table"
     print "type", data_structure_name, "struct {"

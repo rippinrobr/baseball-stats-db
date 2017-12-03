@@ -3,8 +3,8 @@ package databank
 import (
 	"os"
 
-	"github.com/rippinrobr/baseball-stats-db/pkg/db"
-	"github.com/rippinrobr/baseball-stats-db/pkg/parsers/csv"
+	"github.com/rippinrobr/baseball-stats-db/internal/platform/db"
+	"github.com/rippinrobr/baseball-stats-db/internal/platform/parsers/csv"
 )
 
 // ParseAndStoreCSVFunc are functions created by the models
