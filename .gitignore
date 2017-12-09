@@ -17,3 +17,5 @@ vendor
 baseball_databank_*.sqlite3
 dist/
 *goreleaser.yml
+cmd/retrosched-dbloader/retrosched-dbloader
+cmd/retrosched-dbloader/retrosheet_schedules.sqlite3
