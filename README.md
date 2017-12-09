@@ -1,13 +1,24 @@
 # Baseball Stats DB 
 
-The goal of the project is to provide the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) in databases to make using the data easier.  Currently there are three officially supported databases PostgreSQL, SQLite and MongoDB.  _If you are wondering why MySQL isn't support [read this](#about_mysql)_.  
+The goal of the project is to provide the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank)  in databases to make using the data easier.  Currently there are three officially supported databases PostgreSQL, SQLite and MongoDB.  _If you are wondering why MySQL isn't support [read this](cmd/databank-dbloader/README.md#about_mysql)_.  
+
+Another source of data that will be a part of this database is from [Retrosheet.org](http://retrosheet.org).  The Retrosheet project has game logs and other data points that the Baseball Databank project does not.  Currently the data will be in two separate databases but future releases will include a combined database.
 
 ## Schemas
-The schema file for all the supported databases live in the `schemas` directory.  All schema files follow this naming convention:
+The schema file for all the supported databases live in the `schemas` directory. Each database will have a similar name convention.  The All schema files follow this naming convention:
+
+### Baseball Databank
+The [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) schema has the following naming convention:
 
  `(postgres|sqlite)_schema_<season>_<github-commit-hash>.sql`
 
+
 Where `<season>` the most recent season in the databases `<githhub-commit-hash>` is the hash of the latest [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) repository update. The SQLite schema for the most recent commit, as of 2017-11-22, would be `sqlite_schema_2016_4a64a55.sql`.  
+### Retrosheet 
+The [Retrosheet.org](http://www.retrosheet.org) database schema has the following naming convention:
+
+ `(mysql|postgres|sqlite)_schema_<season>_retrosheet.sql
+
 
 ## Backups
 If want the schema AND the data you'll find backup files in the `backups/` directory.  The backup file naming convention is:
@@ -16,68 +27,11 @@ If want the schema AND the data you'll find backup files in the `backups/` direc
 
 If I had a backup file done today would have the name `postgres_backup_20171122_2016_4a64a55.tgz`
 
+## Utilities
+In addition to the schema and backup files there are utilities that you can use to create load the databases yourself.
 
-### databank-dbloader 
-You can load the database yourself if you have downloaded/cloned the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) CSV files, loaded one of the schema files if you are going to use a relational database, and downloaded the latest `databank-dbloader` from the [latest release](https://github.com/rippinrobr/baseball-stats-db/releases). Here are the command line options available:
-
-```
-Usage of ./bin/dbloader:
-  -dbhost string
-    	the name or ip address of the database server. (default "localhost")
-  -dbname string
-    	the hame of the database to load
-  -dbpass string
-    	the password to use when loading the database. Required for all dbtypes except SQLite
-  -dbpath string
-    	the path to your SQLite database
-  -dbport int
-    	the port to use when connecting to the database the database. Required for all dbtypes except SQLite
-  -dbtype string
-    	indicates what type of database is the load target. Supported databases are MongoDB, Postgres, and SQLite
-  -dbuser string
-    	the username to use when loading the database. Required for all dbtypes except SQLite
-  -inputdir string
-    	the directory where the Baseball Databank CSV files live. Required
-  -verbose
-    	writes more lines to the logs
-```
-
-#### Loading a Postgres DB
-
-`./bin/dbloader -dbtype postgres -dbname baseballdatabank -dbuser myusername -dbpass mypassword -inputdir ~/my-baseball-databank-dir/core`
-
-This will load the data into your `baseballdatabank` database stored on the db server that lives on localhost since a `-dbhost` value wasn't provided.  Since the `-dbport` option was not provided the connection will attempt to use the default Postgres port 5432. 
-
-#### Loading a SQLite DB
-
-`./bin/dbloader -dbtype sqlite -dbpath=./baseball_databank_2016_4a64a55.sqlite3 -inputdir ~/my-baseball-databank-dir/core`
-
-Since this is a SQLite database there are only two required parameters, `-dbtype` and `-dbpath`.  The loader will create the SQLite database using the value of `-dbpath`.
-
-<href name="about_mysql">
-## About MySQL
-
-The reason why MySQL isn't officially supported is due to the fact that there are 14 records that aren't in the `pitchingpost` table due to MySQL's decision to not support the `inf` value for infinity.  Having said that there is support in the `dbloader` code for MySQL.  If you choose to use MySQL just remember that you will not have all the data that is present in the CSV files.  Here are the missing records:
-
-```
-playerID,yearID,round,teamID,lgID,W,L,G,GS,CG,SHO,SV,IPouts,H,ER,HR,BB,SO,BAOpp,ERA,IBB,WP,HBP,BK,BFP,GF,R,SH,SF,GIDP
-poledi01,1975,WS,BOS,AL,0,0,1,0,0,0,0,0,0,1,0,2,0,,inf,0,0,0,0,2,0,1,0,0,0
-welchbo01,1981,WS,LAN,NL,0,0,1,1,0,0,0,0,3,2,0,1,0,1.000,inf,0,0,0,0,4,0,2,0,0,0
-westda01,1991,WS,MIN,AL,0,0,2,0,0,0,0,0,2,4,1,4,0,1.000,inf,0,0,0,0,6,0,4,0,0,0
-holtch01,1999,NLDS1,HOU,NL,0,0,1,0,0,0,0,0,3,3,0,0,0,1.000,inf,0,0,0,0,3,0,3,0,0,0
-fultzaa01,2002,NLDS1,SFN,NL,0,0,2,0,0,0,0,0,2,1,0,0,0,1.000,inf,0,0,0,0,2,0,1,0,0,0
-myersmi01,2006,ALDS1,NYA,AL,0,0,1,0,0,0,0,0,1,1,1,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
-saitota01,2008,NLDS1,LAN,NL,0,0,1,0,0,0,0,0,3,2,0,0,0,1.000,inf,0,0,0,0,3,0,2,0,0,0
-ramirra02,2009,ALDS2,BOS,AL,0,0,1,0,0,0,0,0,1,2,0,1,0,1.000,inf,0,0,1,0,3,0,2,0,0,0
-schleda01,2011,ALCS,DET,AL,0,0,1,0,0,0,0,0,1,1,0,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
-ueharko01,2011,ALDS2,TEX,AL,0,0,1,0,0,0,0,0,2,3,1,1,0,1.000,inf,0,0,0,0,3,0,3,0,0,0
-marshse01,2013,NLWC,CIN,NL,0,0,1,0,0,0,0,0,1,1,0,2,0,1.000,inf,1,0,0,0,3,0,1,0,0,0
-choatra01,2014,NLDS2,SLN,NL,0,0,1,0,0,0,0,0,1,1,1,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
-goedder01,2015,NLDS2,NYN,NL,0,0,1,0,0,0,0,0,4,3,1,0,0,1.000,inf,0,0,0,0,4,0,3,0,0,0
-jimenub01,2016,ALWC,BAL,AL,0,1,1,0,0,0,0,0,3,3,1,0,0,1.000,inf,0,0,0,0,3,1,3,0,0,0
-```
-
-I do not want to put some placeholder value in place of the `inf` simply because MySQL doesn't support it when PostgreSQL and SQLite do.  If you can come up with a clever way of handling this for MySQL that isn't a complete hack feel free to pass it along or make a pull request.
+* `databank-dbloader` is used to load Baseball Databank into a database of your choosing. For more information see the [README.md](cmd/databank-dbloader/README.md)l
+* `retsched-dbloader` is used to load Retrosheet's schedules file into a database of your choosing. For more information see its [README.md](cmd/retrosched-dbloader/README.md).
 
 ## Licensing & Acknowledgments
 
@@ -104,3 +58,8 @@ by Retrosheet.  Interested parties may contact Retrosheet at
 http://www.retrosheet.org.
 ```
 
+```
+The information used here was obtained free of
+charge from and is copyrighted by Retrosheet.  Interested
+parties may contact Retrosheet at 20 Sunset Rd., Newark, DE 19711.
+```
