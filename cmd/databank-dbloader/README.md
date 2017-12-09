@@ -60,3 +60,28 @@ jimenub01,2016,ALWC,BAL,AL,0,1,1,0,0,0,0,0,3,3,1,0,0,1.000,inf,0,0,0,0,3,1,3,0,0
 ```
 
 I do not want to put some placeholder value in place of the `inf` simply because MySQL doesn't support it when PostgreSQL and SQLite do.  If you can come up with a clever way of handling this for MySQL that isn't a complete hack feel free to pass it along or make a pull request.
+
+## Licensing & Acknowledgments
+
+```
+Baseball Databank is a compilation of historical baseball data in a
+convenient, tidy format, distributed under Open Data terms.
+
+This work is licensed under a Creative Commons Attribution-ShareAlike
+3.0 Unported License.  For details see:
+http://creativecommons.org/licenses/by-sa/3.0/
+
+Person identification and demographics data are provided by
+Chadwick Baseball Bureau (http://www.chadwick-bureau.com),
+from its Register of baseball personnel.
+
+Player performance data for 1871 through 2014 is based on the
+Lahman Baseball Database, version 2015-01-24, which is 
+Copyright (C) 1996-2015 by Sean Lahman.
+
+The tables Parks.csv and HomeGames.csv are based on the game logs
+and park code table published by Retrosheet.
+This information is available free of charge from and is copyrighted
+by Retrosheet.  Interested parties may contact Retrosheet at 
+http://www.retrosheet.org.
+```

@@ -40,3 +40,11 @@ This will load the data into your `retrosheet` database stored on the db server 
 `./bin/retrosched-dbloader -dbtype sqlite -dbpath=./retrosheet.sqlite3 -inputdir ~/my-retrosheet-schedules`
 
 Since this is a SQLite database there are only two required parameters, `-dbtype` and `-dbpath`.  The loader will create the SQLite database using the value of `-dbpath`.
+
+## Licensing & Acknowledgements
+
+```
+The information used here was obtained free of
+charge from and is copyrighted by Retrosheet.  Interested
+parties may contact Retrosheet at 20 Sunset Rd., Newark, DE 19711.
+```
