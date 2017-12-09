@@ -22,17 +22,17 @@ func init() {
 }
 
 const (
-	dbpathParam   string = "dbpath"
-	dbhostParam          = "dbhost"
-	dbnameParam          = "dbname"
-	dbpassParam          = "dbpass"
-	dbportParam          = "dbport"
-	dbtypeParam          = "dbtype"
-	dbuserParam          = "dbuser"
-	inputdirParam        = "inputdir"
-	verboseParam         = "verbose"
-
-	scheduleTableName = "schedules"
+	dbpathParam       string = "dbpath"
+	dbhostParam              = "dbhost"
+	dbnameParam              = "dbname"
+	dbpassParam              = "dbpass"
+	dbportParam              = "dbport"
+	dbtypeParam              = "dbtype"
+	dbuserParam              = "dbuser"
+	filePattern              = "SKED.TXT"
+	inputdirParam            = "inputdir"
+	scheduleTableName        = "schedules"
+	verboseParam             = "verbose"
 )
 
 // main is the entry point for the application.
@@ -124,9 +124,8 @@ func processFiles(repo db.Repository, isVerbose bool, inDir string) {
 
 	for _, f := range files {
 		fname := f.Name()
-		if strings.HasSuffix(fname, "SKED.TXT") {
-			season := 0
-			season, err = strconv.Atoi(fname[0:4])
+		if strings.HasSuffix(fname, filePattern) {
+			season, err := strconv.Atoi(fname[0:4])
 			file, err := os.Open(filepath.Join(inDir, fname))
 			if err != nil {
 				log.Fatal(err)
@@ -150,7 +149,6 @@ func processFiles(repo db.Repository, isVerbose bool, inDir string) {
 				s, serr := retrosheet.NewSchedule(season, record)
 				if serr != nil {
 					log.Printf("an error occurred while trying to create schedule object %s\n", serr.Error())
-
 				}
 
 				err = repo.Insert(scheduleTableName, s)
