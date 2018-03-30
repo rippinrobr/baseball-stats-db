@@ -1,18 +1,16 @@
 BIN := databank-dbloader
 MAIN := cmd/databank-dbloader/main.go
 
-mac: $(MAIN) vet test
-	GOOS=darwin GOARCH=amd64 go build -o bin/$(BIN) $(MAIN) 
+all: lint vet test build
 
-linux: $(MAIN) vet test
-	GOOS=linux GOARCH=amd64 go build -o bin/$(BIN) $(MAIN)
+build: $(MAIN) 
+	go build -o bin/$(BIN) $(MAIN)
 
-windows: $(MAIN) vet test
-	GOOS=windows GOARCH=amd64 go build -o bin/$(BIN) $(MAIN)
+vet: 
+	go vet -all ./internal/... ./cmd/databank-dbloader/...
 
-
-vet: $(MAIN)
-	go vet -all ./internal/platform/db ./internal/databank ./internal/platform/parsers/csv ./cmd/databank-dbloader
-
-test: $(MAIN)
+test: 
 	go test ./...
+
+lint:
+	golint ./internal/... ./cmd/databank-dbloader/...
