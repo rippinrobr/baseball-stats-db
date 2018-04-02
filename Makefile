@@ -1,7 +1,7 @@
 BIN := databank-dbloader
 MAIN := cmd/databank-dbloader/main.go
 RCDB := baseball_databank_2017_a663145.sqlite3
-TAG := 0.4.0
+TAG := 0.4.1
 LINUX_TGZ := baseball-stats-db-$(TAG)-linux-amd64.tgz
 MACOS_TGZ := baseball-stats-db-$(TAG)-macos-amd64.tgz
 
