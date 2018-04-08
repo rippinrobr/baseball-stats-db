@@ -1,8 +1,8 @@
 BIN := databank-dbloader
 MAIN := cmd/databank-dbloader/main.go
 RELEASE_DIR := release/
-RCDB := baseball_databank_2017_a070569.sqlite3
-TAG := 0.4.2
+RCDB := baseball_databank_2017_aa57ec7.sqlite3
+TAG := 2017.3
 LINUX_TGZ := baseball-stats-db-$(TAG)-linux-amd64.tgz
 MACOS_TGZ := baseball-stats-db-$(TAG)-macos-amd64.tgz
 
@@ -25,12 +25,12 @@ release:
 
 pkg-release-linux: release
 	rm release/*
-	tar -zcvf $(RELEASE_DIR)$(LINUX_TGZ) $(RCDB) ./bin
+	tar -zcvf $(RELEASE_DIR)$(LINUX_TGZ) $(RCDB) ./bin ./backups
 	sha256sum $(RELEASE_DIR)$(LINUX_TGZ) >./$(RELEASE_DIR)$(LINUX_TGZ).checksum
 
 pkg-release-macos: release
 	rm release/*
-	tar -zcvf $(RELEASE_DIR)$(MACOS_TGZ) $(RCDB) ./bin
+	tar -zcvf $(RELEASE_DIR)$(MACOS_TGZ) $(RCDB) ./bin ./backups
 	shasum -a 256 $(RELEASE_DIR)$(MACOS_TGZ) >./$(RELEASE_DIR)$(MACOS_TGZ).checksum
 
 release-linux: build pkg-release-linux
