@@ -33,6 +33,10 @@ In addition to the schema and backup files there are utilities that you can use 
 * `databank-dbloader` is used to load Baseball Databank into a database of your choosing. For more information see the [README.md](cmd/databank-dbloader/README.md)l
 * `retsched-dbloader` is used to load Retrosheet's schedules file into a database of your choosing. For more information see its [README.md](cmd/retrosched-dbloader/README.md).
 
+## Releases & Versioning
+As of April 8th, 2018 I will use the following version structure.  Each version will be <Latest Season Stats in db>.<update number>
+So the third release of of the 2017 stats would have the version number `2017.3`. The release notes will also contain links to the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) commits that were added to the db as part of this release.
+
 ## Licensing & Acknowledgments
 
 ```

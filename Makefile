@@ -6,7 +6,7 @@ TAG := 0.4.2
 LINUX_TGZ := baseball-stats-db-$(TAG)-linux-amd64.tgz
 MACOS_TGZ := baseball-stats-db-$(TAG)-macos-amd64.tgz
 
-all: lint vet test build linux
+all: lint vet test build
 
 build: $(MAIN) 
 	go build -o bin/$(BIN) $(MAIN)
@@ -24,10 +24,12 @@ release:
 	-mkdir $(RELEASE_DIR)
 
 pkg-release-linux: release
+	rm release/*
 	tar -zcvf $(RELEASE_DIR)$(LINUX_TGZ) $(RCDB) ./bin
 	sha256sum $(RELEASE_DIR)$(LINUX_TGZ) >./$(RELEASE_DIR)$(LINUX_TGZ).checksum
 
 pkg-release-macos: release
+	rm release/*
 	tar -zcvf $(RELEASE_DIR)$(MACOS_TGZ) $(RCDB) ./bin
 	shasum -a 256 $(RELEASE_DIR)$(MACOS_TGZ) >./$(RELEASE_DIR)$(MACOS_TGZ).checksum
 
