@@ -14,18 +14,13 @@ The [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) sche
 
 
 Where `<season>` the most recent season in the databases `<githhub-commit-hash>` is the hash of the latest [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) repository update. The SQLite schema for the most recent commit, as of 2017-11-22, would be `sqlite_schema_2016_4a64a55.sql`.  
-### Retrosheet (Still in alpha)
-The [Retrosheet.org](http://www.retrosheet.org) database schema has the following naming convention:
-
- `(mysql|postgres|sqlite)_schema_<season>_retrosheet.sql
-
 
 ## Backups
 If want the schema AND the data you'll find backup files in the `backups/` directory.  The backup file naming convention is:
 
-`(postgres|sqlite|mongodb)_backup_<date of backup>_<season>_<github-commit-hash>.tgz`
+`(postgres|sqlite|mongodb)_backup_<season>.<update #>_<github-commit-hash>.(tgz|sqlite3)`
 
-If I had a backup file done today would have the name `postgres_backup_20171122_2016_4a64a55.tgz`
+The update <season>.<update #> corresponds to the release number of the baseball-stats-db that it was included in. 
 
 ## Utilities
 In addition to the schema and backup files there are utilities that you can use to create load the databases yourself.
