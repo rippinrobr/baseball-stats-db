@@ -24,31 +24,29 @@ lint:
 release:
 	-mkdir $(RELEASE_DIR)
 
-sqlitedb: build
+sqlitedb:
 	./bin/databank-dbloader -dbtype sqlite -dbpath=baseball_databank_2017.sqlite3 -inputdir ~/src/baseballdatabank/core 
 	cp  baseball_databank_2017.sqlite3 backups/$(RCDB)
 
-mongodb: build
+mongodb: 
 	./bin/databank-dbloader -dbtype mongodb -dbname baseball_databank -inputdir ~/src/baseballdatabank/core
 	mongodump --archive=./backups/mongodb_backup_$(TAG)_$(HASH)_baseballdatabank.archive --db baseball_databank
 	tar zcvf ./backups/mongodb_backup_$(TAG)_$(HASH)_baseballdatabank.tgz ./backups/mongodb_backup_$(TAG)_$(HASH)_baseballdatabank.archive
 
-mysqldb: build 
+mysqldb:  
 	./bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
 
-postgresdb: build
+postgresdb: 
 	/bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
 	pg_dumpall >./backups/postgres_backup_$(TAG)_$(HASH)_baseballdatabank.sql
 
-pkg-release-linux: loaddb release
+pkg-release-linux: sqlitedb release
 	rm release/*
-	cp $(RCDB) release/
 	tar -zcvf $(RELEASE_DIR)$(LINUX_TGZ) $(RCDB) ./bin ./backups
 	sha256sum $(RELEASE_DIR)$(LINUX_TGZ) >./$(RELEASE_DIR)$(LINUX_TGZ).checksum
 
-pkg-release-macos: loaddb release
+pkg-release-macos: sqlitedb release
 	rm release/*
-	cp $(RCDB) release/
 	tar -zcvf $(RELEASE_DIR)$(MACOS_TGZ) $(RCDB) ./bin ./backups
 	shasum -a 256 $(RELEASE_DIR)$(MACOS_TGZ) >./$(RELEASE_DIR)$(MACOS_TGZ).checksum
 
