@@ -42,12 +42,12 @@ postgresdb:
 
 pkg-release-linux: sqlitedb release
 	rm release/*
-	tar -zcvf $(RELEASE_DIR)$(LINUX_TGZ) $(RCDB) ./bin ./backups
+	tar -zcvf $(RELEASE_DIR)$(LINUX_TGZ) ./bin ./backups
 	sha256sum $(RELEASE_DIR)$(LINUX_TGZ) >./$(RELEASE_DIR)$(LINUX_TGZ).checksum
 
 pkg-release-macos: sqlitedb release
 	rm release/*
-	tar -zcvf $(RELEASE_DIR)$(MACOS_TGZ) $(RCDB) ./bin ./backups
+	tar -zcvf $(RELEASE_DIR)$(MACOS_TGZ) ./bin ./backups
 	shasum -a 256 $(RELEASE_DIR)$(MACOS_TGZ) >./$(RELEASE_DIR)$(MACOS_TGZ).checksum
 
 release-linux: build pkg-release-linux
