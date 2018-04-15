@@ -37,6 +37,7 @@ This will load the data into your `baseballdatabank` database stored on the db s
 Since this is a SQLite database there are only two required parameters, `-dbtype` and `-dbpath`.  The loader will create the SQLite database using the value of `-dbpath`.
 
 <href name="about_mysql">
+  
 ## About MySQL
 
 The reason why MySQL isn't officially supported is due to the fact that there are 14 records that aren't in the `pitchingpost` table due to MySQL's decision to not support the `inf` value for infinity.  Having said that there is support in the `dbloader` code for MySQL.  If you choose to use MySQL just remember that you will not have all the data that is present in the CSV files.  Here are the missing records:
