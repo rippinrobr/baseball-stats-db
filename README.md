@@ -14,7 +14,7 @@ The [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) sche
 
 
 Where `<season>` the most recent season in the databases `<githhub-commit-hash>` is the hash of the latest [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) repository update. The SQLite schema for the most recent commit, as of 2017-11-22, would be `sqlite_schema_2016_4a64a55.sql`.  
-### Retrosheet 
+### Retrosheet (Still in alpha)
 The [Retrosheet.org](http://www.retrosheet.org) database schema has the following naming convention:
 
  `(mysql|postgres|sqlite)_schema_<season>_retrosheet.sql
