@@ -1,8 +1,9 @@
 BIN := databank-dbloader
 MAIN := cmd/databank-dbloader/main.go
 RELEASE_DIR := release/
-RCDB := baseball_databank_2017_aa57ec7.sqlite3
-TAG := 2017.3
+HASH := 9f91176
+TAG := 2017.4
+RCDB := baseball_databank_$(TAG)_$(HASH).sqlite3
 LINUX_TGZ := baseball-stats-db-$(TAG)-linux-amd64.tgz
 MACOS_TGZ := baseball-stats-db-$(TAG)-macos-amd64.tgz
 
@@ -23,13 +24,31 @@ lint:
 release:
 	-mkdir $(RELEASE_DIR)
 
-pkg-release-linux: release
+sqlitedb: build
+	./bin/databank-dbloader -dbtype sqlite -dbpath=baseball_databank_2017.sqlite3 -inputdir ~/src/baseballdatabank/core 
+	cp  baseball_databank_2017.sqlite3 backups/$(RCDB)
+
+mongodb: build
+	./bin/databank-dbloader -dbtype mongodb -dbname baseball_databank -inputdir ~/src/baseballdatabank/core
+	mongodump --archive=./backups/mongodb_backup_$(TAG)_$(HASH)_baseballdatabank.archive --db baseball_databank
+	tar zcvf ./backups/mongodb_backup_$(TAG)_$(HASH)_baseballdatabank.tgz ./backups/mongodb_backup_$(TAG)_$(HASH)_baseballdatabank.archive
+
+mysqldb: build 
+	./bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+
+postgresdb: build
+	/bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	pg_dumpall >./backups/postgres_backup_$(TAG)_$(HASH)_baseballdatabank.sql
+
+pkg-release-linux: loaddb release
 	rm release/*
+	cp $(RCDB) release/
 	tar -zcvf $(RELEASE_DIR)$(LINUX_TGZ) $(RCDB) ./bin ./backups
 	sha256sum $(RELEASE_DIR)$(LINUX_TGZ) >./$(RELEASE_DIR)$(LINUX_TGZ).checksum
 
-pkg-release-macos: release
+pkg-release-macos: loaddb release
 	rm release/*
+	cp $(RCDB) release/
 	tar -zcvf $(RELEASE_DIR)$(MACOS_TGZ) $(RCDB) ./bin ./backups
 	shasum -a 256 $(RELEASE_DIR)$(MACOS_TGZ) >./$(RELEASE_DIR)$(MACOS_TGZ).checksum
 
