@@ -53,11 +53,12 @@ import (
 // 	BR4 AA          8/25/1890 [moved to BL3 8/27]
 // 	CN3 AA         8/16/1891 [moved to ML3 8/18]
 type Schedule struct {
-	Season                   int          `json:"season" bson:"season" db:"season"`
-	GameDateStr              string       `json:"gameDateStr" bson:"gameDateStr" db:"game_date_str"`
-	GameMonth                time.Month   `json:"gameMonth" bson:"gameMonth" db:"game_month"`
-	GameMonthDay             int          `json:"gameMonthDay" bson:"gameMonthDay" db:"game_month_day"`
-	GameNumber               int          `json:"gameNumber" bson:"gameNumber" db:"game_number"`
+	gameUniqueID `json:",inline" bson:",inline"`
+	// Season                   int          `json:"season" bson:"season" db:"season"`
+	// GameDateStr              string       `json:"gameDateStr" bson:"gameDateStr" db:"game_date_str"`
+	// GameMonth                time.Month   `json:"gameMonth" bson:"gameMonth" db:"game_month"`
+	// GameMonthDay             int          `json:"gameMonthDay" bson:"gameMonthDay" db:"game_month_day"`
+	// GameNumber               int          `json:"gameNumber" bson:"gameNumber" db:"game_number"`
 	WeekDay                  time.Weekday `json:"weekDay" bson:"weekDay" db:"week_day"`
 	VisitorsTeam             string       `json:"visitorsTeam" bson:"visitorsTeam" db:"visitors_team"`
 	Visitorsleague           string       `json:"visitorsleague" bson:"visitorsleague" db:"visitors_league"`
@@ -109,7 +110,7 @@ func NewSchedule(season int, data []string) (Schedule, error) {
 	s.Season = season
 
 	if len(data) != 12 {
-		return s, fmt.Errorf("season data has 12 columns data only has %d", len(data))
+		return s, fmt.Errorf("schedule data has 12 columns data only has %d", len(data))
 	}
 
 	s.GameDateStr = data[0]

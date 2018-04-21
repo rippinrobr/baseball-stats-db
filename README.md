@@ -1,37 +1,52 @@
 # Baseball Stats DB 
 
-The goal of the project is to provide the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank)  in databases to make using the data easier.  Currently there are three officially supported databases PostgreSQL, SQLite and MongoDB.  _If you are wondering why MySQL isn't support [read this](cmd/databank-dbloader/README.md#about_mysql)_.  
+The goal of the project is to share the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) and [Retrosheet.org](http://retrosheet.org) in a format that allows users to easily load the data into a databases.  Currently there are three officially supported databases PostgreSQL, SQLite and MongoDB.  _MySQL isn't 'officially' support, [read this to find out why](cmd/databank-dbloader/README.md#about_mysql), but I do create backups and schema files for it._.  There are schema files and backups for a Baseball Databank only db, a Retrosheet only db plus a combined database named Baseball Stats.
 
-Another source of data that will be a part of this database is from [Retrosheet.org](http://retrosheet.org).  The Retrosheet project has game logs and other data points that the Baseball Databank project does not.  Currently the data will be in two separate databases but future releases will include a combined database.
+## Schema Files
+The schema files live in the  `schemas` directory. With the schema files for all the database will have the folowing naming convention.
 
-## Schemas
-The schema file for all the supported databases live in the `schemas` directory. Each database will have a similar name convention.  The All schema files follow this naming convention:
+`(mysql|postgres|sqlite)_(databank|retrosheet|combined)_schema_<season>.<version>.sql`
 
-### Baseball Databank
-The [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) schema has the following naming convention:
-
- `(postgres|sqlite)_schema_<season>_<github-commit-hash>.sql`
-
-
-Where `<season>` the most recent season in the databases `<githhub-commit-hash>` is the hash of the latest [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) repository update. The SQLite schema for the most recent commit, as of 2017-11-22, would be `sqlite_schema_2016_4a64a55.sql`.  
+Season is the latest season's data that is contained in the Baseball Databank files.   The version number is the numbered
+release for the season's data. A new version is released if the Baseball Databank or Retrosheet release an update to their
+files.  Releases are typically released on Sundays.
 
 ## Backups
-If want the schema AND the data you'll find backup files in the `backups/` directory.  The backup file naming convention is:
+The backup files are included in each release.  Since the files can be big, I've removed the backups from the repository. The naming convention is similar to the schema files.  
 
-`(postgres|sqlite|mongodb)_backup_<season>.<update #>_<github-commit-hash>.(tgz|sqlite3)`
+`(mongodb|mysql|postgres|sqlite)_(databank|retrosheet|combined)_backup_<season>.<version>.tgz`
 
-The update <season>.<update #> corresponds to the release number of the baseball-stats-db that it was included in. 
+Season is the latest season's data that is contained in the Baseball Databank files.   The version number is the numbered
+release for the season's data. A new version is released if the Baseball Databank or Retrosheet release an update to their
+files.  Releases are typically released on Sundays.
+
+## About MySQL
+
+The reason why MySQL isn't officially supported is due to the fact that there are 14 records that aren't in the `pitchingpost` table. The aren't there due to MySQL's decision to not support the `inf` value for infinity.  Having said that there is support in the `dbloader` code for MySQL.  If you choose to use MySQL just remember that you will not have all the data that is present in the CSV files.
+
+```
+playerID,yearID,round,teamID,lgID,W,L,G,GS,CG,SHO,SV,IPouts,H,ER,HR,BB,SO,BAOpp,ERA,IBB,WP,HBP,BK,BFP,GF,R,SH,SF,GIDP
+poledi01,1975,WS,BOS,AL,0,0,1,0,0,0,0,0,0,1,0,2,0,,inf,0,0,0,0,2,0,1,0,0,0
+welchbo01,1981,WS,LAN,NL,0,0,1,1,0,0,0,0,3,2,0,1,0,1.000,inf,0,0,0,0,4,0,2,0,0,0
+westda01,1991,WS,MIN,AL,0,0,2,0,0,0,0,0,2,4,1,4,0,1.000,inf,0,0,0,0,6,0,4,0,0,0
+holtch01,1999,NLDS1,HOU,NL,0,0,1,0,0,0,0,0,3,3,0,0,0,1.000,inf,0,0,0,0,3,0,3,0,0,0
+fultzaa01,2002,NLDS1,SFN,NL,0,0,2,0,0,0,0,0,2,1,0,0,0,1.000,inf,0,0,0,0,2,0,1,0,0,0
+myersmi01,2006,ALDS1,NYA,AL,0,0,1,0,0,0,0,0,1,1,1,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
+saitota01,2008,NLDS1,LAN,NL,0,0,1,0,0,0,0,0,3,2,0,0,0,1.000,inf,0,0,0,0,3,0,2,0,0,0
+ramirra02,2009,ALDS2,BOS,AL,0,0,1,0,0,0,0,0,1,2,0,1,0,1.000,inf,0,0,1,0,3,0,2,0,0,0
+schleda01,2011,ALCS,DET,AL,0,0,1,0,0,0,0,0,1,1,0,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
+ueharko01,2011,ALDS2,TEX,AL,0,0,1,0,0,0,0,0,2,3,1,1,0,1.000,inf,0,0,0,0,3,0,3,0,0,0
+marshse01,2013,NLWC,CIN,NL,0,0,1,0,0,0,0,0,1,1,0,2,0,1.000,inf,1,0,0,0,3,0,1,0,0,0
+choatra01,2014,NLDS2,SLN,NL,0,0,1,0,0,0,0,0,1,1,1,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
+goedder01,2015,NLDS2,NYN,NL,0,0,1,0,0,0,0,0,4,3,1,0,0,1.000,inf,0,0,0,0,4,0,3,0,0,0
+jimenub01,2016,ALWC,BAL,AL,0,1,1,0,0,0,0,0,3,3,1,0,0,1.000,inf,0,0,0,0,3,1,3,0,0,0
+```
+
+I do not want to put some placeholder value in place of the `inf` simply because MySQL doesn't support it when PostgreSQL and SQLite do.  If you can come up with a clever way of handling this for MySQL that isn't a complete hack feel free to pass it along or make a pull request.
 
 ## Utilities
-In addition to the schema and backup files there are utilities that you can use to create load the databases yourself.
-
-* `databank-dbloader` is used to load Baseball Databank into a database of your choosing. For more information see the [README.md](cmd/databank-dbloader/README.md)l
-* `retsched-dbloader` is used to load Retrosheet's schedules file into a database of your choosing. For more information see its [README.md](cmd/retrosched-dbloader/README.md).
-
-## Releases & Versioning
-As of April 8th, 2018 I will use the following version structure.  Each version will be <Latest Season Stats in db>.<update number>
-So the third release of of the 2017 stats would have the version number `2017.3`. The release notes will also contain links to the [Baseball Databank](https://github.com/chadwickbureau/baseballdatabank) commits that were added to the db as part of this release.
-
+I have removed the binaries from the release files, I believe that most people downloading the releases are there for the data.
+I will be moving the code and binaries to my [sports-stats-utilities](https://github.com/rippinrobr/sports-stats-utilities), 
 ## Licensing & Acknowledgments
 
 ```
