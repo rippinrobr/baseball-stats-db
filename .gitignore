@@ -24,3 +24,4 @@ cmd/retrogl-dbloader/retrogl-dbloader
 retrosheet_schedules.sqlite3
 release/
 retrosheet_*.sqlite3
+backups/

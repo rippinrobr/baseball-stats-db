@@ -5,7 +5,6 @@ GL_MAIN := cmd/retrogl-dbloader/main.go
 SCHED_BIN := retrosched-dbloader
 SCHED_MAIN := cmd/retrosched-dbloader/main.go
 OS := $(shell uname)
-HASH := NIGHTLY
 SEASON := 2017
 INC_VERSION := 5
 VERSION := $(SEASON).$(INC_VERSION)
@@ -66,7 +65,7 @@ postgresdb:
 release: #release_dir build_all sqlitedb
 	@echo "Prepping release $(VERSION) $(OS)"
 	rm $(RELEASE_DIR)*
-	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) ./bin ./backups
+	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) ./bin ./schemas
 ifeq ($(OS),Darwin) 
 	shasum -a 256 $(RELEASE_DIR)$(RELEASE_TGZ) >./$(RELEASE_DIR)$(RELEASE_TGZ).checksum
 else
