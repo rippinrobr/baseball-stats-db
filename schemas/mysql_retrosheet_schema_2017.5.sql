@@ -1,3 +1,4 @@
+-- CREATE DATABASE retrosheet_2017 ;
 
 DROP TABLE IF EXISTS schedules;
 
@@ -20,6 +21,8 @@ CREATE TABLE schedules (
 
   PRIMARY KEY(season, game_date_str, game_number, visitors_team, home_team, visitors_season_game_number)
 );
+
+DROP TABLE IF EXISTS gamelogs;
 
 CREATE TABLE gamelogs (
   season INTEGER NOT NULL,

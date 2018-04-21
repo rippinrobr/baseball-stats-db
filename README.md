@@ -23,7 +23,6 @@ files.  Releases are typically released on Sundays.
 ## Utilities
 I have removed the binaries from the release files, I believe that most people downloading the releases are there for the data.
 I will be moving the code and binaries to my [sports-stats-utilities](https://github.com/rippinrobr/sports-stats-utilities), 
-
 ## Licensing & Acknowledgments
 
 ```
