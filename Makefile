@@ -24,7 +24,7 @@ gl_build: $(GL_MAIN)
 sched_build: $(SCHED_MAIN) 
 	go build -o bin/$(SCHED_BIN) $(SCHED_MAIN)
 
-build_all: databank_build sched_build #gl_build
+build_all: databank_build sched_build gl_build
 
 vet: 
 	go vet -all ./internal/... ./cmd/databank-dbloader/... ./cmd/retrosched-dbloader/... ./cmd/retrogl-dbloader/...
@@ -45,6 +45,7 @@ sqlitedb_bd:
 
 sqlitedb_retro:
 	./bin/retrosched-dbloader -dbtype sqlite -dbpath=./$(RETRODB) -inputdir ~/src/retrosheet/schedule
+	./bin/retrogl-dbloader -dbtype sqlite -dbpath=./$(RETRODB) -inputdir ~/src/retrosheet/gamelog
 	sqlite3 $(RETRODB) .schema >./schemas/sqlite_retrosheet_schema_$(VERSION).sql 
 	sqlite3 $(RETRODB) .dump >./backups/sqlite_retrosheet_backup$(VERSION).sql 
 
@@ -65,7 +66,7 @@ postgresdb:
 release: #release_dir build_all sqlitedb
 	@echo "Prepping release $(VERSION) $(OS)"
 	rm $(RELEASE_DIR)*
-	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) ./bin ./schemas
+	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) ./schemas ./backups
 ifeq ($(OS),Darwin) 
 	shasum -a 256 $(RELEASE_DIR)$(RELEASE_TGZ) >./$(RELEASE_DIR)$(RELEASE_TGZ).checksum
 else
