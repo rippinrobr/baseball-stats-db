@@ -8,9 +8,9 @@ OS := $(shell uname)
 SEASON := 2017
 INC_VERSION := 5
 VERSION := $(SEASON).$(INC_VERSION)
-BDDB := baseball_databank_$(SEASON).sqlite3
-RETRODB := retrosheet_$(SEASON).sqlite3
-STATSDB := baseball_stats_$(SEASON).sqlite3 
+BDDB := baseball_databank_$(SEASON)
+RETRODB := retrosheet_$(SEASON)
+STATSDB := baseball_stats_$(SEASON)
 RELEASE_DIR := release/
 RELEASE_TGZ := baseball-stats-db-$(VERSION).tgz
 
@@ -41,21 +41,21 @@ release_dir:
 
 sqlitedb_bd:
 	@echo "loading baseballdatabank db"
-	./bin/databank-dbloader -dbtype sqlite -dbpath=$(BDDB) -inputdir ~/src/baseballdatabank/core 
-	sqlite3 $(BDDB) .schema >./schemas/sqlite_databank_schema_$(VERSION).sql
-	sqlite3 $(BDDB) .dump >./backups/sqlite_databank_backup$(VERSION).sql
+	./bin/databank-dbloader -dbtype sqlite -dbpath=$(BDDB).sqlite3 -inputdir ~/src/baseballdatabank/core 
+	sqlite3 $(BDDB).sqlite3 .schema >./schemas/sqlite_databank_schema_$(VERSION).sql
+	sqlite3 $(BDDB).sqlite3 .dump >./backups/sqlite_databank_backup$(VERSION).sql
 	
 	@echo "loading baseball_stats db"
-	./bin/databank-dbloader -dbtype sqlite -dbpath=$(STATSDB) -inputdir ~/src/baseballdatabank/core 
-	sqlite3 $(STATSDB) .schema >./schemas/sqlite_combined_schema_$(VERSION).sql
-	sqlite3 $(STATSDB) .dump >./backups/sqlite_combined_backup$(VERSION).sql
+	./bin/databank-dbloader -dbtype sqlite -dbpath=$(STATSDB).sqlite3 -inputdir ~/src/baseballdatabank/core 
+	sqlite3 $(STATSDB).sqlite3 .schema >./schemas/sqlite_combined_schema_$(VERSION).sql
+	sqlite3 $(STATSDB).sqlite3 .dump >./backups/sqlite_combined_backup$(VERSION).sql
 
 sqlitedb_retro_stats_db:
 	@echo "loading the baseball_stats db"
-	./bin/retrosched-dbloader -dbtype sqlite -dbpath=./$(STATSDB) -inputdir ~/src/retrosheet/schedule
-	./bin/retrogl-dbloader -dbtype sqlite -dbpath=./$(STATSDB) -inputdir ~/src/retrosheet/gamelog
-	sqlite3 $(STATSDB) .schema >./schemas/sqlite_combined_schema_$(VERSION).sql 
-	sqlite3 $(STATSDB) .dump >./backups/sqlite_combined_backup$(VERSION).sql 
+	./bin/retrosched-dbloader -dbtype sqlite -dbpath=./$(STATSDB).sqlite3 -inputdir ~/src/retrosheet/schedule
+	./bin/retrogl-dbloader -dbtype sqlite -dbpath=./$(STATSDB).sqlite3 -inputdir ~/src/retrosheet/gamelog
+	sqlite3 $(STATSDB).sqlite3 .schema >./schemas/sqlite_combined_schema_$(VERSION).sql 
+	sqlite3 $(STATSDB).sqlite3 .dump >./backups/sqlite_combined_backup$(VERSION).sql 
 
 sqlitedb_retro: sqlitedb_retro_stats_db
 	@echo "loading the retrosheet db"
@@ -64,12 +64,30 @@ sqlitedb_retro: sqlitedb_retro_stats_db
 	sqlite3 $(RETRODB) .schema >./schemas/sqlite_retrosheet_schema_$(VERSION).sql 
 	sqlite3 $(RETRODB) .dump >./backups/sqlite_retrosheet_backup$(VERSION).sql 
 
-sqlitedb: sqlitedb_bd sqlitedb_retro
+sqlitedb_tar: 
+	tar zcvf ./backups/sqlite_databank_backup_$(VERSION).tgz ./backups/sqlite_databank_backup_$(VERSION).sql
+	tar zcvf ./backups/sqlite_retrosheet_backup_$(VERSION).tgz ./backups/sqlite_retrosheet_backup_$(VERSION).sql
+	tar zcvf ./backups/sqlite_combined_backup_$(VERSION).tgz ./backups/sqlite_combined_backup_$(VERSION).sql
+	
+sqlitedb: sqlitedb_bd sqlitedb_retro sqlitedb_tar
 
-mongodb: 
-	./bin/databank-dbloader -dbtype mongodb -dbname baseball_databank -inputdir ~/src/baseballdatabank/core
-	mongodump --archive=./backups/mongodb_backup_$(VERSION)_$(HASH)_baseballdatabank.archive --db baseball_databank
-	tar zcvf ./backups/mongodb_backup_$(VERSION)_$(HASH)_baseballdatabank.tgz ./backups/mongodb_backup_$(VERSION)_$(HASH)_baseballdatabank.archive
+mongodb_db: 
+	./bin/databank-dbloader -dbtype mongodb -dbname $(BDDB) -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader -dbtype mongodb -dbname $(STATSDB) -inputdir ~/src/baseballdatabank/core
+	mongodump --archive=./backups/mongodb_databank_$(VERSION).archive --db $(BDDB)
+	mongodump --archive=./backups/mongodb_combined_$(VERSION).archive --db $(STATSDB)
+
+mongodb_retro:
+	./bin/retrosched-dbloader -dbtype mongodb -dbname $(RETRODB) -inputdir ~/src/retrosheet/schedule
+	./bin/retrogl-dbloader -dbtype mongodb -dbname $(RETRODB) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader -dbtype mongodb -dbname $(STATSDB) -inputdir ~/src/retrosheet/schedule
+	./bin/retrogl-dbloader -dbtype mongodb -dbname $(STATSDB) -inputdir ~/src/retrosheet/gamelog
+	mongodump --archive=./backups/mongodb_retrosheet_backup_$(VERSION).archive --db $(RETRODB)
+	mongodump --archive=./backups/mongodb_combined_backup_$(VERSION).archive --db $(STATSDB)
+	tar zcvf ./backups/mongodb_retrosheet_backup_$(VERSION).tgz ./backups/mongodb_retrosheet_backup_$(VERSION).archive
+	tar zcvf ./backups/mongodb_combined_backup_$(VERSION).tgz ./backups/mongodb_combined_backup_$(VERSION).archive
+	
+mongodb: mongodb_db mongodb_retro
 
 mysqldb:  
 	./bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core

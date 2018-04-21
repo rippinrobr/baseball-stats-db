@@ -105,12 +105,20 @@ func main() {
 	}
 
 	var repo db.Repository
-	conn, connErr := db.CreateConnection(opts)
-	if connErr != nil {
-		log.Fatal("Connection error: " + connErr.Error())
+	switch dbtype {
+	case db.DBMongoDB:
+		conn, err := db.CreateNoSQLConnection(opts)
+		if err != nil {
+			log.Fatal("Connection error: " + err.Error())
+		}
+		repo = db.CreateNoSQLRepo(conn)
+	default:
+		conn, connErr := db.CreateConnection(opts)
+		if connErr != nil {
+			log.Fatal("Connection error: " + connErr.Error())
+		}
+		repo = db.CreateRepo(conn)
 	}
-	repo = db.CreateRepo(conn)
-
 	defer repo.CloseConn()
 
 	processFiles(repo, opts.Verbose, inputdir)
