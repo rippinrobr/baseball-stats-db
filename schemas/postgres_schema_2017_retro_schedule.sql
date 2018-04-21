@@ -1,4 +1,3 @@
---' sqlite_schema_2017_retro_schedule.sql
 
 DROP TABLE IF EXISTS "schedules";
 

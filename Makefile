@@ -116,16 +116,16 @@ mysqldb_tar:
 mysqldb: mysqldb_db mysqldb_retro mysqldb_tar
 
 postgresdb_db: 
-	/bin/databank-dbloader --dbtype postgres --dbname baseballdatabank_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
-	/bin/databank-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
-	pg_dump baseballdatabank_2017 >./backups/postgres_databank_backup_$(VERSION).sql
+	./bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	pg_dump baseballdatabank >./backups/postgres_databank_backup_$(VERSION).sql
 	pg_dump baseball_stats_2017 >./backups/postgres_databank_backup_$(VERSION).sql
 
 postgresdb_retro:
-	/bin/retrogl-dbloader --dbtype postgres --dbname retrosheet_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	/bin/retrosched-dbloader --dbtype postgres --dbname retrosheet_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	/bin/retrogl-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	/bin/retrosched-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
+	./bin/retrogl-dbloader --dbtype postgres --dbname retrosheet_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader --dbtype postgres --dbname retrosheet_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
+	./bin/retrogl-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
 	pg_dump retrosheet_2017 >./backups/postgres_retrosheet_backup_$(VERSION).sql
 	pg_dump baseball_stats_2017 >./backups/postgres_combined_backup_$(VERSION).sql
 
@@ -150,7 +150,7 @@ retrosheet: mysqldb_retro sqlitedb_retro mongodb_retro postgresdb_retro
 release: release_dir 
 	@echo "Prepping release $(VERSION) $(OS)"
 	rm $(RELEASE_DIR)*
-	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) backups/*$(VERSION).tgz schemas/*$(VERSION).sql
+	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) README.md backups/*$(VERSION).tgz schemas/*$(VERSION).sql
 ifeq ($(OS),Darwin) 
 	shasum -a 256 $(RELEASE_DIR)$(RELEASE_TGZ) >./$(RELEASE_DIR)$(RELEASE_TGZ).checksum
 else
