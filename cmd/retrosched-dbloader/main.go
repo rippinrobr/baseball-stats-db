@@ -133,7 +133,7 @@ func processFiles(repo db.Repository, isVerbose bool, inDir string) {
 			}
 			defer file.Close()
 
-			fmt.Println("season: ", season)
+			fmt.Println("schedule: ", season)
 			r := csv.NewReader(file)
 			for {
 				record, err := r.Read()

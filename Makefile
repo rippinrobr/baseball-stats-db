@@ -10,6 +10,7 @@ INC_VERSION := 5
 VERSION := $(SEASON).$(INC_VERSION)
 BDDB := baseball_databank_$(SEASON).sqlite3
 RETRODB := retrosheet_$(SEASON).sqlite3
+STATSDB := baseball_stats_$(SEASON).sqlite3 
 RELEASE_DIR := release/
 RELEASE_TGZ := baseball-stats-db-$(VERSION).tgz
 
@@ -39,11 +40,25 @@ release_dir:
 	-mkdir $(RELEASE_DIR)
 
 sqlitedb_bd:
+	@echo "loading baseballdatabank db"
 	./bin/databank-dbloader -dbtype sqlite -dbpath=$(BDDB) -inputdir ~/src/baseballdatabank/core 
-	sqlite3 $(BDDB) .schema >./schemas/sqlite_schema_$(VERSION).sql
-	sqlite3 $(BDDB) .dump >./backups/sqlite_backup$(VERSION).sql
+	sqlite3 $(BDDB) .schema >./schemas/sqlite_databank_schema_$(VERSION).sql
+	sqlite3 $(BDDB) .dump >./backups/sqlite_databank_backup$(VERSION).sql
+	
+	@echo "loading baseball_stats db"
+	./bin/databank-dbloader -dbtype sqlite -dbpath=$(STATSDB) -inputdir ~/src/baseballdatabank/core 
+	sqlite3 $(STATSDB) .schema >./schemas/sqlite_combined_schema_$(VERSION).sql
+	sqlite3 $(STATSDB) .dump >./backups/sqlite_combined_backup$(VERSION).sql
 
-sqlitedb_retro:
+sqlitedb_retro_stats_db:
+	@echo "loading the baseball_stats db"
+	./bin/retrosched-dbloader -dbtype sqlite -dbpath=./$(STATSDB) -inputdir ~/src/retrosheet/schedule
+	./bin/retrogl-dbloader -dbtype sqlite -dbpath=./$(STATSDB) -inputdir ~/src/retrosheet/gamelog
+	sqlite3 $(STATSDB) .schema >./schemas/sqlite_combined_schema_$(VERSION).sql 
+	sqlite3 $(STATSDB) .dump >./backups/sqlite_combined_backup$(VERSION).sql 
+
+sqlitedb_retro: sqlitedb_retro_stats_db
+	@echo "loading the retrosheet db"
 	./bin/retrosched-dbloader -dbtype sqlite -dbpath=./$(RETRODB) -inputdir ~/src/retrosheet/schedule
 	./bin/retrogl-dbloader -dbtype sqlite -dbpath=./$(RETRODB) -inputdir ~/src/retrosheet/gamelog
 	sqlite3 $(RETRODB) .schema >./schemas/sqlite_retrosheet_schema_$(VERSION).sql 
@@ -63,7 +78,7 @@ postgresdb:
 	/bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
 	pg_dumpall >./backups/postgres_backup_$(VERSION)_$(HASH)_baseballdatabank.sql
 
-release: #release_dir build_all sqlitedb
+release: release_dir build_all sqlitedb
 	@echo "Prepping release $(VERSION) $(OS)"
 	rm $(RELEASE_DIR)*
 	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) ./schemas ./backups

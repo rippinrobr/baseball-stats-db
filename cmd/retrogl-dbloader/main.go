@@ -146,6 +146,10 @@ func processDirectory(repo db.Repository, isVerbose bool, inDir string) {
 				fmt.Println("err", err.Error())
 			}
 			fmt.Println("season: ", season)
+			if season == 0 {
+				fmt.Println("season was zero so I must be at the end of the file. I'm out!")
+				return
+			}
 			file, err := os.Open(filepath.Join(inDir, fname))
 			if err != nil {
 				log.Fatal(err)

@@ -25,3 +25,4 @@ retrosheet_schedules.sqlite3
 release/
 retrosheet_*.sqlite3
 backups/
+baseball_stats_2017.sqlite3
