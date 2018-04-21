@@ -20,5 +20,6 @@ dist/
 baseball_databank_*.sqlite3
 retrosheet.sqlite3
 cmd/retrosched-dbloader/retrosched-dbloader
+cmd/retrogl-dbloader/retrogl-dbloader
 retrosheet_schedules.sqlite3
 release/
