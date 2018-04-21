@@ -122,6 +122,7 @@ func processFiles(repo db.Repository, isVerbose bool, inDir string) {
 		log.Fatal(err)
 	}
 
+	repo.Truncate(scheduleTableName)
 	for _, f := range files {
 		fname := f.Name()
 		if strings.HasSuffix(fname, filePattern) {
@@ -132,6 +133,7 @@ func processFiles(repo db.Repository, isVerbose bool, inDir string) {
 			}
 			defer file.Close()
 
+			fmt.Println("season: ", season)
 			r := csv.NewReader(file)
 			for {
 				record, err := r.Read()
