@@ -78,7 +78,7 @@ postgresdb:
 	/bin/databank-dbloader --dbtype postgres --dbname baseballdatabank --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
 	pg_dumpall >./backups/postgres_backup_$(VERSION)_$(HASH)_baseballdatabank.sql
 
-release: release_dir build_all sqlitedb
+release: release_dir 
 	@echo "Prepping release $(VERSION) $(OS)"
 	rm $(RELEASE_DIR)*
 	tar -zcvf $(RELEASE_DIR)$(RELEASE_TGZ) ./schemas ./backups
@@ -88,4 +88,4 @@ else
 	sha256sum $(RELEASE_DIR)$(RELEASE_TGZ) >./$(RELEASE_DIR)$(RELEASE_TGZ).checksum
 endif
 
-release_all: build_all sqlitedb mysqldb postgresdb mongodb
+release_all: build_all sqlitedb mysqldb postgresdb mongodb release
