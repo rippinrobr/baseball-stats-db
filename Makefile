@@ -121,6 +121,14 @@ mysqldb_retro_stats_db:
 	./bin/retrosched-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/schedule
 	./bin/retrosched-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/schedule
 
+mysqldb_backup:
+	mysqldump -u root -p $(BDDB) >./backups/mysql_databank_backup_$(VERSION).sql
+	mysqldump -u root -p $(STATSDB) >./backups/mysql_combined_backup_$(VERSION).sql
+	mysqldump -u root -p $(RETRODB) >./backups/mysql_retrosheet_backup_$(VERSION).sql
+	mysqldump --no-data -u root -p $(RETRODB) >./schemas/mysql_retrosheet_schema_$(VERSION).sql
+	mysqldump --no-data -u root -p $(STATSDB) >./schemas/mysql_combined_schema_$(VERSION).sql
+	mysqldump --no-data -u root -p $(BDDB) >./schemas/mysql_databank_schema_$(VERSION).sql
+
 mysqldb_tar: 
 	tar zcvf ./backups/mysql_databank_backup_$(VERSION).tgz ./backups/mysql_databank_backup_$(VERSION).sql
 	rm backups/mysql_databank_backup_$(VERSION).sql
