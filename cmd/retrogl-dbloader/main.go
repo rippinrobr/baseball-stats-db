@@ -138,6 +138,7 @@ func processDirectory(repo db.Repository, isVerbose bool, inDir string) {
 		log.Fatal(err)
 	}
 
+	repo.Truncate(gamelogTableName)
 	for _, f := range files {
 		fname := f.Name()
 		if strings.HasPrefix(fname, filePrefix) && strings.HasSuffix(fname, fileSuffix) {
