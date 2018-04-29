@@ -96,14 +96,23 @@ mongodb_tar:
 mongodb: mongodb_db mongodb_retro mongodb_tar
 
 mysqldb_db:  
-	./bin/databank-dbloader --dbtype mysql --dbname baseballdatabank --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
-	./bin/databank-dbloader --dbtype mysql --dbname baseball_stats_2017 --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype mysql --dbname $(BDDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
 
 mysqldb_retro:
-	./bin/retrogl-dbloader --dbtype mysql --dbname retrosheet_2017 --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrogl-dbloader --dbtype mysql --dbname retrosheet_2017 --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
-	./bin/retrosched-dbloader --dbtype mysql --dbname baseball_stats_2017 --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrosched-dbloader --dbtype mysql --dbname baseball_stats_2017 --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/retrogl-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
+	./bin/retrogl-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/retrosched-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+
+mysqldb_backup:
+	mysqldump -u root -p baseball_databank_2017 >./backups/mysql_databank_backup_$(VERSION).sql
+	mysqldump -u root -p baseball_stats_2017 >./backups/mysql_combined_backup_$(VERSION).sql
+	mysqldump -u root -p retrosheet_2017 >./backups/mysql_retrosheet_backup_$(VERSION).sql
+	mysqldump --nodata -u root -p retrosheet_2017 >./schemas/mysql_retrosheet_schema_$(VERSION).sql
+	mysqldump --no-data -u root -p retrosheet_2017 >./schemas/mysql_retrosheet_schema_$(VERSION).sql
+	mysqldump --no-data -u root -p baseball_stats_2017 >./schemas/mysql_combined_schema_$(VERSION).sql
+	mysqldump --no-data -u root -p baseball_databank_2017 >./schemas/mysql_databank_schema_$(VERSION).sql
 
 mysqldb_tar: 
 	tar zcvf ./backups/mysql_databank_backup_$(VERSION).tgz ./backups/mysql_databank_backup_$(VERSION).sql
