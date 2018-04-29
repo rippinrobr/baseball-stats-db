@@ -1,9 +1,4 @@
-
---' sqlite_schema_2017_retrosheet.sql
-
-DROP TABLE IF EXISTS "schedules";
-
-CREATE TABLE "schedules" (
+CREATE TABLE IF NOT EXISTS "schedules" (
   "season" INTEGER NOT NULL,
   "game_date_str" VARCHAR(8) NOT NULL,
   "game_number" INTEGER NOT NULL,
@@ -22,10 +17,7 @@ CREATE TABLE "schedules" (
 
   PRIMARY KEY(season, game_date_str, game_number, visitors_team, home_team, visitors_season_game_number)
 );
-
-DROP TABLE IF EXISTS "gamelogs";
-
-CREATE TABLE "gamelogs" (
+CREATE TABLE IF NOT EXISTS "gamelogs" (
   "season" INTEGER NOT NULL,
   "game_date_str" VARCHAR(8) NOT NULL,
   "game_month" INTEGER NOT NULL,
@@ -193,5 +185,3 @@ CREATE TABLE "gamelogs" (
 
   PRIMARY KEY(season, game_date_str, game_number, visitors_team, home_team, visitors_season_game_number)
 );
-
-
