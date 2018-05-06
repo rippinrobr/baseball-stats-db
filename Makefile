@@ -128,8 +128,8 @@ mysqldb_db:
 	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
 
 mysqldb_people:  
-	./bin/databank-dbloader --dbtype mysql --dbname $(BDDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
-	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype mysql --dbname $(BDDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
+	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
 
 mysqldb_retro:
 	./bin/retrogl-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
