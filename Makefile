@@ -87,7 +87,7 @@ sqlitedb_retro: sqlitedb_retro_stats_db
 
 sqlitedb_tar: 
 	tar zcvf ./backups/sqlite_databank_backup_$(VERSION).tgz ./backups/sqlite_databank_backup_$(VERSION).sql
-	tar zcvf ./backups/sqlite_retrosheet_backup_$(VERSION).tgz ./backups/sqlite_retrosheet_backup_$(VERSION).sql
+	-tar zcvf ./backups/sqlite_retrosheet_backup_$(VERSION).tgz ./backups/sqlite_retrosheet_backup_$(VERSION).sql
 	tar zcvf ./backups/sqlite_combined_backup_$(VERSION).tgz ./backups/sqlite_combined_backup_$(VERSION).sql
 	
 sqlitedb: sqlitedb_bd sqlitedb_retro sqlitedb_tar
@@ -116,8 +116,8 @@ mongodb_retro:
 mongodb_tar:
 	tar zcvf ./backups/mongodb_databank_backup_$(VERSION).tgz ./backups/mongodb_databank_backup_$(VERSION).archive
 	rm ./backups/mongodb_databank_backup_$(VERSION).archive
-	tar zcvf ./backups/mongodb_retrosheet_backup_$(VERSION).tgz ./backups/mongodb_retrosheet_backup_$(VERSION).archive
-	rm ./backups/mongodb_retrosheet_backup_$(VERSION).archive
+	-tar zcvf ./backups/mongodb_retrosheet_backup_$(VERSION).tgz ./backups/mongodb_retrosheet_backup_$(VERSION).archive
+	-rm ./backups/mongodb_retrosheet_backup_$(VERSION).archive
 	tar zcvf ./backups/mongodb_combined_backup_$(VERSION).tgz ./backups/mongodb_combined_backup_$(VERSION).archive
 	rm ./backups/mongodb_combined_backup_$(VERSION).archive
 	
@@ -154,8 +154,8 @@ mysqldb_backup:
 mysqldb_tar: 
 	tar zcvf ./backups/mysql_databank_backup_$(VERSION).tgz ./backups/mysql_databank_backup_$(VERSION).sql
 	rm backups/mysql_databank_backup_$(VERSION).sql
-	tar zcvf ./backups/mysql_retrosheet_backup_$(VERSION).tgz ./backups/mysql_retrosheet_backup_$(VERSION).sql
-	rm backups/mysql_retrosheet_backup_$(VERSION).sql
+	-tar zcvf ./backups/mysql_retrosheet_backup_$(VERSION).tgz ./backups/mysql_retrosheet_backup_$(VERSION).sql
+	-rm backups/mysql_retrosheet_backup_$(VERSION).sql
 	tar zcvf ./backups/mysql_combined_backup_$(VERSION).tgz ./backups/mysql_combined_backup_$(VERSION).sql
 	rm backups/mysql_combined_backup_$(VERSION).sql
 
@@ -184,8 +184,8 @@ postgresdb_retro:
 postgresdb_tar: 
 	tar zcvf ./backups/postgres_databank_backup_$(VERSION).tgz ./backups/postgres_databank_backup_$(VERSION).sql
 	rm backups/postgres_databank_backup_$(VERSION).sql
-	tar zcvf ./backups/postgres_retrosheet_backup_$(VERSION).tgz ./backups/postgres_retrosheet_backup_$(VERSION).sql
-	rm backups/postgres_retrosheet_backup_$(VERSION).sql
+	-tar zcvf ./backups/postgres_retrosheet_backup_$(VERSION).tgz ./backups/postgres_retrosheet_backup_$(VERSION).sql
+	-rm backups/postgres_retrosheet_backup_$(VERSION).sql
 	tar zcvf ./backups/postgres_combined_backup_$(VERSION).tgz ./backups/postgres_combined_backup_$(VERSION).sql
 	rm backups/postgres_combined_backup_$(VERSION).sql
 
