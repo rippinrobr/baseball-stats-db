@@ -1,12 +1,13 @@
+FILES_CHANGED := ""
 DATABANK_BIN := databank-dbloader
 DATABANK_MAIN := cmd/databank-dbloader/main.go
 GL_BIN := retrogl-dbloader
 GL_MAIN := cmd/retrogl-dbloader/main.go
 SCHED_BIN := retrosched-dbloader
 SCHED_MAIN := cmd/retrosched-dbloader/main.go
-OS := $(shell uname)
+OS := $(shell uname) SEASON := 2017
+INC_VERSION := 8
 SEASON := 2017
-INC_VERSION := 7
 VERSION := $(SEASON).$(INC_VERSION)
 BDDB := baseball_databank_$(SEASON)
 RETRODB := retrosheet_$(SEASON)
@@ -168,8 +169,8 @@ postgresdb_db:
 	pg_dump $(STATSDB) >./backups/postgres_combined_backup_$(VERSION).sql
 
 postgresdb_people: 
-	# ./bin/databank-dbloader --dbtype postgres --dbname $(BDDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
-	# ./bin/databank-dbloader --dbtype postgres --dbname $(STATSDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
+	./bin/databank-dbloader --dbtype postgres --dbname $(BDDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
+	./bin/databank-dbloader --dbtype postgres --dbname $(STATSDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
 	pg_dump $(BDDB) >./backups/postgres_databank_backup_$(VERSION).sql
 	pg_dump $(STATSDB) >./backups/postgres_combined_backup_$(VERSION).sql
 
@@ -197,6 +198,8 @@ postgresdb_schema:
 postgresdb: postgresdb_db postgresdb_retro postgresdb_tar postgresdb_schema
 
 databank: mysqldb_db mongodb_db postgresdb_db sqlitedb_db 
+people: mongodb_people postgresdb_people sqlitedb_people
+people_tar: mongodb_tar postgresdb_tar sqlitedb_tar
 retrosheet: mysqldb_retro sqlitedb_retro mongodb_retro postgresdb_retro
 
 release: release_dir 
