@@ -44,9 +44,16 @@ jimenub01,2016,ALWC,BAL,AL,0,1,1,0,0,0,0,0,3,3,1,0,0,1.000,inf,0,0,0,0,3,1,3,0,0
 
 I do not want to put some placeholder value in place of the `inf` simply because MySQL doesn't support it when PostgreSQL and SQLite do.  If you can come up with a clever way of handling this for MySQL that isn't a complete hack feel free to pass it along or make a pull request.
 
-## Utilities
-I have removed the binaries from the release files, I believe that most people downloading the releases are there for the data.
-I will be moving the code and binaries to my [sports-stats-utilities](https://github.com/rippinrobr/sports-stats-utilities), 
+## Makefile
+
+If you wish to use this repo to parse and load the databases yourself, you should use the makefile.  In order to connect to a database you need to pass in the username and password for the database you are going to connect to.  For instance, If I wanted to load a postgres database I'd run the following:
+
+`make DB_USER=<db username> DB_PASS=<db password> postgresdb_db`
+
+## Future
+
+In the future the utility used in this repository will be replaced by my [csv-to]() project.  I now use it for PostgreSQL and SQLite but it does not support MySQL at this point.
+
 ## Licensing & Acknowledgments
 
 ```

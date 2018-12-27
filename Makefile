@@ -1,15 +1,17 @@
 FILES_CHANGED := ""
 DATABANK_BIN := databank-dbloader
 DATABANK_MAIN := cmd/databank-dbloader/main.go
+DB_USER?=""
+DB_PASS?=""
 GL_BIN := retrogl-dbloader
 GL_MAIN := cmd/retrogl-dbloader/main.go
 SCHED_BIN := retrosched-dbloader
 SCHED_MAIN := cmd/retrosched-dbloader/main.go
-OS := $(shell uname) SEASON := 2017
-INC_VERSION := 8
-SEASON := 2017
+OS := $(shell uname) SEASON := 2018
+INC_VERSION := 01
+SEASON := 2018
 VERSION := $(SEASON).$(INC_VERSION)
-BDDB := baseball_databank_$(SEASON)
+BDDB := baseballdatabank
 RETRODB := retrosheet_$(SEASON)
 STATSDB := baseball_stats_$(SEASON)
 RELEASE_DIR := release/
@@ -125,32 +127,32 @@ mongodb_tar:
 mongodb: mongodb_db mongodb_retro mongodb_tar
 
 mysqldb_db:  
-	./bin/databank-dbloader --dbtype mysql --dbname $(BDDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
-	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype mysql --dbname $(BDDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core
 
 mysqldb_people:  
-	./bin/databank-dbloader --dbtype mysql --dbname $(BDDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
-	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
+	./bin/databank-dbloader --dbtype mysql --dbname $(BDDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
+	./bin/databank-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
 
 mysqldb_retro:
-	./bin/retrogl-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrogl-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrosched-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/schedule
-	./bin/retrosched-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/schedule
+	./bin/retrogl-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrogl-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/schedule
+	./bin/retrosched-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/schedule
 
 mysqldb_retro_stats_db:
-	./bin/retrogl-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrogl-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrosched-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/schedule
-	./bin/retrosched-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser root --dbpass itsmerob -inputdir ~/src/retrosheet/schedule
+	./bin/retrogl-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrogl-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader --dbtype mysql --dbname $(RETRODB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/schedule
+	./bin/retrosched-dbloader --dbtype mysql --dbname $(STATSDB) --dbuser $(DB_USER) --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/schedule
 
 mysqldb_backup:
-	mysqldump -u root -p $(BDDB) >./backups/mysql_databank_backup_$(VERSION).sql
-	mysqldump -u root -p $(STATSDB) >./backups/mysql_combined_backup_$(VERSION).sql
-	mysqldump -u root -p $(RETRODB) >./backups/mysql_retrosheet_backup_$(VERSION).sql
-	mysqldump --no-data -u root -p $(RETRODB) >./schemas/mysql_retrosheet_schema_$(VERSION).sql
-	mysqldump --no-data -u root -p $(STATSDB) >./schemas/mysql_combined_schema_$(VERSION).sql
-	mysqldump --no-data -u root -p $(BDDB) >./schemas/mysql_databank_schema_$(VERSION).sql
+	mysqldump -u $(DB_USER) -p $(BDDB) >./backups/mysql_databank_backup_$(VERSION).sql
+	mysqldump -u $(DB_USER) -p $(STATSDB) >./backups/mysql_combined_backup_$(VERSION).sql
+	mysqldump -u $(DB_USER) -p $(RETRODB) >./backups/mysql_retrosheet_backup_$(VERSION).sql
+	mysqldump --no-data -u $(DB_USER) -p $(RETRODB) >./schemas/mysql_retrosheet_schema_$(VERSION).sql
+	mysqldump --no-data -u $(DB_USER) -p $(STATSDB) >./schemas/mysql_combined_schema_$(VERSION).sql
+	mysqldump --no-data -u $(DB_USER) -p $(BDDB) >./schemas/mysql_databank_schema_$(VERSION).sql
 
 mysqldb_tar: 
 	tar zcvf ./backups/mysql_databank_backup_$(VERSION).tgz ./backups/mysql_databank_backup_$(VERSION).sql
@@ -163,22 +165,22 @@ mysqldb_tar:
 mysqldb: mysqldb_db mysqldb_retro #mysqldb_tar
 
 postgresdb_db: 
-	./bin/databank-dbloader --dbtype postgres --dbname $(BDDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
-	./bin/databank-dbloader --dbtype postgres --dbname $(STATSDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype postgres --dbname $(BDDB) --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core
+	./bin/databank-dbloader --dbtype postgres --dbname $(STATSDB) --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core
 	pg_dump $(BDDB) >./backups/postgres_databank_backup_$(VERSION).sql
 	pg_dump $(STATSDB) >./backups/postgres_combined_backup_$(VERSION).sql
 
 postgresdb_people: 
-	./bin/databank-dbloader --dbtype postgres --dbname $(BDDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
-	./bin/databank-dbloader --dbtype postgres --dbname $(STATSDB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
+	./bin/databank-dbloader --dbtype postgres --dbname $(BDDB) --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
+	./bin/databank-dbloader --dbtype postgres --dbname $(STATSDB) --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/baseballdatabank/core -inputfiles People.csv
 	pg_dump $(BDDB) >./backups/postgres_databank_backup_$(VERSION).sql
 	pg_dump $(STATSDB) >./backups/postgres_combined_backup_$(VERSION).sql
 
 postgresdb_retro:
-	./bin/retrogl-dbloader --dbtype postgres --dbname $(RETRODB) --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrosched-dbloader --dbtype postgres --dbname retrosheet_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrogl-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
-	./bin/retrosched-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass itsmerob -inputdir ~/src/retrosheet/gamelog
+	./bin/retrogl-dbloader --dbtype postgres --dbname $(RETRODB) --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader --dbtype postgres --dbname retrosheet_2017 --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrogl-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
+	./bin/retrosched-dbloader --dbtype postgres --dbname baseball_stats_2017 --dbuser postgres --dbpass $(DB_PASS) -inputdir ~/src/retrosheet/gamelog
 	pg_dump retrosheet_2017 >./backups/postgres_retrosheet_backup_$(VERSION).sql
 	pg_dump baseball_stats_2017 >./backups/postgres_combined_backup_$(VERSION).sql
 
