@@ -18,6 +18,7 @@ dist/
 *.goreleaser.yml
 
 baseball_databank_*.sqlite3
+baseballdatabank/baseballdatabank.db
 retrosheet.sqlite3
 cmd/retrosched-dbloader/retrosched-dbloader
 cmd/retrogl-dbloader/retrogl-dbloader
