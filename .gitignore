@@ -27,3 +27,6 @@ release/
 retrosheet_*.sqlite3
 backups/
 baseball_stats_2017.sqlite3
+baseballdatabank.db
+retrosheet/retrosheet.db
+retrosheet/retrosheet_events.db
