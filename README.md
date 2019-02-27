@@ -1,58 +1,48 @@
 # Baseball Stats DB 
 
-The goal of the project is to share the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) and [Retrosheet.org](http://retrosheet.org) in a format that allows users to easily load the data into a databases.  Currently there are three officially supported databases PostgreSQL, SQLite and MongoDB.  _MySQL isn't 'officially' support, [read this to find out why](cmd/databank-dbloader/README.md#about_mysql), but I do create backups and schema files for it._.  There are schema files and backups for a Baseball Databank only db, a Retrosheet only db plus a combined database named Baseball Stats.
+The goal of the project is to share the data provided by the [Baseball Databank files](https://github.com/chadwickbureau/baseballdatabank) and [Retrosheet.org](http://retrosheet.org) in a way that makes it easier for other interested people to work with the data using SQL.  Currently this project does that by supplying database backup and schema files for the three officially supported databases PostgreSQL, SQLite and MySQL.  
 
-## Schema Files
-The schema files live in the  `schemas` directory. With the schema files for all the database will have the folowing naming convention.
+_If there is a database you'd like to see supported, please open an [Issue](https://github.com/rippinrobr/baseball-stats-db/issues/new) and I will look into adding it._ 
 
-`(mysql|postgres|sqlite)_(databank|retrosheet|combined)_schema_<season>.<version>.sql`
+## My Philosophy 
 
-Season is the latest season's data that is contained in the Baseball Databank files.   The version number is the numbered
-release for the season's data. A new version is released if the Baseball Databank or Retrosheet release an update to their
-files.  Releases are typically released on Sundays.
+I will always create a database that stores the data as is, in columns that match with the column headers.  For the Baseball Databank data, I have created a table for each file that contains the exact columns that exist in the files.   For the `retrosheet` database, I store all of the schedules in a single table but the data is not changed. That way you can interact with the data in a way that you may already be using.  I will also create a more [normalized](https://en.wikipedia.org/wiki/Database_normalization) version of the data, one that adhears more to the proper database structure.  The `retrosheet_events` database is an example of a more normalized database.
 
-## Backups
-The backup files are included in each release.  Since the files can be big, I've removed the backups from the repository. The naming convention is similar to the schema files.  
+## Project Structure
 
-`(mongodb|mysql|postgres|sqlite)_(databank|retrosheet|combined)_backup_<season>.<version>.tgz`
+The project is laid out by using the data source as the root directory with two child directories, `backups` and `schemas`. 
+Each of these directories store exactly what their name implies.  These two directories can hold backups/schemas for multiple databases that were created using the given data source.  As an example, I have created two databases based on the Retrosheet data, one named `retrosheet` and the other named `retrosheet_events`, the backups for both databases will live in the same backups directory.  In the root of each of the datasource directory there will be one or more [Docker](https://www.docker.com/) files that are used to create docker containers with the data already loaded in the database.  _When I've created the docker images and pushed thme to docker hub I will add those links here_
 
-Season is the latest season's data that is contained in the Baseball Databank files.   The version number is the numbered
-release for the season's data. A new version is released if the Baseball Databank or Retrosheet release an update to their
-files.  Releases are typically released on Sundays.
+### Backups & Schema File Generation
 
-## About MySQL
+Database backups will run whenever an update from a datasource has occurred or a schema change has happened.  A new schema file will be generated whenever there is a schema change.  So the backup files and schema files may look out of sync because of their versions but remember that database backups will happen more often than new schema files being generated.
 
-The reason why MySQL isn't officially supported is due to the fact that there are 14 records that aren't in the `pitchingpost` table. The aren't there due to MySQL's decision to not support the `inf` value for infinity.  Having said that there is support in the `dbloader` code for MySQL.  If you choose to use MySQL just remember that you will not have all the data that is present in the CSV files.
+### File Naming Convention
 
-```
-playerID,yearID,round,teamID,lgID,W,L,G,GS,CG,SHO,SV,IPouts,H,ER,HR,BB,SO,BAOpp,ERA,IBB,WP,HBP,BK,BFP,GF,R,SH,SF,GIDP
-poledi01,1975,WS,BOS,AL,0,0,1,0,0,0,0,0,0,1,0,2,0,,inf,0,0,0,0,2,0,1,0,0,0
-welchbo01,1981,WS,LAN,NL,0,0,1,1,0,0,0,0,3,2,0,1,0,1.000,inf,0,0,0,0,4,0,2,0,0,0
-westda01,1991,WS,MIN,AL,0,0,2,0,0,0,0,0,2,4,1,4,0,1.000,inf,0,0,0,0,6,0,4,0,0,0
-holtch01,1999,NLDS1,HOU,NL,0,0,1,0,0,0,0,0,3,3,0,0,0,1.000,inf,0,0,0,0,3,0,3,0,0,0
-fultzaa01,2002,NLDS1,SFN,NL,0,0,2,0,0,0,0,0,2,1,0,0,0,1.000,inf,0,0,0,0,2,0,1,0,0,0
-myersmi01,2006,ALDS1,NYA,AL,0,0,1,0,0,0,0,0,1,1,1,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
-saitota01,2008,NLDS1,LAN,NL,0,0,1,0,0,0,0,0,3,2,0,0,0,1.000,inf,0,0,0,0,3,0,2,0,0,0
-ramirra02,2009,ALDS2,BOS,AL,0,0,1,0,0,0,0,0,1,2,0,1,0,1.000,inf,0,0,1,0,3,0,2,0,0,0
-schleda01,2011,ALCS,DET,AL,0,0,1,0,0,0,0,0,1,1,0,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
-ueharko01,2011,ALDS2,TEX,AL,0,0,1,0,0,0,0,0,2,3,1,1,0,1.000,inf,0,0,0,0,3,0,3,0,0,0
-marshse01,2013,NLWC,CIN,NL,0,0,1,0,0,0,0,0,1,1,0,2,0,1.000,inf,1,0,0,0,3,0,1,0,0,0
-choatra01,2014,NLDS2,SLN,NL,0,0,1,0,0,0,0,0,1,1,1,0,0,1.000,inf,0,0,0,0,1,0,1,0,0,0
-goedder01,2015,NLDS2,NYN,NL,0,0,1,0,0,0,0,0,4,3,1,0,0,1.000,inf,0,0,0,0,4,0,3,0,0,0
-jimenub01,2016,ALWC,BAL,AL,0,1,1,0,0,0,0,0,3,3,1,0,0,1.000,inf,0,0,0,0,3,1,3,0,0,0
-```
+To make things easier on all of us the backup and schema file names will all have the same pattern: 
 
-I do not want to put some placeholder value in place of the `inf` simply because MySQL doesn't support it when PostgreSQL and SQLite do.  If you can come up with a clever way of handling this for MySQL that isn't a complete hack feel free to pass it along or make a pull request.
+`database-type_database-name_(schema|backup).<version>.sql`
 
-## Makefile
+Here's an example of the Baseball Databank SQLite version backup file, the first of the calendar year:
 
-If you wish to use this repo to parse and load the databases yourself, you should use the makefile.  In order to connect to a database you need to pass in the username and password for the database you are going to connect to.  For instance, If I wanted to load a postgres database I'd run the following:
+`sqlite_baseballdatabank_backup.2019.1.sql` The compressed file will have the name `sqlite_baseballdatabank_backup.2019.1.tgz`
 
-`make DB_USER=<db username> DB_PASS=<db password> postgresdb_db`
 
-## Future
+## The Future
 
-In the future the utility used in this repository will be replaced by my [csv-to]() project.  I now use it for PostgreSQL and SQLite but it does not support MySQL at this point.
+- [ ] Create a Postgres docker container with the `baseballdatabank` data pre-loaded and push it to [Docker Hub]()
+- [ ] Create a Postgres docker container with the `retrosheet_events` data pre-loaded and push it to [Docker Hub]()
+- [ ] Create a MySQL docker container with the `baseballdatabank` data pre-loaded and push it to [Docker Hub]()
+- [ ] Create a MySQL docker container with the `retrosheet_events` data pre-loaded and push it to [Docker Hub]()
+- [ ] Create a normalized version of the `baseballdatabank` data
+
+## The Tools I use
+
+I have created a couple of tools to parse the CSV files and Retrosheet specific files.  The tool I used to load the Baseball Databank data and the Retrosheet schedules and game log files is [csv-to](https://github.com/rippinrobr/csv-to).  The `csv-to` project can be used to parse and load any csv file data into a MySQL/MaraiDB, Postgres or SQLite databases.
+
+The Retrosheet Events data is loaded using a specific tool I've created called [retrosheet-events](https://github.com/rippinrobr/retrosheet-events).  It is specifically made for parsing and loading the events data into a normalized database schema I created.
+
+Feel free to try both tools yourself, I'm always looking for feedback.
 
 ## Licensing & Acknowledgments
 
