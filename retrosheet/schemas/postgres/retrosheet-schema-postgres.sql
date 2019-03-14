@@ -20,6 +20,12 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: __schema_version; Type: TABLE; Schema: public; Owner: baseball
+--
+CREATE TABLE __schema_version (version VARCHAR(8) PRIMARY KEY NOT NULL);
+INSERT INTO __schema_version (version) values ('0.1.0');
+
+--
 -- Name: gamelogs; Type: TABLE; Schema: public; Owner: baseball
 --
 

@@ -19,13 +19,19 @@ Database backups will run whenever an update from a datasource has occurred or a
 
 ### File Naming Convention
 
-To make things easier on all of us the backup and schema file names will all have the same pattern: 
+Back up files will follow the naming convention:
 
-`database-type_database-name_(schema|backup).<version>.sql`
+ `(mysql|postgres|sqlite)-(baseballdatabank|retrosheet|retrosheet_events)-backup-YYYYMMDD.sql` and 
+ `(mysql|postgres|sqlite)-(baseballdatabank|retrosheet|retrosheet_events)-backup-YYYYMMDD.tgz` for the tar and gziped file 
+
+where `YYYYMMDD` is the year, month and day that the backup was performed.  The schema files are named slightly different:
+
+ `(mysql|postgres|sqlite)-(baseballdatabank|retrosheet|retrosheet_events)-backup-.0.0.0.sql` where 0.0.0 is the version of the schema
+
 
 Here's an example of the Baseball Databank SQLite version backup file, the first of the calendar year:
 
-`sqlite_baseballdatabank_backup.2019.1.sql` The compressed file will have the name `sqlite_baseballdatabank_backup.2019.1.tgz`
+`sqlite-baseballdatabank-backup-20190226.sql` The compressed file will have the name `sqlite-baseballdatabank-backup-20190226.tgz`
 
 
 ## The Future

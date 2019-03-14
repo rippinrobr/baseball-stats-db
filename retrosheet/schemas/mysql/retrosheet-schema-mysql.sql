@@ -16,9 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Name: __schema_version; Type: TABLE; Schema: public; Owner: baseball
+--
+CREATE TABLE `__schema_version` (`version` VARCHAR(8) PRIMARY KEY NOT NULL);
+INSERT INTO __schema_version (version) values ('0.1.0');
+
+--
 -- Table structure for table `gamelogs`
 --
-
 DROP TABLE IF EXISTS `gamelogs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

@@ -1,7 +1,10 @@
-CREATE TABLE __diesel_schema_migrations (version VARCHAR(50) PRIMARY KEY NOT NULL,run_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE __schema_version (version VARCHAR(8) PRIMARY KEY NOT NULL);
+INSERT INTO __schema_version (version) values ('0.1.0'); 
+
 CREATE TABLE games
 (
 	game_id char(12) PRIMARY KEY,
+	season integer default 0 not null,
 	visteam char(3) not null,
 	hometeam char(3) not null,
 	game_date date not null,
@@ -16,11 +19,11 @@ CREATE TABLE games
 	ump3b char(8),
 	umplf char(8),
 	umprf char(8),
-	fieldcond varchar(7) not null,
-	precip varchar(7) not null,
-	sky varchar(7) not null,
+	fieldcond varchar(16) not null,
+	precip varchar(16) not null,
+	sky varchar(16) not null,
 	temp integer default 0 not null,
-	winddir varchar(7) not null,
+	winddir varchar(16) not null,
 	windspeed integer default 0 not null,
 	timeofgame integer default 0 not null,
 	attendance integer default 0 not null,
@@ -34,7 +37,7 @@ CREATE TABLE games
 	inputprogvers varchar(32),
 	inputter varchar(32),
 	inputtime timestamp,
-	scorer varchar(32),
+	scorer varchar(64),
 	translator varchar(32)
 );
 CREATE TABLE plays (
@@ -44,7 +47,7 @@ CREATE TABLE plays (
         team integer NOT NULL,
         player_id character(8) NOT NULL,
         count character varying(16) NOT NULL,
-        pitches character varying(32) NOT NULL,
+        pitches character varying(64) NOT NULL,
         event character varying(64) NOT NULL,
         PRIMARY KEY (game_id, idx)
       );
@@ -58,14 +61,14 @@ CREATE TABLE starters (
 	PRIMARY KEY (game_id, player_id)
 );
 CREATE TABLE subs (
-	    game_id character(12) NOT NULL references games(game_id),
-			idx integer NOT NULL,
-			player_id character(8) NOT NULL,
-	    name character varying(64) NOT NULL,
-	    team integer NOT NULL,
-	    batting_order integer NOT NULL,
-	    position integer NOT NULL,
-	    PRIMARY KEY (game_id, idx)
+	game_id character(12) NOT NULL references games(game_id),
+	"idx" integer NOT NULL,
+	player_id character(8) NOT NULL,
+	name character varying(64) NOT NULL,
+	team integer NOT NULL,
+	batting_order integer NOT NULL,
+	position integer NOT NULL,
+	PRIMARY KEY (game_id, player_id, idx)
 );
 CREATE TABLE coms (
 	    game_id character(12) NOT NULL references games(game_id),

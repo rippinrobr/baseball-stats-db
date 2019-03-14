@@ -20,6 +20,9 @@ dist/
 baseball_databank_*.sqlite3
 baseballdatabank/baseballdatabank.db
 retrosheet.sqlite3
+retrosheet/retrosheet_events.db
+retrosheet/retrosheet_events_allstargames.db
+retrosheet/retrosheet_events_postseason.db
 cmd/retrosched-dbloader/retrosched-dbloader
 cmd/retrogl-dbloader/retrogl-dbloader
 retrosheet_schedules.sqlite3

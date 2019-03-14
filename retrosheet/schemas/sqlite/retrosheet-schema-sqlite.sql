@@ -1,3 +1,7 @@
+CREATE TABLE __schema_version (version VARCHAR(8) PRIMARY KEY NOT NULL);
+INSERT INTO __schema_version (version) values ('0.1.0');
+
+
 CREATE TABLE IF NOT EXISTS "schedules" (
   "season" INTEGER NOT NULL,
   "game_date_str" VARCHAR(8) NOT NULL,

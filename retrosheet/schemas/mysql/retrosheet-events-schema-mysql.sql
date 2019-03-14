@@ -19,6 +19,13 @@
 -- Table structure for table `coms`
 --
 
+--
+-- Name: __schema_version; Type: TABLE; Schema: public; Owner: baseball
+--
+CREATE TABLE `__schema_version` (`version` VARCHAR(8) PRIMARY KEY NOT NULL);
+INSERT INTO __schema_version (version) values ('0.1.0');
+
+
 DROP TABLE IF EXISTS `coms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -72,11 +79,12 @@ DROP TABLE IF EXISTS `games`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `games` (
   `game_id` char(12) NOT NULL,
+  `season` int(11) NOT NULL DEFAULT 0,
   `visteam` char(3) NOT NULL,
   `hometeam` char(3) NOT NULL,
   `game_date` date NOT NULL,
   `number` int(11) NOT NULL DEFAULT 0,
-  `starttime` time NOT NULL,
+  `starttime` varchar(16) NOT NULL,
   `daynight` varchar(16) NOT NULL,
   `usedh` tinyint(1) NOT NULL DEFAULT 0,
   `pitches` varchar(7) NOT NULL,
@@ -86,11 +94,11 @@ CREATE TABLE `games` (
   `ump3b` char(8) DEFAULT NULL,
   `umplf` char(8) DEFAULT NULL,
   `umprf` char(8) DEFAULT NULL,
-  `fieldcond` varchar(7) NOT NULL,
-  `precip` varchar(7) NOT NULL,
-  `sky` varchar(7) NOT NULL,
+  `fieldcond` varchar(16) NOT NULL,
+  `precip` varchar(16) NOT NULL,
+  `sky` varchar(16) NOT NULL,
   `temp` int(11) NOT NULL DEFAULT 0,
-  `winddir` varchar(7) NOT NULL,
+  `winddir` varchar(16) NOT NULL,
   `windspeed` int(11) NOT NULL DEFAULT 0,
   `timeofgame` int(11) NOT NULL DEFAULT 0,
   `attendance` int(11) NOT NULL DEFAULT 0,
@@ -99,12 +107,12 @@ CREATE TABLE `games` (
   `lp` char(8) NOT NULL,
   `save` char(8) DEFAULT NULL,
   `gwrbi` char(8) DEFAULT NULL,
-  `edittime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `edittime` varchar(32),
   `howscored` varchar(32) DEFAULT NULL,
   `inputprogvers` varchar(32) DEFAULT NULL,
   `inputter` varchar(32) DEFAULT NULL,
-  `inputtime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `scorer` varchar(32) DEFAULT NULL,
+  `inputtime` varchar(32),
+  `scorer` varchar(64) DEFAULT NULL,
   `translator` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`game_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -133,7 +141,7 @@ CREATE TABLE `plays` (
   `team` int(11) NOT NULL,
   `player_id` char(8) NOT NULL,
   `count` varchar(16) NOT NULL,
-  `pitches` varchar(32) NOT NULL,
+  `pitches` varchar(64) NOT NULL,
   `event` varchar(64) NOT NULL,
   PRIMARY KEY (`game_id`,`idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -184,13 +192,13 @@ DROP TABLE IF EXISTS `subs`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `subs` (
   `game_id` char(12) NOT NULL,
-  `idx` int(11) NOT NULL,
   `player_id` char(8) NOT NULL,
+  `idx` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   `team` int(11) NOT NULL,
   `batting_order` int(11) NOT NULL,
   `position` int(11) NOT NULL,
-  PRIMARY KEY (`game_id`,`idx`)
+  PRIMARY KEY (`game_id`,`player_id`, `idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -213,3 +221,13 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2019-02-21 18:13:49
+CREATE TABLE subs (
+	game_id character(12) NOT NULL references games(game_id),
+	"idx" integer NOT NULL,
+	player_id character(8) NOT NULL,
+	name character varying(64) NOT NULL,
+	team integer NOT NULL,
+	batting_order integer NOT NULL,
+	position integer NOT NULL,
+	PRIMARY KEY (game_id, idx)
+);
